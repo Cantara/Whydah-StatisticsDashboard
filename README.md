@@ -2,8 +2,9 @@
 
 Dashboard to get some insights into the user activities for a running whydah installation
 
-* Number of users
-* Number of new users/day
+* Total number of users
+* Total number of applications
+* Number of new users/day  (per hour?)
    From which aplication
 * Number of logins/day
    From which aplication
