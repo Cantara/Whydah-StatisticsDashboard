@@ -9,16 +9,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import no.cantara.tools.stats.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import no.cantara.config.ApplicationProperties;
-import no.cantara.tools.stats.domain.ActivityCollection;
-import no.cantara.tools.stats.domain.ActivityStatistics;
-import no.cantara.tools.stats.domain.UserSessionStatus;
-import no.cantara.tools.stats.domain.UserSessionStatusCache;
 import no.cantara.tools.stats.exception.AppExceptionCode;
 
 public class StatusService {
@@ -60,7 +57,7 @@ public class StatusService {
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
     
     private UserSessionStatus recentStatus = null;
-	private Map<String,UserSessionStatus> userSessionStatusMap = new HashMap<>();
+	private Map<String,DailyStatus> dailyStatusMap = new HashMap<>();
 
     public UserSessionStatus getUserSessionStatusForToday() {
     	
@@ -90,7 +87,11 @@ public class StatusService {
     		UserSessionStatus status = getDataFromActivityStatistics(stats);
     		status.setTotal_number_of_users(getTotalOfUsers());
     		recentStatus = status;
-			userSessionStatusMap.put( new SimpleDateFormat("yyyy-MM-dd").format(new Date()),status);
+			DailyStatus todaysStatusMap=dailyStatusMap.get( new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+			if (todaysStatusMap.getUserApplicationStatistics()==null){
+				todaysStatusMap.setUserApplicationStatistics(new UserApplicationStatistics());
+			}
+			todaysStatusMap.setUserSessionStatus(status);
     		return status;
     	} catch(Exception ex) {
     		logger.error("get: %s", ex.getMessage());
