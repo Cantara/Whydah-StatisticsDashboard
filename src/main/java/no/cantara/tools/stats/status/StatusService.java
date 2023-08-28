@@ -51,7 +51,7 @@ public class StatusService {
 		// Just to get some data for UI work...
 		// TODO - read existing map from db/file
 		LocalDate yesterdayDate = localDate.minusDays(1);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		String yesterdayString = yesterdayDate.format(formatter);
 		DailyStatus dailyStatus = new DailyStatus();
 		dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
