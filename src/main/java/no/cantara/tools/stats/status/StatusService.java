@@ -137,9 +137,9 @@ public class StatusService {
 				deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
 			}
 		});
-		status.setNumber_of_deleted_users(deleted_users.size());
-		status.setNumber_of_logins(logins.size());
-		status.setNumber_of_registered_users(registered_users.size());
+		status.setNumber_of_deleted_users_today(deleted_users.size());
+		status.setNumber_of_logins_today(logins.size());
+		status.setNumber_of_registered_users_today(registered_users.size());
 		status.setLast_updated(ZonedDateTime.now());
 		status.setStarttime_of_today(lastUpdatedStatusCache.getStarttime_of_today());
 		//store to the cache
