@@ -164,11 +164,11 @@ public class StatusService {
 		}
 	}
 
-	public Map<String,UserSessionStatus>  getRecentStatusMap() {
+	public Map<String,DailyStatus>   getRecentStatusMap() {
 		if(recentStatus==null) {
 			getUserSessionStatusForToday();
 		}
-		return userSessionStatusMap;
+		return dailyStatusMap;
 	}
 
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import no.cantara.tools.stats.domain.DailyStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +56,7 @@ public class StatusResource implements Service {
             }
         }
 		try {
-			Map<String,UserSessionStatus> status = statusService.getRecentStatusMap();
+            Map<String, DailyStatus>  status = statusService.getRecentStatusMap();
 			if(status!=null) {
 				response.status(200).send(status);
 			} else {
