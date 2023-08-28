@@ -20,7 +20,7 @@
 <script>
 
 import { runInThisContext } from "vm";
-import { mapState, mapActions } from "vuex";
+import {mapState,  mapActions, mapMutations} from 'vuex';
 import toaster from "@/mixins/toaster";
 
 export default {
@@ -46,7 +46,12 @@ export default {
     this.startAutoPoller();
   },
 
+
   methods: {
+    ...mapMutations({
+       setToken: 'auth/setToken'
+    }),
+
     ...mapActions("api", ["get_usersession_status"]),
 
     startAutoPoller () {
@@ -63,7 +68,9 @@ export default {
           });
           }, this.interval)
     },
+
   },
+
 };
 </script>
 

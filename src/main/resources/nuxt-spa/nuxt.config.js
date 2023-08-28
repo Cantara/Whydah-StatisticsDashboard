@@ -16,6 +16,9 @@ export default {
   */
   target: 'static',
 
+  router: {
+    middleware: 'query-parameters'
+  },
   /*
   ** Headers of the page
   ** See https://nuxtjs.org/api/configuration-head
@@ -53,10 +56,10 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
 
-  plugins: ['~plugins/vuelidate.js', 
-  { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' }, 
+  plugins: ['~plugins/vuelidate.js',
+  { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' },
   {src:'~/plugins/font-awesome.js', mode: 'client'},
-  //'~/plugins/font-awesome.js',  
+  //'~/plugins/font-awesome.js',
   { src: '~/plugins/vue-slider.js', ssr: false },
     {src:'~/plugins/datagrid.js', mode: 'client'},
     '~plugins/mediator.js',
@@ -90,7 +93,7 @@ export default {
   ],
   googleFonts: {
     download: true
-    
+
   },
   /*
   ** Nuxt.js modules
@@ -119,7 +122,7 @@ export default {
     '@nuxtjs/style-resources',
     [
       'nuxt-fontawesome', {
-      component: 'fa', 
+      component: 'fa',
       imports: [
         {
           set: '@fortawesome/free-solid-svg-icons',
@@ -165,7 +168,7 @@ export default {
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
- 
+
   router: {
     //middleware: ['auth']
   },
@@ -209,7 +212,7 @@ export default {
             "token": `${config.oauth2_url}token`,
             "logout": `${config.oauth2_url}logout`
           },
-        
+
       }
     }
   },
@@ -224,10 +227,10 @@ export default {
   generate: {
     dir: process.env.APP_ENV === 'production'? 'dist': `dist-${process.env.APP_ENV}`
   },
-  
+
 
   build: {
-    vendor: ['vue-datagrid'], 
+    vendor: ['vue-datagrid'],
     parallel: true,
     cache: true,
     analyze: false,
