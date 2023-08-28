@@ -36,7 +36,7 @@
     "device-uuid": "^1.0.4",
     "install-changed": "1.1.0",
     "lodash": "4.17.21",
-    "mqtt": "4.3.7",
+    "mqtt": "5.0.3",
     "nuxt": "2.15.8",
     "nuxt-basic-auth-module": "^1.4.1",
     "nuxt-buefy": "0.4.25",
