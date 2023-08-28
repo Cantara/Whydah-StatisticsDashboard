@@ -1,8 +1,11 @@
 package no.cantara.tools.stats.status;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,9 +23,19 @@ import no.cantara.tools.stats.exception.AppExceptionCode;
 
 public class StatusService {
 
+	public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
+
 	String report_service;
 	String uib_health_service;
-	
+
+
+
+	private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
+	private UserSessionStatus recentStatus = null;
+	private Map<String,DailyStatus> dailyStatusMap = new HashMap<>();
+
+	LocalDate localDate = LocalDate.now();
+
 	public StatusService() {
 		report_service = ApplicationProperties.getInstance().get("app.reportservice", "");
 		report_service = report_service.replaceFirst("/$", "");
@@ -34,7 +47,17 @@ public class StatusService {
 		if(uib_health_service.isEmpty()) {
 			throw new RuntimeException("app.uib-health must be present in the app config");
 		}
-		
+
+		// Just to get some data for UI work...
+		// TODO - read existing map from db/file
+		LocalDate yesterdayDate = localDate.minusDays(1);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+		String yesterdayString = yesterdayDate.format(formatter);
+		DailyStatus dailyStatus = new DailyStatus();
+		dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
+		dailyStatus.setUserSessionStatus(new UserSessionStatus());
+		dailyStatusMap.put(yesterdayString,dailyStatus);
+
 		ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 		scheduler.scheduleAtFixedRate(
 				new Runnable() {
@@ -45,19 +68,13 @@ public class StatusService {
 
 							
 						}catch(Exception ex) {
+							logger.error("Exception in trying to get updated status",ex);
 							ex.printStackTrace();
 						}
 					}
 				},
 				1, 1, TimeUnit.MINUTES);
 	}
-    public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
-
-    
-    private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
-    
-    private UserSessionStatus recentStatus = null;
-	private Map<String,DailyStatus> dailyStatusMap = new HashMap<>();
 
     public UserSessionStatus getUserSessionStatusForToday() {
     	
