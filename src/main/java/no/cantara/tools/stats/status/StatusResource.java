@@ -65,6 +65,7 @@ public class StatusResource implements Service {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+            logger.error("Unable to get status",e);
 			request.next(e);
 		} 
     }

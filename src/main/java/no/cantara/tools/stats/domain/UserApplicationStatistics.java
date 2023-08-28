@@ -1,9 +1,11 @@
 package no.cantara.tools.stats.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.time.ZonedDateTime;
 
+@Data
 public class UserApplicationStatistics {
 
     private String for_application;

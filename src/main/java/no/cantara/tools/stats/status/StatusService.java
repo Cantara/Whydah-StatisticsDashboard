@@ -87,12 +87,18 @@ public class StatusService {
     		UserSessionStatus status = getDataFromActivityStatistics(stats);
     		status.setTotal_number_of_users(getTotalOfUsers());
     		recentStatus = status;
-			DailyStatus todaysStatusMap=dailyStatusMap.get( new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-			if (todaysStatusMap.getUserApplicationStatistics()==null){
-				todaysStatusMap.setUserApplicationStatistics(new UserApplicationStatistics());
+			String todayString = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+			DailyStatus dailyStatus=dailyStatusMap.get( todayString);
+			if (dailyStatus==null){
+				dailyStatus = new DailyStatus();
+				//dailyStatusMap.put(new SimpleDateFormat("yyyy-MM-dd").format(new Date()),dailyStatus);
 			}
-			todaysStatusMap.setUserSessionStatus(status);
-    		return status;
+			if (dailyStatus.getUserApplicationStatistics()==null){
+				dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
+			}
+			dailyStatus.setUserSessionStatus(status);
+			dailyStatusMap.put(todayString,dailyStatus);
+			return status;
     	} catch(Exception ex) {
     		logger.error("get: %s", ex.getMessage());
 			throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get status due to the exception - " + ex.getMessage());
