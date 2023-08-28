@@ -1,5 +1,7 @@
 package no.cantara.tools.stats.status;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -53,7 +55,7 @@ public class StatusResource implements Service {
             }
         }
 		try {
-			UserSessionStatus status = statusService.getRecentStatus();
+			Map<String,UserSessionStatus> status = statusService.getRecentStatusMap();
 			if(status!=null) {
 				response.status(200).send(status);
 			} else {

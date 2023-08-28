@@ -1,12 +1,9 @@
 package no.cantara.tools.stats.status;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +60,7 @@ public class StatusService {
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
     
     private UserSessionStatus recentStatus = null;
+	private Map<String,UserSessionStatus> userSessionStatusMap = new HashMap<>();
 
     public UserSessionStatus getUserSessionStatusForToday() {
     	
@@ -91,6 +89,7 @@ public class StatusService {
     		UserSessionStatus status = getDataFromActivityStatistics(stats);
     		status.setTotal_number_of_users(getTotalOfUsers());
     		recentStatus = status;
+			userSessionStatusMap.put( new SimpleDateFormat("yyyy-MM-dd").format(new Date()),status);
     		return status;
     	} catch(Exception ex) {
     		logger.error("get: %s", ex.getMessage());
@@ -161,6 +160,13 @@ public class StatusService {
 		} else {
 			return getUserSessionStatusForToday();
 		}
+	}
+
+	public Map<String,UserSessionStatus>  getRecentStatusMap() {
+		if(recentStatus==null) {
+			getUserSessionStatusForToday();
+		}
+		return userSessionStatusMap;
 	}
 
 
