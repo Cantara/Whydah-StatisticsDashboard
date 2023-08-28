@@ -66,7 +66,8 @@ public class StatusService {
     	
     	try {
     		if(lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
-    			//reset the cache if the day is passed 
+    			//reset the cache if the day is passed
+				// TODO: store last days stats in DB
     			recentStatus = null;
     			lastUpdatedStatusCache = new UserSessionStatusCache();
     			ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
