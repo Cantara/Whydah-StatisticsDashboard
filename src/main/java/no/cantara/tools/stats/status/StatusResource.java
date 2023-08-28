@@ -3,6 +3,7 @@ package no.cantara.tools.stats.status;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import no.cantara.tools.stats.domain.DailyStatus;
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public class StatusResource implements Service {
 		try {
             Map<String, DailyStatus>  status = statusService.getRecentStatusMap();
 			if(status!=null) {
-				response.status(200).send(status);
+				response.status(200).send(new TreeMap<>(status));
 			} else {
 				throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get status");
 			}
