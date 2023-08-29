@@ -31,6 +31,7 @@ public class StatusService {
 
     public static final DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(dateformat);
 	public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
+
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
     private UserSessionStatus recentStatus = null;
     private Map<String, DailyStatus> dailyStatusMap = new HashMap<>();
@@ -82,6 +83,12 @@ public class StatusService {
                 lastUpdatedStatusCache = new UserSessionStatusCache();
                 ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
                 lastUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
+
+                // add a new dailystatus object for the new day
+                DailyStatus dailyStatus = new DailyStatus();
+                dailyStatus.setUserSessionStatus(recentStatus);
+                String todayString = simpleDateFormatter.format(new Date());
+                dailyStatusMap.put(todayString, dailyStatus);
             }
 
             String starttime_param = String.valueOf(lastUpdatedStatusCache.getStarttime_of_today().toInstant().toEpochMilli());
@@ -146,15 +153,21 @@ public class StatusService {
         Set<String> logins = new HashSet<>(lastUpdatedStatusCache.getLogins());
         Set<String> registered_users = new HashSet<>(lastUpdatedStatusCache.getRegistered_users());
         Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
-
+        String todayString = simpleDateFormatter.format(new Date());
 
         activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid().equals("2215")).forEach(activity -> {
             if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
-                logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))){
+                    logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                }
             } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
-                registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
+                    registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                }
             } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
-                deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
+                    deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                }
             }
         });
         status.setNumber_of_deleted_users_today(deleted_users.size());
