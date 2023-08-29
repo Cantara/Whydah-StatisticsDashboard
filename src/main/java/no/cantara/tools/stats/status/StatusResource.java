@@ -1,9 +1,18 @@
 package no.cantara.tools.stats.status;
 
+import java.net.URI;
+import java.net.URL;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import javax.ws.rs.core.UriBuilder;
 
 import no.cantara.tools.stats.domain.DailyStatus;
 import org.slf4j.Logger;
@@ -13,6 +22,7 @@ import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerRequest;
 import io.helidon.webserver.ServerResponse;
 import io.helidon.webserver.Service;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import no.cantara.tools.stats.domain.UserSessionStatus;
 import no.cantara.tools.stats.exception.AppExceptionCode;
 import no.cantara.tools.stats.domain.UserSessionStatus;
@@ -44,12 +54,26 @@ public class StatusResource implements Service {
         .options("/status", this::showUserSessionStatusOptionHeaders);
     }
     
+    private String getAccessTokenInReferer(URI uri) {
+    	Map<String, List<String>> parameters =  new QueryStringDecoder(uri).parameters();
+    	if( parameters.get("accesstoken")!=null) { 
+    		return parameters.get("accesstoken").get(0);
+    	} else if(parameters.get("accessToken")!=null) {
+    		return parameters.get("accessToken").get(0);
+    	}
+    	return null;
+    }
+    
+
+    
     @SuppressWarnings("checkstyle:designforextension")
     public void showUserSessionStatus(final ServerRequest request, final ServerResponse response){
         if (accessToken != null && accessToken.length() > 0) {
-            Optional<String> AccessTokenParam = request.queryParams().first(ACCESS_TOKEN_PARAM_NAME);
+            String AccessTokenParam = request.queryParams().first(ACCESS_TOKEN_PARAM_NAME).
+            		orElseGet(() -> getAccessTokenInReferer(request.headers().referer().get()));
+            
             try {
-                if (!accessToken.equalsIgnoreCase(AccessTokenParam.get())) {
+                if (!accessToken.equalsIgnoreCase(AccessTokenParam)) {
                     response.status(404).send("{\"reason\":\"unauthorized\"}");
                 }
             } catch (Exception e) {
