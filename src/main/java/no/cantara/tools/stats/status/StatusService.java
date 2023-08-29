@@ -1,10 +1,7 @@
 package no.cantara.tools.stats.status;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -29,7 +26,7 @@ public class StatusService {
 
     public static final String dateformat = "yyyy-MM-dd";
 
-    public static final DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(dateformat);
+    public static final DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(dateformat).withZone( ZoneId.of("Europe/Oslo"));;
 	public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
 
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
