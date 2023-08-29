@@ -158,10 +158,15 @@ public class StatusService {
             if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
                 if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                     logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                    // increase session activity count  - may count twice...
+                    status.setTotal_number_of_session_actions_today(1+status.getTotal_number_of_session_actions_today());
                 } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
                     registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                 } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
                     deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionVerification")) {
+                    // increase session activity count  - may count twice...
+                    status.setTotal_number_of_session_actions_today(1+status.getTotal_number_of_session_actions_today());
                 }
             }
         });
