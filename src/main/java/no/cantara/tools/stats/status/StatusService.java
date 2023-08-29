@@ -26,8 +26,9 @@ public class StatusService {
 
     public static final String dateformat = "yyyy-MM-dd";
 
-    public static final DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(dateformat).withZone( ZoneId.of("Europe/Oslo"));;
-	public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
+    public static final DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(dateformat).withZone(ZoneId.of("Europe/Oslo"));
+    ;
+    public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
 
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
     private UserSessionStatus recentStatus = null;
@@ -153,23 +154,19 @@ public class StatusService {
         String todayString = simpleDateFormatter.format(new Date());
 
 //        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid().equals("2215")).forEach(activity -> {
-        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid()!=null).forEach(activity -> {
-            if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
-                if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))){
+        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
+            if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
+                if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                     logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-                }
-            } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
-                if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
+                } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
                     registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-                }
-            } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
-                if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
+                } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
                     deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                 }
             }
         });
         status.setNumber_of_deleted_users_today(deleted_users.size());
-        status.setNumber_of_logins_today(logins.size());
+        status.setNumber_of_unique_logins_today(logins.size());
         status.setNumber_of_registered_users_today(registered_users.size());
         status.setLast_updated(ZonedDateTime.now());
         status.setStarttime_of_today(lastUpdatedStatusCache.getStarttime_of_today());

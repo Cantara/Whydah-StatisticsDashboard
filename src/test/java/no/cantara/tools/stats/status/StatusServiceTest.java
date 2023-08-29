@@ -13,6 +13,8 @@ import no.cantara.tools.stats.domain.ActivityStatistics;
 import no.cantara.tools.stats.domain.UserSessionStatus;
 import no.cantara.tools.stats.utils.EntityUtils;
 
+import java.time.Instant;
+
 class StatusServiceTest {
 
     static {
@@ -22,17 +24,18 @@ class StatusServiceTest {
     
     @Test
     public void testParseResponseToUserSessionStatus() throws JsonMappingException, JsonProcessingException {
+		Long timestamp = Instant.now().toEpochMilli();
     	String responseFromReportService = "{\n"
     			+ "    \"prefix\":\"All\",\n"
     			+ "    \"activityName\":\"userSession\",\n"
-    			+ "    \"startTime\":1692716808000,\n"
-    			+ "    \"endTime\":1692792834768,\n"
+    			+ "    \"startTime\":"+timestamp+",\n"
+    			+ "    \"endTime\":" + timestamp +",\n"
     			+ "    \"activities\":{\n"
     			+ "        \"userSessions\":[\n"
     			+ "            {\n"
     			+ "                \"prefix\":\"\",\n"
     			+ "                \"name\":\"usersession\",\n"
-    			+ "                \"startTime\":1692716808000,\n"
+    			+ "                \"startTime\":" + timestamp +",\n"
     			+ "                \"data\":{\n"
     			+ "                    \"usersessionfunction\":\"userSessionVerification\",\n"
     			+ "                    \"applicationid\":\"2215\",\n"
@@ -43,7 +46,7 @@ class StatusServiceTest {
     			+ "            {\n"
     			+ "                \"prefix\":\"\",\n"
     			+ "                \"name\":\"usersession\",\n"
-    			+ "                \"startTime\":1692716808000,\n"
+    			+ "                \"startTime\":" + timestamp +",\n"
     			+ "                \"data\":{\n"
     			+ "                    \"usersessionfunction\":\"userSessionAccess\",\n"
     			+ "                    \"applicationid\":\"2215\",\n"
@@ -54,7 +57,7 @@ class StatusServiceTest {
     			+ "            {\n"
     			+ "                \"prefix\":\"\",\n"
     			+ "                \"name\":\"usersession\",\n"
-    			+ "                \"startTime\":1692717034000,\n"
+    			+ "                \"startTime\":" + timestamp +",\n"
     			+ "                \"data\":{\n"
     			+ "                    \"usersessionfunction\":\"userCreated\",\n"
     			+ "                    \"applicationid\":\"2215\",\n"
@@ -65,7 +68,7 @@ class StatusServiceTest {
     			+ "            {\n"
     			+ "                \"prefix\":\"\",\n"
     			+ "                \"name\":\"usersession\",\n"
-    			+ "                \"startTime\":1692717035000,\n"
+    			+ "                \"startTime\":" + timestamp +",\n"
     			+ "                \"data\":{\n"
     			+ "                    \"usersessionfunction\":\"userDeleted\",\n"
     			+ "                    \"applicationid\":\"2215\",\n"
@@ -82,7 +85,7 @@ class StatusServiceTest {
     	status.setTotal_number_of_users(s.getTotalOfUsers());
     	assertTrue(status!=null);
     	assertTrue(status.getNumber_of_deleted_users_today()==1);
-    	assertTrue(status.getNumber_of_logins_today() == 1);
+    	assertTrue(status.getNumber_of_unique_logins_today() == 1);
     	assertTrue(status.getNumber_of_registered_users_today() ==1);
     	assertTrue(status.getTotal_number_of_users()>0);
     	
