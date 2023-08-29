@@ -84,9 +84,9 @@ class StatusServiceTest {
     	UserSessionStatus status = s.getDataFromActivityStatistics(map_from_the_response);
     	status.setTotal_number_of_users(s.getTotalOfUsers());
     	assertTrue(status!=null);
-    	assertTrue(status.getNumber_of_deleted_users_today()==1);
-    	assertTrue(status.getNumber_of_unique_logins_today() == 1);
-    	assertTrue(status.getNumber_of_registered_users_today() ==1);
+    	assertTrue(status.getNumber_of_deleted_users_this_day()==1);
+    	assertTrue(status.getNumber_of_unique_logins_this_day() == 1);
+    	assertTrue(status.getNumber_of_registered_users_this_day() ==1);
     	assertTrue(status.getTotal_number_of_users()>0);
     	
     }
