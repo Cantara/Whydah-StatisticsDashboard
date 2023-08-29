@@ -23,6 +23,7 @@ public class StatusService {
     public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
     String report_service;
     String uib_health_service;
+    String sts_health_service;
 
     public static final String dateformat = "yyyy-MM-dd";
 
@@ -45,6 +46,11 @@ public class StatusService {
         uib_health_service = ApplicationProperties.getInstance().get("app.uib-health", "");
         uib_health_service = uib_health_service.replaceFirst("/$", "");
         if (uib_health_service.isEmpty()) {
+            throw new RuntimeException("app.uib-health must be present in the app config");
+        }
+        sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
+        sts_health_service = sts_health_service.replaceFirst("/$", "");
+        if (sts_health_service.isEmpty()) {
             throw new RuntimeException("app.uib-health must be present in the app config");
         }
 
@@ -73,6 +79,7 @@ public class StatusService {
 
     public UserSessionStatus getUserSessionStatusForToday() {
 
+        UserSessionStatus status = new UserSessionStatus();
         try {
             if (lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
                 //reset the cache if the day is passed
@@ -102,8 +109,9 @@ public class StatusService {
                     .asObject(ActivityStatistics.class)
                     .getBody();
 
-            UserSessionStatus status = getDataFromActivityStatistics(stats);
+            status = getDataFromActivityStatistics(stats);
             status.setTotal_number_of_users(getTotalOfUsers());
+            status.setNumber_of_active_user_sessions(getTotalOfSessions());
             recentStatus = status;
             String todayString = simpleDateFormatter.format(new Date());
             DailyStatus dailyStatus = dailyStatusMap.get(todayString);
@@ -119,7 +127,8 @@ public class StatusService {
             return status;
         } catch (Exception ex) {
             logger.error("get: %s", ex.getMessage());
-            throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get status due to the exception - " + ex.getMessage());
+            return status;
+            //throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get status due to the exception - " + ex.getMessage());
         }
 
     }
@@ -139,6 +148,26 @@ public class StatusService {
                     .getObject()
                     .getString("users (DB)");
             return Integer.valueOf(count_from_uib != null ? count_from_uib : "0");
+        } catch (UnirestException e) {
+            logger.error("get: %s", e.getMessage());
+        }
+        return 0;
+    }
+
+    protected int getTotalOfSessions() {
+        try {
+            String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
+            sts_health_service = sts_health_service.replaceFirst("/$", "");
+            if (sts_health_service.isEmpty()) {
+                throw new RuntimeException("app.uib-health must be present in the app config");
+            }
+
+            String count_from_sts = Unirest.get(sts_health_service)
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("AuthenticatedUserTokenMapSize");
+            return Integer.valueOf(count_from_sts != null ? count_from_sts : "0");
         } catch (UnirestException e) {
             logger.error("get: %s", e.getMessage());
         }
