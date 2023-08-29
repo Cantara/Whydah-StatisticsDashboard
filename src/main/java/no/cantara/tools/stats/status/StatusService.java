@@ -152,7 +152,8 @@ public class StatusService {
         Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
         String todayString = simpleDateFormatter.format(new Date());
 
-        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid().equals("2215")).forEach(activity -> {
+//        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid().equals("2215")).forEach(activity -> {
+        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid()!=null).forEach(activity -> {
             if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                 if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))){
                     logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
@@ -177,8 +178,6 @@ public class StatusService {
         lastUpdatedStatusCache.setRegistered_users(registered_users);
         lastUpdatedStatusCache.setDeleted_users(deleted_users);
         lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
-
-
         return status;
     }
 
