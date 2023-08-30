@@ -12,6 +12,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import no.cantara.tools.stats.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +25,22 @@ import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import no.cantara.config.ApplicationProperties;
 import no.cantara.tools.stats.exception.AppExceptionCode;
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 public class StatusService {
 
     public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
 
-    private static final String MAPFILENAME="data/dailyStatusMap.dat";
+    private static final String MAPFILENAME="data/dailyStatusMap.json";
+    ObjectMapper mapper =  new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER.mappedFeature())
+            .enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature())
+            .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature())
+            .findAndRegisterModules();
     String report_service;
     String uib_health_service;
     String sts_health_service;
@@ -139,6 +154,7 @@ public class StatusService {
             status = getDataFromActivityStatistics(stats);
             status.setTotal_number_of_users(getTotalOfUsers());
             status.setNumber_of_active_user_sessions(getTotalOfSessions());
+            status.setTotal_number_of_applications(getTotalOfApplications());
             recentStatus = status;
             String todayString = simpleDateFormatter.format(new Date());
             DailyStatus dailyStatus = dailyStatusMap.get(todayString);
@@ -187,7 +203,7 @@ public class StatusService {
             String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
             sts_health_service = sts_health_service.replaceFirst("/$", "");
             if (sts_health_service.isEmpty()) {
-                throw new RuntimeException("app.uib-health must be present in the app config");
+                throw new RuntimeException("app.sts-health must be present in the app config");
             }
 
             String count_from_sts = Unirest.get(sts_health_service)
@@ -202,9 +218,51 @@ public class StatusService {
         return 0;
     }
 
+    protected int getTotalOfApplications() {
+        try {
+            String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
+            sts_health_service = sts_health_service.replaceFirst("/$", "");
+            if (sts_health_service.isEmpty()) {
+                throw new RuntimeException("app.sts-health must be present in the app config");
+            }
+
+            String count_from_sts = Unirest.get(sts_health_service)
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("ConfiguredApplications");
+            return Integer.valueOf(count_from_sts != null ? count_from_sts : "0");
+        } catch (UnirestException e) {
+            logger.error("get: %s", e.getMessage());
+        }
+        return 0;
+    }
+
+    protected int getTotalOfThreats() {
+        try {
+            String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
+            sts_health_service = sts_health_service.replaceFirst("/$", "");
+            if (sts_health_service.isEmpty()) {
+                throw new RuntimeException("app.sts-health must be present in the app config");
+            }
+
+            String count_from_sts = Unirest.get(sts_health_service)
+                    .asJson()
+                    .getBody()
+                    .getObject()
+                    .getString("ThreatSignalRingbufferSize");
+            return Integer.valueOf(count_from_sts != null ? count_from_sts : "0");
+        } catch (UnirestException e) {
+            logger.error("get: %s", e.getMessage());
+        }
+        return 0;
+    }
+
     protected UserSessionStatus getDataFromActivityStatistics(ActivityStatistics stats) {
-        ActivityCollection activities = stats.getActivities();
         UserSessionStatus status = new UserSessionStatus();
+        if (stats!=null){
+
+        ActivityCollection activities = stats.getActivities();
         Set<String> logins = new HashSet<>(lastUpdatedStatusCache.getLogins());
         Set<String> registered_users = new HashSet<>(lastUpdatedStatusCache.getRegistered_users());
         Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
@@ -237,6 +295,8 @@ public class StatusService {
         lastUpdatedStatusCache.setRegistered_users(registered_users);
         lastUpdatedStatusCache.setDeleted_users(deleted_users);
         lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
+        }
+
         //storeMap();
         return status;
     }
@@ -281,16 +341,13 @@ public class StatusService {
     }
 
 
-    public void storeMap() {
+    public synchronized void storeMap() {
         try {
-            FileOutputStream f = new FileOutputStream(new File(MAPFILENAME));
-            ObjectOutputStream o = new ObjectOutputStream(f);
 
+            Path path = Paths.get(MAPFILENAME);
+            String json =mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dailyStatusMap);
+            Files.writeString(path, json, StandardCharsets.UTF_8);
             // Write objects to file
-            o.writeObject(dailyStatusMap);
-
-            o.close();
-            f.close();
 
 
         } catch (FileNotFoundException e) {
@@ -303,22 +360,25 @@ public class StatusService {
     public Map<String, DailyStatus> readMap() {
         try {
 
-            FileInputStream fi = new FileInputStream(new File(MAPFILENAME));
-            ObjectInputStream oi = new ObjectInputStream(fi);
+//            FileInputStream fi = new FileInputStream(new File(MAPFILENAME));
+//            ObjectInputStream oi = new ObjectInputStream(fi);
 
+            TypeReference<HashMap<String, DailyStatus>> typeRef
+                    = new TypeReference<HashMap<String, DailyStatus>>() {};
             // Read objects
-            Map<String, DailyStatus> dailyStatusMap = (Map<String, DailyStatus>) oi.readObject();
+            Map<String, DailyStatus> dailyStatusMap = mapper.readValue(new File(MAPFILENAME), typeRef);
+            //(Map<String, DailyStatus>) oi.readObject();
 
-            oi.close();
-            fi.close();
+//            oi.close();
+//            fi.close();
             return dailyStatusMap;
 
         } catch (FileNotFoundException e) {
             logger.error("File not found",e);
         } catch (IOException e) {
             logger.error("Error initializing stream",e);
-        } catch (ClassNotFoundException e) {
-            logger.error("ClassNotFoundException initializing stream",e);
+//        } catch (ClassNotFoundException e) {
+//            logger.error("ClassNotFoundException initializing stream",e);
         }
         return null;
 

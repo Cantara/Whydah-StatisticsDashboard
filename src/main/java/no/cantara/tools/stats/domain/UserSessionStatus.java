@@ -12,6 +12,7 @@ import lombok.Data;
 public class UserSessionStatus  implements Serializable {
 	
 	private int total_number_of_users;
+	private int total_number_of_applications;
 	private int number_of_registered_users_this_day;
 	private int number_of_unique_logins_this_day;
 	private int total_number_of_session_actions_this_day;
