@@ -7,10 +7,12 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,13 +49,11 @@ public class StatusService {
 
     public static final String dateformat = "yyyy-MM-dd";
 
-    public static final DateTimeFormatter datetimeformatter = DateTimeFormatter.ofPattern(dateformat).withZone(ZoneId.of("Europe/Oslo"));
-    ;
     public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
 
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
     private UserSessionStatus recentStatus = null;
-    private Map<String, DailyStatus> dailyStatusMap = new HashMap<>();
+    private TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
 
     LocalDate localDate = LocalDate.now();
 
@@ -84,19 +84,7 @@ public class StatusService {
             String todayString = simpleDateFormatter.format(new Date());
             if(dailyStatusMap.get(todayString)!=null && dailyStatusMap.get(todayString).getUserSessionStatus()!=null){
                 recentStatus=dailyStatusMap.get(todayString).getUserSessionStatus();
-            } else {
-                DailyStatus ds=new DailyStatus();
-//                recentStatus=new UserSessionStatus();
-                recentStatus=getUserSessionStatusForToday();
-                ds.setUserSessionStatus(recentStatus);
-                ds.setUserApplicationStatistics(new UserApplicationStatistics());
-                dailyStatusMap.put(todayString,ds);
-                storeMap();
-            };
-        } else {
-            // Just to get some data for UI work...
-            // TODO - read existing map from db/file
-            initializebackDateswithStructure();
+            }
         }
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -106,8 +94,18 @@ public class StatusService {
                         try {
 
                             getUserSessionStatusForToday();
-
-
+                            
+                            //remove old data
+                            int maxHistory = ApplicationProperties.getInstance().asInt("app.stats.keep-history-in-days", 7);
+                            int numberToRemove = dailyStatusMap.size() - maxHistory - 1;
+                            while(numberToRemove>0) {
+                            	Entry<String, DailyStatus> en = dailyStatusMap.pollFirstEntry();
+                            	numberToRemove --;
+                            	logger.debug("remove date {}. We keep a history of {} statistics records according to the config", en.getKey(), maxHistory);
+                            }
+                            
+                            //store map
+                            storeMap();
 
                         } catch (Exception ex) {
                             logger.error("Exception in trying to get updated status", ex);
@@ -151,7 +149,7 @@ public class StatusService {
                     .asObject(ActivityStatistics.class)
                     .getBody();
 
-            status = getDataFromActivityStatistics(stats);
+            status = getUserSessionStatusDataFromActivityStatistics(stats);
             status.setTotal_number_of_users(getTotalOfUsers());
             status.setNumber_of_active_user_sessions(getTotalOfSessions());
             status.setTotal_number_of_applications(getTotalOfApplications());
@@ -163,7 +161,11 @@ public class StatusService {
                 //dailyStatusMap.put(new SimpleDateFormat("yyyy-MM-dd").format(new Date()),dailyStatus);
             }
             if (dailyStatus.getUserApplicationStatistics() == null) {
-                dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
+            	String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
+            	if(!appIds.equals("")) {
+            		String[] parts = appIds.split("\\s*[;,]\\s*");
+            		dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+            	}
             }
             dailyStatus.setUserSessionStatus(status);
             dailyStatusMap.put(todayString, dailyStatus);
@@ -180,12 +182,7 @@ public class StatusService {
 
     protected int getTotalOfUsers() {
         try {
-            String uib_health_service = ApplicationProperties.getInstance().get("app.uib-health", "");
-            uib_health_service = uib_health_service.replaceFirst("/$", "");
-            if (uib_health_service.isEmpty()) {
-                throw new RuntimeException("app.uib-health must be present in the app config");
-            }
-
+          
             String count_from_uib = Unirest.get(uib_health_service)
                     .asJson()
                     .getBody()
@@ -200,11 +197,6 @@ public class StatusService {
 
     protected int getTotalOfSessions() {
         try {
-            String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
-            sts_health_service = sts_health_service.replaceFirst("/$", "");
-            if (sts_health_service.isEmpty()) {
-                throw new RuntimeException("app.sts-health must be present in the app config");
-            }
 
             String count_from_sts = Unirest.get(sts_health_service)
                     .asJson()
@@ -220,12 +212,7 @@ public class StatusService {
 
     protected int getTotalOfApplications() {
         try {
-            String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
-            sts_health_service = sts_health_service.replaceFirst("/$", "");
-            if (sts_health_service.isEmpty()) {
-                throw new RuntimeException("app.sts-health must be present in the app config");
-            }
-
+           
             String count_from_sts = Unirest.get(sts_health_service)
                     .asJson()
                     .getBody()
@@ -240,11 +227,7 @@ public class StatusService {
 
     protected int getTotalOfThreats() {
         try {
-            String sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
-            sts_health_service = sts_health_service.replaceFirst("/$", "");
-            if (sts_health_service.isEmpty()) {
-                throw new RuntimeException("app.sts-health must be present in the app config");
-            }
+           
 
             String count_from_sts = Unirest.get(sts_health_service)
                     .asJson()
@@ -257,8 +240,49 @@ public class StatusService {
         }
         return 0;
     }
+    
+    protected List<UserApplicationStatistics> getUserApplicationStatisticsDataFromActivityStatistics(Set<String> appIds, ActivityStatistics stats) {
+    	Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
+    	appIds.forEach(id -> statsByAppId.put(id, new UserApplicationStatistics(id)));
+        if (stats!=null){
+        	ActivityCollection activities = stats.getActivities();
+        	String todayString = simpleDateFormatter.format(new Date());
+        	activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
+        		if (appIds.contains(activity.getData().getApplicationid()) && todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
+        			
+        			if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
+        				if(!lastUpdatedStatusCache.getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
+        					lastUpdatedStatusCache.getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+        				}
+        				lastUpdatedStatusCache.getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+        			} else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
+        				if(!lastUpdatedStatusCache.getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+        					lastUpdatedStatusCache.getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+        				}
+        				lastUpdatedStatusCache.getRegistered_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+        			} else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
+        				if(!lastUpdatedStatusCache.getDeleted_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+        					lastUpdatedStatusCache.getDeleted_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+        				}
+        				lastUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());        				
+        			}
+        		}
+        	});
+        	appIds.forEach(id -> {
+        		UserApplicationStatistics d = statsByAppId.get(id);
+        		d.setFor_application(id);
+        		d.setLast_updated(ZonedDateTime.now());
+        		d.setNumber_of_deleted_users_this_day(lastUpdatedStatusCache.getDeleted_users_by_appId().get(id)!=null?lastUpdatedStatusCache.getDeleted_users_by_appId().get(id).size():0);
+        		d.setNumber_of_registered_users_this_day(lastUpdatedStatusCache.getRegistered_users_by_appId().get(id)!=null?lastUpdatedStatusCache.getRegistered_users_by_appId().get(id).size():0);
+        		d.setNumber_of_unique_logins_this_day(lastUpdatedStatusCache.getLogins_by_appId().get(id)!=null?lastUpdatedStatusCache.getLogins_by_appId().get(id).size():0);
+        		d.setStarttime_of_this_day(lastUpdatedStatusCache.getStarttime_of_today());
+        	});
+        }
+        return new ArrayList<UserApplicationStatistics>(statsByAppId.values());
 
-    protected UserSessionStatus getDataFromActivityStatistics(ActivityStatistics stats) {
+    }
+
+    protected UserSessionStatus getUserSessionStatusDataFromActivityStatistics(ActivityStatistics stats) {
         UserSessionStatus status = new UserSessionStatus();
         if (stats!=null){
 
@@ -268,9 +292,8 @@ public class StatusService {
         Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
         String todayString = simpleDateFormatter.format(new Date());
 
-//        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid().equals("2215")).forEach(activity -> {
         activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
-            if (todayString.equalsIgnoreCase(datetimeformatter.format(Instant.ofEpochMilli(activity.getStartTime())))) {
+            if (todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
                 if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                     logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                     // increase session activity count  - may count twice...
@@ -297,7 +320,6 @@ public class StatusService {
         lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
         }
 
-        //storeMap();
         return status;
     }
 
@@ -314,32 +336,8 @@ public class StatusService {
         if (recentStatus == null) {
             getUserSessionStatusForToday();
         }
-        storeMap();
         return dailyStatusMap;
     }
-
-
-    private void initializebackDateswithStructure() {
-        LocalDate yesterdayDate = localDate.minusDays(1);
-        String yesterdayString = yesterdayDate.format(datetimeformatter);
-        DailyStatus dailyStatus = new DailyStatus();
-        dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
-        dailyStatus.setUserSessionStatus(new UserSessionStatus());
-        dailyStatusMap.put(yesterdayString, dailyStatus);
-        LocalDate yesteryesterdayDate = localDate.minusDays(2);
-        String yesteryesterdayString = yesteryesterdayDate.format(datetimeformatter);
-        dailyStatus = new DailyStatus();
-        dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
-        dailyStatus.setUserSessionStatus(new UserSessionStatus());
-        dailyStatusMap.put(yesteryesterdayString, dailyStatus);
-        LocalDate yesteryesteryesterdayDate = localDate.minusDays(3);
-        String yesteryesteryesterdayString = yesteryesteryesterdayDate.format(datetimeformatter);
-        dailyStatus = new DailyStatus();
-        dailyStatus.setUserApplicationStatistics(new UserApplicationStatistics());
-        dailyStatus.setUserSessionStatus(new UserSessionStatus());
-        dailyStatusMap.put(yesteryesteryesterdayString, dailyStatus);
-    }
-
 
     public synchronized void storeMap() {
         try {
@@ -347,8 +345,6 @@ public class StatusService {
             Path path = Paths.get(MAPFILENAME);
             String json =mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dailyStatusMap);
             Files.writeString(path, json, StandardCharsets.UTF_8);
-            // Write objects to file
-
 
         } catch (FileNotFoundException e) {
             logger.error("File not found",e);
@@ -357,28 +353,25 @@ public class StatusService {
         }
     }
 
-    public Map<String, DailyStatus> readMap() {
+    public TreeMap<String, DailyStatus> readMap() {
         try {
-
-//            FileInputStream fi = new FileInputStream(new File(MAPFILENAME));
-//            ObjectInputStream oi = new ObjectInputStream(fi);
-
-            TypeReference<HashMap<String, DailyStatus>> typeRef
-                    = new TypeReference<HashMap<String, DailyStatus>>() {};
-            // Read objects
-            Map<String, DailyStatus> dailyStatusMap = mapper.readValue(new File(MAPFILENAME), typeRef);
-            //(Map<String, DailyStatus>) oi.readObject();
-
-//            oi.close();
-//            fi.close();
+            TypeReference<TreeMap<String, DailyStatus>> typeRef = new TypeReference<TreeMap<String, DailyStatus>>() {};
+            TreeMap<String, DailyStatus> dailyStatusMap = mapper.readValue(new File(MAPFILENAME), typeRef);
             return dailyStatusMap;
-
         } catch (FileNotFoundException e) {
             logger.error("File not found",e);
         } catch (IOException e) {
             logger.error("Error initializing stream",e);
-//        } catch (ClassNotFoundException e) {
-//            logger.error("ClassNotFoundException initializing stream",e);
+        }
+        //fallback
+        try {
+            TypeReference<HashMap<String, DailyStatus>> typeRef = new TypeReference<HashMap<String, DailyStatus>>() {};
+            Map<String, DailyStatus> dailyStatusMap = mapper.readValue(new File(MAPFILENAME), typeRef);
+            return new TreeMap<>(dailyStatusMap);
+        } catch (FileNotFoundException e) {
+            logger.error("File not found",e);
+        } catch (IOException e) {
+            logger.error("Error initializing stream",e);
         }
         return null;
 

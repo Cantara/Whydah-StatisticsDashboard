@@ -83,7 +83,7 @@ public class StatusResource implements Service {
 		try {
             Map<String, DailyStatus>  status = statusService.getRecentStatusMap();
 			if(status!=null) {
-				response.status(200).send(new TreeMap<>(status));
+				response.status(200).send(status);
 			} else {
 				throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get status");
 			}

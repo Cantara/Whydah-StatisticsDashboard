@@ -81,7 +81,7 @@ class StatusServiceTest {
     			+ "}";
     	ActivityStatistics map_from_the_response = EntityUtils.mapFromJson(responseFromReportService, ActivityStatistics.class);
     	StatusService s = new StatusService();
-    	UserSessionStatus status = s.getDataFromActivityStatistics(map_from_the_response);
+    	UserSessionStatus status = s.getUserSessionStatusDataFromActivityStatistics(map_from_the_response);
     	status.setTotal_number_of_users(s.getTotalOfUsers());
     	assertTrue(status!=null);
     	assertTrue(status.getNumber_of_deleted_users_this_day()==1);
