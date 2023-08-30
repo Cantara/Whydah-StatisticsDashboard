@@ -1,5 +1,6 @@
 package no.cantara.tools.stats.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityCollection {
+public class ActivityCollection implements Serializable {
 
 	List<UserSessionActivity> userSessions = new ArrayList<>();
 	

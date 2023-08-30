@@ -1,5 +1,6 @@
 package no.cantara.tools.stats.domain;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityStatistics {
+public class ActivityStatistics implements Serializable {
 	
     private String prefix = "ALL";
     private String activityName="userSession";

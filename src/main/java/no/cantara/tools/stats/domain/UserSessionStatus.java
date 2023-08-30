@@ -1,6 +1,7 @@
 package no.cantara.tools.stats.domain;
 
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class UserSessionStatus {
+public class UserSessionStatus  implements Serializable {
 	
 	private int total_number_of_users;
 	private int number_of_registered_users_this_day;

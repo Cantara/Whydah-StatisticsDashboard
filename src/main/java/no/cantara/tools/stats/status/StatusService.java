@@ -1,5 +1,8 @@
 package no.cantara.tools.stats.status;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +24,8 @@ import no.cantara.tools.stats.exception.AppExceptionCode;
 public class StatusService {
 
     public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
+
+    private static final String MAPFILENAME="data/dailyStatusMap.dat";
     String report_service;
     String uib_health_service;
     String sts_health_service;
@@ -54,9 +59,30 @@ public class StatusService {
             throw new RuntimeException("app.uib-health must be present in the app config");
         }
 
-        // Just to get some data for UI work...
-        // TODO - read existing map from db/file
-        initializebackDateswithStructure();
+        try {
+            Files.createDirectories(Paths.get("data"));
+        } catch (Exception e){
+            logger.error("Unable to create path to persistence",e);
+        }
+        if (readMap()!=null){
+            dailyStatusMap=readMap();
+            String todayString = simpleDateFormatter.format(new Date());
+            if(dailyStatusMap.get(todayString)!=null && dailyStatusMap.get(todayString).getUserSessionStatus()!=null){
+                recentStatus=dailyStatusMap.get(todayString).getUserSessionStatus();
+            } else {
+                DailyStatus ds=new DailyStatus();
+//                recentStatus=new UserSessionStatus();
+                recentStatus=getUserSessionStatusForToday();
+                ds.setUserSessionStatus(recentStatus);
+                ds.setUserApplicationStatistics(new UserApplicationStatistics());
+                dailyStatusMap.put(todayString,ds);
+                storeMap();
+            };
+        } else {
+            // Just to get some data for UI work...
+            // TODO - read existing map from db/file
+            initializebackDateswithStructure();
+        }
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(
@@ -65,6 +91,7 @@ public class StatusService {
                         try {
 
                             getUserSessionStatusForToday();
+
 
 
                         } catch (Exception ex) {
@@ -124,6 +151,7 @@ public class StatusService {
             }
             dailyStatus.setUserSessionStatus(status);
             dailyStatusMap.put(todayString, dailyStatus);
+            storeMap();
             return status;
         } catch (Exception ex) {
             logger.error("get: %s", ex.getMessage());
@@ -188,14 +216,14 @@ public class StatusService {
                 if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                     logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                     // increase session activity count  - may count twice...
-                    status.setTotal_number_of_session_actions_this_day(1+status.getTotal_number_of_session_actions_this_day());
+                    status.setTotal_number_of_session_actions_this_day(1 + status.getTotal_number_of_session_actions_this_day());
                 } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
                     registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                 } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
                     deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                 } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionVerification")) {
                     // increase session activity count  - may count twice...
-                    status.setTotal_number_of_session_actions_this_day(1+status.getTotal_number_of_session_actions_this_day());
+                    status.setTotal_number_of_session_actions_this_day(1 + status.getTotal_number_of_session_actions_this_day());
                 }
             }
         });
@@ -209,6 +237,7 @@ public class StatusService {
         lastUpdatedStatusCache.setRegistered_users(registered_users);
         lastUpdatedStatusCache.setDeleted_users(deleted_users);
         lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
+        //storeMap();
         return status;
     }
 
@@ -225,6 +254,7 @@ public class StatusService {
         if (recentStatus == null) {
             getUserSessionStatusForToday();
         }
+        storeMap();
         return dailyStatusMap;
     }
 
@@ -251,4 +281,47 @@ public class StatusService {
     }
 
 
+    public void storeMap() {
+        try {
+            FileOutputStream f = new FileOutputStream(new File(MAPFILENAME));
+            ObjectOutputStream o = new ObjectOutputStream(f);
+
+            // Write objects to file
+            o.writeObject(dailyStatusMap);
+
+            o.close();
+            f.close();
+
+
+        } catch (FileNotFoundException e) {
+            logger.error("File not found",e);
+        } catch (IOException e) {
+            logger.error("Error initializing stream",e);
+        }
+    }
+
+    public Map<String, DailyStatus> readMap() {
+        try {
+
+            FileInputStream fi = new FileInputStream(new File(MAPFILENAME));
+            ObjectInputStream oi = new ObjectInputStream(fi);
+
+            // Read objects
+            Map<String, DailyStatus> dailyStatusMap = (Map<String, DailyStatus>) oi.readObject();
+
+            oi.close();
+            fi.close();
+            return dailyStatusMap;
+
+        } catch (FileNotFoundException e) {
+            logger.error("File not found",e);
+        } catch (IOException e) {
+            logger.error("Error initializing stream",e);
+        } catch (ClassNotFoundException e) {
+            logger.error("ClassNotFoundException initializing stream",e);
+        }
+        return null;
+
+    }
 }
+
