@@ -1,5 +1,5 @@
 import Crud from "@/store/basestore"
-const crud = new Crud('')
+const crud = new Crud('api')
 export const state = () => ({
     ...crud.state
 })

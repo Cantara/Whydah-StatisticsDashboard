@@ -72,6 +72,7 @@ export default {
     { src: "~plugins/click-outside.js", ssr: true},
     '~plugins/global.js',
     {src:'~/plugins/date-picker.js', mode: 'client'},
+    '~plugins/date-fns.js',
    // {src : '~/plugins/vue-apexchart.js', ssr : false}
 
 ],
@@ -176,11 +177,10 @@ export default {
     //middleware: ['auth']
   },
   axios: {
-    baseURL: "https://stats.cantara.no/",
     proxy:true,
   },
   proxy: {
-    '/api/': { target: 'http://localhost:8088/', pathRewrite: {'^/api/': ''}, changeOrigin: true }
+    '/api': { target: 'http://localhost:8088/', pathRewrite: {'^/api': ''}, changeOrigin: true}
   },
   /*
   auth: {

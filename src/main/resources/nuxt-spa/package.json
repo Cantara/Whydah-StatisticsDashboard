@@ -34,6 +34,7 @@
     "bulma": "0.9.4",
     "chart.js": "2.9.4",
     "cross-env": "7.0.3",
+    "date-fns": "^2.30.0",
     "device-uuid": "^1.0.4",
     "install-changed": "1.1.0",
     "lodash": "4.17.21",
