@@ -4,7 +4,7 @@
             <span class="is-size-5 has-text-weight-semibold">
                 {{ getTheDay() }}
             </span>
-            <span class="is-size-7 mt-1 ml-3">Last updated: {{ getLastUpdated() }}</span>
+            <span v-if="getTheDay()=='Today'" class="is-size-7 mt-1 ml-3">Last updated: {{ getLastUpdated() }}</span>
         </div>
 
         <ul class="a mt-5 mb-5">
