@@ -13,8 +13,8 @@
             <li>Total number of user sessions: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}</li>
         </ul>
         <div class="tags">
-            <span class="tag is-info"> {{ stats.userSessionStatus.number_of_registered_users_this_day }} new registered</span>
-            <span class="tag is-success"> {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique logins</span>
+            <span class="tag is-info"> {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered</span>
+            <span class="tag is-success"> {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins</span>
             <span class="tag is-danger"> {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted</span>
             <span class="tag is-warning"> {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions</span>
         </div>
