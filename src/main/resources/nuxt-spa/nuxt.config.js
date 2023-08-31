@@ -180,7 +180,7 @@ export default {
     proxy:true,
   },
   proxy: {
-    '/api': { target: 'http://localhost:8088/', pathRewrite: {'^/api': ''}, changeOrigin: true}
+    //'/api': { target: 'http://localhost:8088/', pathRewrite: {'^/api': ''}, changeOrigin: true}
   },
   /*
   auth: {
