@@ -8,28 +8,28 @@
         </div>
 
         <ul class="a mt-5 mb-5">
-            <li>Total number of users: {{ stats.userSessionStatus.total_number_of_users }}</li>
-            <li>Total number of apps: {{ stats.userSessionStatus.total_number_of_applications }}</li>
-            <li>Total number of sessions: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}</li>
+            <li>Total number of registered users: {{ stats.userSessionStatus.total_number_of_users }}</li>
+            <li>Total number of appslications: {{ stats.userSessionStatus.total_number_of_applications }}</li>
+            <li>Total number of user sessions: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}</li>
         </ul>
         <div class="tags">
-            <span class="tag is-info"> {{ stats.userSessionStatus.number_of_registered_users_this_day }} registered</span>
-            <span class="tag is-success"> {{ stats.userSessionStatus.number_of_unique_logins_this_day }} logins</span>
-            <span class="tag is-danger"> {{ stats.userSessionStatus.number_of_deleted_users_this_day }} deleted</span>
-            <span class="tag is-warning"> {{ stats.userSessionStatus.number_of_active_user_sessions }} active sessions</span>
+            <span class="tag is-info"> {{ stats.userSessionStatus.number_of_registered_users_this_day }} new registered</span>
+            <span class="tag is-success"> {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique logins</span>
+            <span class="tag is-danger"> {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted</span>
+            <span class="tag is-warning"> {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions</span>
         </div>
 
         <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
             <div v-for="p in stats.userApplicationStatistics" :key="p" class="is-flex is-flex-direction-column app-item">
                 <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1">appid - {{ p.for_application }}</span>
-                <span class="has-background-info is-small pl-2 pr-2">{{ p.number_of_registered_users_this_day }} registered</span>
-                <span class="has-background-success is-small pl-2 pr-2">{{ p.number_of_unique_logins_this_day }} logins</span>
-                <span class="has-background-danger is-small pl-2 pr-2">{{ p.number_of_deleted_users_this_day }} deleted</span>
+                <span class="has-background-info is-small pl-2 pr-2">{{ p.number_of_registered_users_this_day }} new users registered today</span>
+                <span class="has-background-success is-small pl-2 pr-2">{{ p.number_of_unique_logins_this_day }} unique user logins today</span>
+                <span class="has-background-danger is-small pl-2 pr-2">{{ p.number_of_deleted_users_this_day }} users deleted</span>
             </div>
         </div>
     </div>
 </template>
-    
+
 <script>
 
 import { runInThisContext } from "vm";
@@ -64,14 +64,14 @@ export default {
     methods: {
         getLastUpdated(){
             const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);
-            return this.$datefns.format(parsed, "H:mm") 
+            return this.$datefns.format(parsed, "H:mm")
         },
         getTheDay() {
             const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.starttime_of_this_day);
             if (this.$datefns.isToday(parsed)) {
                 return 'Today';
             } else {
-                return this.$datefns.format(parsed, "dd MMM yyyy") 
+                return this.$datefns.format(parsed, "dd MMM yyyy")
             }
         }
 
@@ -79,7 +79,7 @@ export default {
 
 };
 </script>
-    
+
 <style lang="scss" scoped>
 ul.a {
     list-style-type: circle;
@@ -107,4 +107,4 @@ ul.a {
     transition: .9s;
 }
 </style>
-    
+
