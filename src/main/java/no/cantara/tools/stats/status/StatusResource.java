@@ -51,7 +51,9 @@ public class StatusResource implements Service {
     public void update(Routing.Rules rules) {
         rules
         .get("/status", this::showUserSessionStatus)
-        .options("/status", this::showUserSessionStatusOptionHeaders);
+        .get("/api/status", this::showUserSessionStatus)
+        .options("/status", this::showUserSessionStatusOptionHeaders)
+        .options("/api/status", this::showUserSessionStatusOptionHeaders);
     }
     
     private String getAccessTokenInReferer(URI uri) {

@@ -40,4 +40,8 @@ html {
   margin: 0;
 }
 
+body {
+  color: #eee;
+  background: #121212;
+}
 </style>

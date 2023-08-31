@@ -66,7 +66,7 @@ export default {
     {src:'~/plugins/datagrid.js', mode: 'client'},
     '~plugins/mediator.js',
     '~plugins/filters.js',
-    //'~plugins/highcharts.js',
+    '~plugins/highcharts.js',
     '~plugins/lodash.js',
     '~plugins/axios.js',
     { src: "~plugins/click-outside.js", ssr: true},
@@ -180,7 +180,8 @@ export default {
     proxy:true,
   },
   proxy: {
-    //'/api': { target: 'http://localhost:8088/', pathRewrite: {'^/api': ''}, changeOrigin: true}
+    /*UNCOMMENT THE LINE BELOW WHEN TESTING ON YOUR LOCALHOST*/
+    '/status': { target: 'http://localhost:8088/', pathRewrite: {'^/status': 'status'}, changeOrigin: true},
   },
   /*
   auth: {

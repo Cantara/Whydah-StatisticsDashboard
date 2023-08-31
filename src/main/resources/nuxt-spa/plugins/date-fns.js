@@ -15,6 +15,7 @@ import {
   isValid,
   isWithinInterval,
   parseISO,
+  parse,
   startOfDay,
   sub,
   isToday
@@ -35,6 +36,7 @@ const datefns = {
   isValid,
   isWithinInterval,
   parseISO,
+  parse,
   startOfDay,
   sub,
   isToday

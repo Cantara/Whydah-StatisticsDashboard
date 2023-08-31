@@ -92,7 +92,8 @@ ul.a {
     opacity: 0.8;
     -webkit-border-radius: 1px 1px 1px 1px;
     border-radius: 1px 1px 1px 1px;
-    border: 1px solid #000;
+    border: 1px solid #fff;
+    margin-bottom: 5px;
 }
 
 .app-item {

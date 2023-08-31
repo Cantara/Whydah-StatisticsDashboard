@@ -1,63 +1,193 @@
 <template>
-<div v-if="status" class="container">
-  <StatsNode v-for="(b, i) in Object.keys(status).reverse()" :key="b" :stats="getValue(b)">
-  </StatsNode>
-</div>
+  <div v-if="status" class="is-flex is-flex-direction-column is-flex-wrap-wrap">
+    <highcharts ref="columnChart" class="hc" :options="chartOptions"></highcharts>
+    <div v-for="(x, i) in getAllAppIdsForChart()" :key="i">
+      <highcharts ref="columnChart" class="hc" :options="getChartOptions(x)"></highcharts>
+    </div>
+    <div class="container">
+      <StatsNode v-for="(b, i) in Object.keys(status).reverse()" :key="i" :stats="getValue(b)">
+      </StatsNode>
+    </div>
+  </div>
 </template>
 
 <script>
 
 import { runInThisContext } from "vm";
-import {mapState,  mapActions, mapMutations} from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import toaster from "@/mixins/toaster";
+import { parseISO, compareAsc, isToday, parse } from "date-fns";
 import StatsNode from "../domain/pages/StatsNode.vue";
 
 export default {
-    auth: false,
-    mixins: [toaster],
-    data() {
-        return {
-            status: null,
-            interval: 10000
-        };
+  auth: false,
+  mixins: [toaster],
+  data() {
+    return {
+      status: null,
+      interval: 10000
+    };
+  },
+  computed: {
+    ...mapState({}),
+    getSeriesData() {
+      const result = [];
+      if (this.status) {
+        result.push({ "name": "Registered", "data": [], "color": "#209cee" });
+        result.push({ "name": "Logins", "data": [], "color": "#23d160" });
+        result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
+        result.push({ "name": "Active sessions", "data": [], "color": "#ffdd57" });
+        Object.values(this.status).forEach(e => {
+          result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
+          result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
+          result[2].data.push(e.userSessionStatus.number_of_deleted_users_this_day);
+          result[3].data.push(e.userSessionStatus.number_of_active_user_sessions);
+        });
+
+      }
+      return result;
     },
-    computed: {
-        ...mapState({}),
+    getStartDateInUTCForChart() {
+      if (this.status) {
+        const d = this.$datefns.parse(Object.keys(this.status)[0], 'yyyy-MM-dd', new Date());
+        return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+      } else {
+        return null;
+      }
+
     },
-    watch: {},
-    mounted() {
-        this.startAutoPoller();
+    getStartDateForChart() {
+      if (this.status) {
+        return Object.keys(this.status)[0];
+      } else {
+        return null;
+      }
     },
-    methods: {
-        ...mapMutations({
-            setToken: 'auth/setToken'
-        }),
-        ...mapActions("api", ["get_usersession_status"]),
-        getValue(day){
-          return this.status[day];
+    chartOptions() {
+      return {
+        chart: {
+          backgroundColor: '#FCFFC5',
+          type: 'line'
         },
-        startAutoPoller() {
-            this.get_usersession_status({
-                callbackfunc: (data) => {
-                    this.status = data;
-                }
-            });
-            this.polling = setInterval(() => {
-                this.get_usersession_status({
-                    callbackfunc: (data) => {
-                        this.status = data;
-                    }
-                });
-            }, this.interval);
+        xAxis: {
+          type: 'datetime'
         },
+        yAxis: {
+          title: {
+            text: 'Number of users sessions'
+          }
+        },
+        title: {
+          text: 'User session statistics ' + ' from ' + this.getStartDateForChart
+        },
+        plotOptions: {
+          series: {
+            pointStart: this.getStartDateInUTCForChart,
+            pointInterval: 24 * 3600 * 1000 // one day
+          }
+        },
+        series: this.getSeriesData
+
+      }
+    }
+  },
+  watch: {},
+  mounted() {
+    this.startAutoPoller();
+  },
+  methods: {
+    ...mapMutations({
+      setToken: 'auth/setToken'
+    }),
+    ...mapActions("api", ["get_usersession_status"]),
+    getValue(day) {
+      return this.status[day];
     },
-    components: { StatsNode }
+
+    getChartOptions(appId){
+      return {
+        chart: {
+          backgroundColor: '#eef2e1',
+          type: 'line'
+        },
+        xAxis: {
+          type: 'datetime'
+        },
+        yAxis: {
+          title: {
+            text: 'Number of users sessions'
+          }
+        },
+        title: {
+          text: 'User session statistics ' + ' from ' + this.getStartDateForChart + ' for appid ' + appId
+        },
+        plotOptions: {
+          series: {
+            pointStart: this.getStartDateInUTCForChart,
+            pointInterval: 24 * 3600 * 1000 // one day
+          }
+        },
+        series: this.getSeriesDataForAppId(appId)
+
+      }
+    },
+
+    getSeriesDataForAppId(appId){
+      const result = [];
+      if (this.status) {
+        result.push({ "name": "Registered", "data": [], "color": "#209cee" });
+        result.push({ "name": "Logins", "data": [], "color": "#23d160" });
+        result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
+        
+        Object.values(this.status).forEach(e => {
+          const found = e.userApplicationStatistics.find(x => x.for_application === appId);
+          if (found) {
+            result[0].data.push(found.number_of_registered_users_this_day);
+            result[1].data.push(found.number_of_unique_logins_this_day);
+            result[2].data.push(found.number_of_deleted_users_this_day);
+          }
+        });
+
+      }
+      return result;
+    },
+
+    getAllAppIdsForChart(){
+      if (this.status) {
+        const appids = new Set();
+        Object.values(this.status).forEach(e => {
+          e.userApplicationStatistics.forEach(j => {
+            appids.add(j.for_application);
+          })
+        }); 
+        return appids;
+      }
+      return [];
+    },
+
+    startAutoPoller() {
+      this.get_usersession_status({
+        callbackfunc: (data) => {
+          this.status = data;
+        }
+      });
+      this.polling = setInterval(() => {
+        this.get_usersession_status({
+          callbackfunc: (data) => {
+            this.status = data;
+          }
+        });
+      }, this.interval);
+    },
+  },
+  components: { StatsNode }
 };
 </script>
 
 <style lang="scss" scoped>
 .container {
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   margin-top: 20px;
   display: flex;
   flex-direction: row;
@@ -66,29 +196,9 @@ export default {
   gap: 1rem;
 }
 
-ul.a {
-  list-style-type: circle;
-  padding-left: 20px;
-}
-
-.item {
-  width: 400px;
-  padding: 10px;
-  opacity: 0.8;
-  -webkit-border-radius: 1px 1px 1px 1px;
-  border-radius: 1px 1px 1px 1px;
-  border: 1px solid #000;
-}
-
-.app-item {
-  -webkit-border-radius:  5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
-  border: 1px solid #000;
-  margin-right: 5px;
-}
-
-.item:hover{
-  opacity: 1;
-  transition: .9s;
+.hc {
+  height: 450px;
+  padding: 16px;
+  
 }
 </style>
