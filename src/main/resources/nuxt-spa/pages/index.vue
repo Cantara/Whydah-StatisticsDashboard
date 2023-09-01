@@ -35,7 +35,7 @@ export default {
       if (this.status) {
         result.push({ "name": "New users", "data": [], "color": "#209cee" });
         result.push({ "name": "Logins", "data": [], "color": "#23d160" });
-        result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
+        result.push({ "name": "Deleted users", "data": [], "color": "#ff3860" });
         Object.values(this.status).forEach(e => {
           result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
           result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
@@ -72,11 +72,11 @@ export default {
         },
         yAxis: {
           title: {
-            text: 'Number of users activities'
+            text: 'Number of user activities'
           }
         },
         title: {
-          text: 'User session statistics ' + ' from ' + this.getStartDateForChart
+          text: 'User activities ' + ' from ' + this.getStartDateForChart
         },
         plotOptions: {
           series: {
@@ -116,11 +116,11 @@ export default {
         },
         yAxis: {
           title: {
-            text: 'Number of users activities'
+            text: 'Number of user activities'
           }
         },
         title: {
-          text: 'User activity statistics ' + ' for appid ' + appId
+          text: 'User activities ' + ' for appid ' + appId
         },
         plotOptions: {
           series: {
@@ -141,7 +141,7 @@ export default {
       if (this.status) {
         result.push({ "name": "New users", "data": [], "color": "#209cee" });
         result.push({ "name": "Logins", "data": [], "color": "#23d160" });
-        result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
+        result.push({ "name": "Deleted users", "data": [], "color": "#ff3860" });
 
         Object.values(this.status).forEach(e => {
           const found = e.userApplicationStatistics.find(x => x.for_application === appId);
