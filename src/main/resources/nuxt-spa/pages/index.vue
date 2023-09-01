@@ -36,12 +36,10 @@ export default {
         result.push({ "name": "Registered", "data": [], "color": "#209cee" });
         result.push({ "name": "Logins", "data": [], "color": "#23d160" });
         result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
-        result.push({ "name": "Active sessions", "data": [], "color": "#ffdd57" });
         Object.values(this.status).forEach(e => {
           result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
           result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
           result[2].data.push(e.userSessionStatus.number_of_deleted_users_this_day);
-          result[3].data.push(e.userSessionStatus.number_of_active_user_sessions);
         });
 
       }
@@ -66,7 +64,7 @@ export default {
     chartOptions() {
       return {
         chart: {
-          backgroundColor: '#FCFFC5',
+          backgroundColor: '#eef2e1',
           type: 'line'
         },
         xAxis: {
@@ -138,7 +136,7 @@ export default {
         result.push({ "name": "Registered", "data": [], "color": "#209cee" });
         result.push({ "name": "Logins", "data": [], "color": "#23d160" });
         result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
-        
+
         Object.values(this.status).forEach(e => {
           const found = e.userApplicationStatistics.find(x => x.for_application === appId);
           if (found) {
@@ -159,7 +157,7 @@ export default {
           e.userApplicationStatistics.forEach(j => {
             appids.add(j.for_application);
           })
-        }); 
+        });
         return appids;
       }
       return [];
@@ -199,6 +197,6 @@ export default {
 .hc {
   height: 450px;
   padding: 16px;
-  
+
 }
 </style>
