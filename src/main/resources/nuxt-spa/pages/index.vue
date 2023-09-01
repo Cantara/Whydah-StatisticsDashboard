@@ -33,7 +33,7 @@ export default {
     getSeriesData() {
       const result = [];
       if (this.status) {
-        result.push({ "name": "Registered", "data": [], "color": "#209cee" });
+        result.push({ "name": "New users", "data": [], "color": "#209cee" });
         result.push({ "name": "Logins", "data": [], "color": "#23d160" });
         result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
         Object.values(this.status).forEach(e => {
@@ -139,7 +139,7 @@ export default {
     getSeriesDataForAppId(appId){
       const result = [];
       if (this.status) {
-        result.push({ "name": "Registered", "data": [], "color": "#209cee" });
+        result.push({ "name": "New users", "data": [], "color": "#209cee" });
         result.push({ "name": "Logins", "data": [], "color": "#23d160" });
         result.push({ "name": "Deleted", "data": [], "color": "#ff3860" });
 
