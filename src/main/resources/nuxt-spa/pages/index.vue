@@ -72,7 +72,7 @@ export default {
         },
         yAxis: {
           title: {
-            text: 'Number of users sessions'
+            text: 'Number of users activities'
           }
         },
         title: {
@@ -113,11 +113,11 @@ export default {
         },
         yAxis: {
           title: {
-            text: 'Number of users sessions'
+            text: 'Number of users activities'
           }
         },
         title: {
-          text: 'User session statistics ' + ' from ' + this.getStartDateForChart + ' for appid ' + appId
+          text: 'User activity statistics ' + ' for appid ' + appId
         },
         plotOptions: {
           series: {
