@@ -9,8 +9,8 @@
 
         <ul class="a mt-5 mb-5">
             <li>Total number of registered users: {{ stats.userSessionStatus.total_number_of_users }}</li>
-            <li>Total number of appslications: {{ stats.userSessionStatus.total_number_of_applications }}</li>
-            <li>Total number of user sessions: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}</li>
+            <li>Total number of applications: {{ stats.userSessionStatus.total_number_of_applications }}</li>
+            <li>Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}</li>
         </ul>
         <div class="tags">
             <span class="tag is-info"> {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered</span>
