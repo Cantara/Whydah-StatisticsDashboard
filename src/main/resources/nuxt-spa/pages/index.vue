@@ -82,6 +82,9 @@ export default {
           series: {
             pointStart: this.getStartDateInUTCForChart,
             pointInterval: 24 * 3600 * 1000 // one day
+          },
+          line: {
+            lineWidth: 3
           }
         },
         series: this.getSeriesData
@@ -106,7 +109,7 @@ export default {
       return {
         chart: {
           backgroundColor: '#eef2e1',
-          type: 'line'
+          type: 'column'
         },
         xAxis: {
           type: 'datetime'
@@ -123,6 +126,9 @@ export default {
           series: {
             pointStart: this.getStartDateInUTCForChart,
             pointInterval: 24 * 3600 * 1000 // one day
+          },
+          line: {
+            lineWidth: 3
           }
         },
         series: this.getSeriesDataForAppId(appId)
