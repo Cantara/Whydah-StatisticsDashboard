@@ -84,7 +84,7 @@ export default {
             pointInterval: 24 * 3600 * 1000 // one day
           },
           line: {
-            lineWidth: 3
+            lineWidth: 5
           }
         },
         series: this.getSeriesData
