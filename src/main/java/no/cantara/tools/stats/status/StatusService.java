@@ -169,7 +169,7 @@ public class StatusService {
             }
             dailyStatus.setUserSessionStatus(status);
             dailyStatusMap.put(todayString, dailyStatus);
-            storeMap();
+           
             return status;
         } catch (Exception ex) {
             logger.error("get: %s", ex.getMessage());
@@ -276,6 +276,7 @@ public class StatusService {
         		d.setNumber_of_registered_users_this_day(lastUpdatedStatusCache.getRegistered_users_by_appId().get(id)!=null?lastUpdatedStatusCache.getRegistered_users_by_appId().get(id).size():0);
         		d.setNumber_of_unique_logins_this_day(lastUpdatedStatusCache.getLogins_by_appId().get(id)!=null?lastUpdatedStatusCache.getLogins_by_appId().get(id).size():0);
         		d.setStarttime_of_this_day(lastUpdatedStatusCache.getStarttime_of_today());
+        		statsByAppId.put(id, d);
         	});
         }
         return new ArrayList<UserApplicationStatistics>(statsByAppId.values());
