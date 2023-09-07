@@ -166,6 +166,11 @@ public class StatusService {
             		String[] parts = appIds.split("\\s*[;,]\\s*");
             		dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
             	}
+            } else {
+                if(!appIds.equals("")) {
+                    String[] parts = appIds.split("\\s*[;,]\\s*");
+                    dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+                }
             }
             dailyStatus.setUserSessionStatus(status);
             dailyStatusMap.put(todayString, dailyStatus);
