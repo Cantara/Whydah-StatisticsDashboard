@@ -167,6 +167,7 @@ public class StatusService {
             		dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
             	}
             } else {
+                String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
                 if(!appIds.equals("")) {
                     String[] parts = appIds.split("\\s*[;,]\\s*");
                     dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
