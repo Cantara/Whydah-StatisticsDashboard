@@ -13,14 +13,17 @@
 
 <script>
 
-import { runInThisContext } from "vm";
-import { mapState, mapActions, mapMutations } from 'vuex';
+// import { runInThisContext } from "vm";
+import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-line
 import toaster from "@/mixins/toaster";
-import { parseISO, compareAsc, isToday, parse } from "date-fns";
+// import { parseISO, compareAsc, isToday, parse } from "date-fns";
 import StatsNode from "../domain/pages/StatsNode.vue";
 
 export default {
   auth: false,
+  components: {
+    StatsNode
+  },
   mixins: [toaster],
   data() {
     return {
@@ -28,6 +31,7 @@ export default {
       interval: 10000
     };
   },
+
   computed: {
     ...mapState({}),
     getSeriesData() {
@@ -184,7 +188,6 @@ export default {
       }, this.interval);
     },
   },
-  components: { StatsNode }
 };
 </script>
 
