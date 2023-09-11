@@ -6,15 +6,15 @@ export default {
     config
   },*/
   /*
-  ** Nuxt rendering mode
-  ** See https://nuxtjs.org/api/configuration-mode
-  */
+   ** Nuxt rendering mode
+   ** See https://nuxtjs.org/api/configuration-mode
+   */
   ssr: false,
 
   /*
-  ** Nuxt target
-  ** See https://nuxtjs.org/api/configuration-target
-  */
+   ** Nuxt target
+   ** See https://nuxtjs.org/api/configuration-target
+   */
   target: 'static',
 
   router: {
@@ -22,9 +22,9 @@ export default {
   },
 
   /*
-  ** Headers of the page
-  ** See https://nuxtjs.org/api/configuration-head
-  */
+   ** Headers of the page
+   ** See https://nuxtjs.org/api/configuration-head
+   */
   head: {
     title: process.env.npm_package_name || '',
     meta: [
@@ -34,7 +34,8 @@ export default {
     ],
     link: [
       {
-        rel: 'icon', type: 'image/x-icon',
+        rel: 'icon',
+        type: 'image/x-icon',
         href: '/favicon.ico'
       },
     ],
@@ -47,22 +48,22 @@ export default {
     }]*/
   },
   /*
-  ** Global CSS
-  */
+   ** Global CSS
+   */
   css: [
     '@/assets/styles/main.scss',
     // '@/assets/styles/bulma_modules.sass'
   ],
   /*
-  ** Plugins to load before mounting the App
-  ** https://nuxtjs.org/guide/plugins
-  */
+   ** Plugins to load before mounting the App
+   ** https://nuxtjs.org/guide/plugins
+   */
 
-  plugins: ['~plugins/vuelidate.js', 
-  { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' }, 
-  {src:'~/plugins/font-awesome.js', mode: 'client'},
-  //'~/plugins/font-awesome.js',  
-  { src: '~/plugins/vue-slider.js', ssr: false },
+  plugins: ['~plugins/vuelidate.js',
+    { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' },
+    {src:'~/plugins/font-awesome.js', mode: 'client'},
+    //'~/plugins/font-awesome.js',
+    { src: '~/plugins/vue-slider.js', ssr: false },
     {src:'~/plugins/datagrid.js', mode: 'client'},
     '~plugins/mediator.js',
     '~plugins/filters.js',
@@ -73,22 +74,22 @@ export default {
     '~plugins/global.js',
     {src:'~/plugins/date-picker.js', mode: 'client'},
     '~plugins/date-fns.js',
-   // {src : '~/plugins/vue-apexchart.js', ssr : false}
+    // {src : '~/plugins/vue-apexchart.js', ssr : false}
 
-],
+  ],
   //makes hub always loaded first, so other plugins can use it
   extendPlugins (plugins) {
     plugins.unshift('~/plugins/event-hub.js')
     return plugins
   },
   /*
-  ** Auto import components
-  ** See https://nuxtjs.org/api/configuration-components
-  */
+   ** Auto import components
+   ** See https://nuxtjs.org/api/configuration-components
+   */
   components: false,
   /*
-  ** Nuxt.js dev-modules
-  */
+   ** Nuxt.js dev-modules
+   */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/google-fonts',
@@ -96,11 +97,11 @@ export default {
   ],
   googleFonts: {
     download: true
-    
+
   },
   /*
-  ** Nuxt.js modules
-  */
+   ** Nuxt.js modules
+   */
   modules: [
     //'nuxt-basic-auth-module',
     //'@nuxtjs/vuetify',
@@ -126,22 +127,22 @@ export default {
     '@nuxtjs/style-resources',
     [
       'nuxt-fontawesome', {
-      component: 'fa', 
-      imports: [
-        {
-          set: '@fortawesome/free-solid-svg-icons',
-          icons: ['fas']
-        },
-        {
-          set: '@fortawesome/free-regular-svg-icons',
-          icons: ['far']
-        },
-        {
-          set: '@fortawesome/free-brands-svg-icons',
-          icons: ['fab']
-        }
-      ]
-    }
+        component: 'fa',
+        imports: [
+          {
+            set: '@fortawesome/free-solid-svg-icons',
+            icons: ['fas']
+          },
+          {
+            set: '@fortawesome/free-regular-svg-icons',
+            icons: ['far']
+          },
+          {
+            set: '@fortawesome/free-brands-svg-icons',
+            icons: ['fab']
+          }
+        ]
+      }
     ]
   ],
   toast: {
@@ -169,13 +170,10 @@ export default {
     scss: ['~assets/styles/variables/_variables.scss','~assets/styles/_mixins.scss'],
   },
   /*
-  ** Axios module configuration
-  ** See https://axios.nuxtjs.org/options
-  */
- 
-  router: {
-    //middleware: ['auth']
-  },
+   ** Axios module configuration
+   ** See https://axios.nuxtjs.org/options
+   */
+
   axios: {
     proxy:true,
   },
@@ -218,7 +216,7 @@ export default {
             "token": `${config.oauth2_url}token`,
             "logout": `${config.oauth2_url}logout`
           },
-        
+
       }
     }
   },
@@ -231,12 +229,12 @@ export default {
     }
   },*/
   generate: {
-    dir: process.env.APP_ENV === 'production'? 'dist': `dist-${process.env.APP_ENV}`
+    dir: process.env.APP_ENV === 'production' ? 'dist' : `dist-${process.env.APP_ENV}`
   },
-  
+
 
   build: {
-    vendor: ['vue-datagrid'], 
+    vendor: ['vue-datagrid'],
     parallel: true,
     cache: true,
     analyze: false,
