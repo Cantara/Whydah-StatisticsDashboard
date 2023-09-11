@@ -12,7 +12,7 @@ export const actions = {
     ...crud.actions,
 
     async get_usersession_status({ dispatch, state, commit }, { callbackfunc }) {
-        await dispatch('get', { affixPath: `/status`, key: "get_usersession_status_result" })
+        await dispatch('get', { affixPath: '/api/status', key: "get_usersession_status_result" })
         if (state.storage.get_usersession_status_result) {
             if (callbackfunc) {
                 callbackfunc(state.storage.get_usersession_status_result);

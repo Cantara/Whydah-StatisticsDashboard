@@ -181,7 +181,7 @@ export default {
   },
   proxy: {
     /*UNCOMMENT THE LINE BELOW WHEN TESTING ON YOUR LOCALHOST*/
-    '/status': { target: 'http://localhost:8088/', pathRewrite: {'^/status': 'status'}, changeOrigin: true},
+    '/api': { target: 'http://localhost:8088', pathRewrite: {'^/api': '/'}, changeOrigin: true},
   },
   /*
   auth: {
