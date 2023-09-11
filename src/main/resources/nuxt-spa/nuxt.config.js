@@ -51,22 +51,11 @@ export default {
    */
 
   plugins: [
-    // '~plugins/vuelidate.js',
-    // { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' },
     {src:'~/plugins/font-awesome.js', mode: 'client'},
-    //'~/plugins/font-awesome.js',
-    // { src: '~/plugins/vue-slider.js', ssr: false },
-    // {src:'~/plugins/datagrid.js', mode: 'client'},
-    // '~plugins/mediator.js',
-    // '~plugins/filters.js',
     '~plugins/highcharts.js',
     '~plugins/lodash.js',
     '~plugins/axios.js',
-    // { src: "~plugins/click-outside.js", ssr: true},
-    // '~plugins/global.js',
-    // {src:'~/plugins/date-picker.js', mode: 'client'},
     '~plugins/date-fns.js',
-    // {src : '~/plugins/vue-apexchart.js', ssr : false}
 
   ],
   //makes hub always loaded first, so other plugins can use it
@@ -94,47 +83,33 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    //'nuxt-basic-auth-module',
-    //'@nuxtjs/vuetify',
     '@nuxtjs/proxy',
-    [
-      "nuxt-buefy",
-      {
-        materialDesignIcons: true,
-        css: true,
-        defaultIconPack: "fas",
-        defaultIconComponent: "font-awesome-icon",
-      },
-    ],
+    ["nuxt-buefy", {
+      materialDesignIcons: true,
+      css: true,
+      defaultIconPack: "fas",
+      defaultIconComponent: "font-awesome-icon",
+    }],
     '@nuxtjs/toast',
-    // '~/modules/autoinjector.js',
-    // '@nuxtjs/auth-next',
     '@nuxtjs/sentry',
-    // 'vue-scrollto/nuxt',
-    // '@nuxtjs/moment',
-    // Doc: https://github.com/nuxt-community/modules/tree/master/packages/bulma
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    // '@nuxtjs/style-resources',
-    [
-      'nuxt-fontawesome', {
-        component: 'fa',
-        imports: [
-          {
-            set: '@fortawesome/free-solid-svg-icons',
-            icons: ['fas']
-          },
-          {
-            set: '@fortawesome/free-regular-svg-icons',
-            icons: ['far']
-          },
-          {
-            set: '@fortawesome/free-brands-svg-icons',
-            icons: ['fab']
-          }
-        ]
-      }
-    ]
+    ['nuxt-fontawesome', {
+      component: 'fa',
+      imports: [
+        {
+          set: '@fortawesome/free-solid-svg-icons',
+          icons: ['fas']
+        },
+        {
+          set: '@fortawesome/free-regular-svg-icons',
+          icons: ['far']
+        },
+        {
+          set: '@fortawesome/free-brands-svg-icons',
+          icons: ['fab']
+        }
+      ]
+    }]
   ],
   toast: {
     position: 'top-center',
@@ -155,11 +130,8 @@ export default {
     dsn: 'https://f8cf946a403f4e709a6d6639a528da04@o450136.ingest.sentry.io/5434296', // Enter your project's DSN here
     config: {
       logErrors: true
-    }, // Additional config
+    },
   },
-  // styleResources: {
-  //   scss: ['~assets/styles/variables/_variables.scss','~assets/styles/_mixins.scss'],
-  // },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
@@ -177,7 +149,6 @@ export default {
 
 
   build: {
-    vendor: ['vue-datagrid'],
     parallel: true,
     cache: true,
     analyze: false,
