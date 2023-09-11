@@ -1,5 +1,5 @@
 <template>
-  <div v-if="status" class="is-flex is-flex-direction-column is-flex-wrap-wrap">
+  <div v-if="status" class="has-background-black is-flex is-flex-direction-column is-flex-wrap-wrap">
     <highcharts ref="columnChart" class="hc" :options="chartOptions"></highcharts>
     <div v-for="(x, i) in getAllAppIdsForChart()" :key="i">
       <highcharts ref="columnChart" class="hc" :options="getChartOptions(x)"></highcharts>

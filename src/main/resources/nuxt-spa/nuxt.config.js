@@ -2,10 +2,6 @@
 
 export default {
   /*
-  env: {
-    config
-  },*/
-  /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
@@ -42,37 +38,33 @@ export default {
     style: [
       { cssText: '.icon svg { height: 20px !important; }', type: 'text/css' }
     ],
-    /*
-    script: [{
-      src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDDDW6OIkPWoD3VheJbHAH-FGJQ0mn1TYU&libraries=places'
-    }]*/
   },
   /*
    ** Global CSS
    */
   css: [
     '@/assets/styles/main.scss',
-    // '@/assets/styles/bulma_modules.sass'
   ],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
 
-  plugins: ['~plugins/vuelidate.js',
-    { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' },
+  plugins: [
+    // '~plugins/vuelidate.js',
+    // { src: '~plugins/perfect-scrollbar.js', ssr: false, mode: 'client' },
     {src:'~/plugins/font-awesome.js', mode: 'client'},
     //'~/plugins/font-awesome.js',
-    { src: '~/plugins/vue-slider.js', ssr: false },
-    {src:'~/plugins/datagrid.js', mode: 'client'},
-    '~plugins/mediator.js',
-    '~plugins/filters.js',
+    // { src: '~/plugins/vue-slider.js', ssr: false },
+    // {src:'~/plugins/datagrid.js', mode: 'client'},
+    // '~plugins/mediator.js',
+    // '~plugins/filters.js',
     '~plugins/highcharts.js',
     '~plugins/lodash.js',
     '~plugins/axios.js',
-    { src: "~plugins/click-outside.js", ssr: true},
-    '~plugins/global.js',
-    {src:'~/plugins/date-picker.js', mode: 'client'},
+    // { src: "~plugins/click-outside.js", ssr: true},
+    // '~plugins/global.js',
+    // {src:'~/plugins/date-picker.js', mode: 'client'},
     '~plugins/date-fns.js',
     // {src : '~/plugins/vue-apexchart.js', ssr : false}
 
@@ -97,7 +89,6 @@ export default {
   ],
   googleFonts: {
     download: true
-
   },
   /*
    ** Nuxt.js modules
@@ -116,15 +107,15 @@ export default {
       },
     ],
     '@nuxtjs/toast',
-    '~/modules/autoinjector.js',
-    '@nuxtjs/auth-next',
+    // '~/modules/autoinjector.js',
+    // '@nuxtjs/auth-next',
     '@nuxtjs/sentry',
-    'vue-scrollto/nuxt',
-    '@nuxtjs/moment',
+    // 'vue-scrollto/nuxt',
+    // '@nuxtjs/moment',
     // Doc: https://github.com/nuxt-community/modules/tree/master/packages/bulma
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/style-resources',
+    // '@nuxtjs/style-resources',
     [
       'nuxt-fontawesome', {
         component: 'fa',
@@ -166,68 +157,20 @@ export default {
       logErrors: true
     }, // Additional config
   },
-  styleResources: {
-    scss: ['~assets/styles/variables/_variables.scss','~assets/styles/_mixins.scss'],
-  },
+  // styleResources: {
+  //   scss: ['~assets/styles/variables/_variables.scss','~assets/styles/_mixins.scss'],
+  // },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-
   axios: {
-    proxy:true,
+    proxy: true,
   },
   proxy: {
     /*UNCOMMENT THE LINE BELOW WHEN TESTING ON YOUR LOCALHOST*/
     '/api': { target: 'http://localhost:8088', pathRewrite: {'^/api': '/'}, changeOrigin: true},
   },
-  /*
-  auth: {
-    redirect: {
-      login: '/',
-      callback: '/login',
-      logout: '/',
-      home: '/ui'
-    },
-    strategies: {
-      social: {
-        scheme: 'oauth2',
-          clientId: config.oauth2_clientid,
-          scope: ['openid', 'profile', 'email'],
-          responseType: 'token',
-          grantType: 'authorization_code',
-          state: 'UNIQUE_AND_NON_GUESSABLE',
-          codeChallengeMethod: '',
-          responseMode: '',
-          acrValues: '',
-          token: {
-            property: 'access_token',
-            type: 'Bearer',
-            required: true,
-            maxAge: 1800
-          },
-          refreshToken: {
-            property: 'refresh_token',
-            maxAge: 60 * 60 * 24 * 30
-          },
-          endpoints: {
-            "authorization": `${config.oauth2_url}authorize`,
-            "userInfo": `${config.oauth2_url}userinfo`,
-            "token": `${config.oauth2_url}token`,
-            "logout": `${config.oauth2_url}logout`
-          },
-
-      }
-    }
-  },
-  */
-  /*
-  publicRuntimeConfig: {
-    api_url: config.api_url,
-    axios: {
-      baseURL: config.api_url
-    }
-  },*/
   generate: {
     dir: process.env.APP_ENV === 'production' ? 'dist' : `dist-${process.env.APP_ENV}`
   },
