@@ -141,7 +141,8 @@ export default {
   },
   proxy: {
     /*UNCOMMENT THE LINE BELOW WHEN TESTING ON YOUR LOCALHOST*/
-    '/api': { target: 'http://localhost:8088', pathRewrite: {'^/api': '/'}, changeOrigin: true},
+    '/api': { target: 'http://localhost:8088/', pathRewrite: {'^/api': '/'}, changeOrigin: true},
+    '/status': { target: 'http://localhost:8088/', pathRewrite: {'^/status': 'status'}, changeOrigin: true},
   },
   generate: {
     dir: process.env.APP_ENV === 'production' ? 'dist' : `dist-${process.env.APP_ENV}`
