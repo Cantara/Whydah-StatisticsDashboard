@@ -1,4 +1,4 @@
-import Vue from 'vue'
+// import Vue from 'vue'
 
 import {
   add,
@@ -41,8 +41,13 @@ const datefns = {
   sub,
   isToday
 }
-Vue.prototype.$datefns = datefns
+// Vue.prototype.$datefns = datefns
 
-export default (ctx, inject) => {
-  inject('datefns', datefns)
-}
+// export default (ctx, inject) => {
+//   inject('datefns', datefns)
+// }
+
+export default defineNuxtPlugin(nuxtApp => {
+  nuxtApp.provide('datefns', datefns)
+  // nuxtApp.vueApp.use(datefns);
+})
