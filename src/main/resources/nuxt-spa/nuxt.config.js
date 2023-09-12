@@ -58,11 +58,6 @@ export default {
     '~plugins/date-fns.js',
 
   ],
-  //makes hub always loaded first, so other plugins can use it
-  extendPlugins (plugins) {
-    plugins.unshift('~/plugins/event-hub.js')
-    return plugins
-  },
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
