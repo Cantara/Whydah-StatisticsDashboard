@@ -15,7 +15,7 @@
 
 // import { runInThisContext } from "vm";
 import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-line
-import toaster from "@/mixins/toaster";
+// import toaster from "@/mixins/toaster";
 // import { parseISO, compareAsc, isToday, parse } from "date-fns";
 import StatsNode from "../domain/pages/StatsNode.vue";
 
@@ -24,7 +24,7 @@ export default {
   components: {
     StatsNode
   },
-  mixins: [toaster],
+  // mixins: [toaster],
   data() {
     return {
       status: null,
