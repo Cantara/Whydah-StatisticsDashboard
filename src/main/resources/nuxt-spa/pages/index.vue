@@ -1,8 +1,8 @@
 <template>
-  <div v-if="status" class="is-flex is-flex-direction-column is-flex-wrap-wrap">
-    <highcharts ref="columnChart" class="hc" :options="chartOptions"></highcharts>
+  <div v-if="status" class="has-background-black is-flex is-flex-direction-column is-flex-wrap-wrap">
+    <highchart ref="columnChart" class="hc" :options="chartOptions"></highchart>
     <div v-for="(x, i) in getAllAppIdsForChart()" :key="i">
-      <highcharts ref="columnChart" class="hc" :options="getChartOptions(x)"></highcharts>
+      <highchart ref="columnChart" class="hc" :options="getChartOptions(x)"></highchart>
     </div>
     <div class="container">
       <StatsNode v-for="(b, i) in Object.keys(status).reverse()" :key="i" :stats="getValue(b)">
@@ -13,23 +13,29 @@
 
 <script>
 
-import { runInThisContext } from "vm";
-import { mapState, mapActions, mapMutations } from 'vuex';
-import toaster from "@/mixins/toaster";
-import { parseISO, compareAsc, isToday, parse } from "date-fns";
+// import { runInThisContext } from "vm";
+import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-line
+// import toaster from "@/mixins/toaster";
+// import { parseISO, compareAsc, isToday, parse } from "date-fns";
 import StatsNode from "../domain/pages/StatsNode.vue";
+import toaster from "@/mixins/toaster";
 
 export default {
   auth: false,
   mixins: [toaster],
+  components: {
+    StatsNode
+  },
+  // mixins: [toaster],
   data() {
     return {
       status: null,
       interval: 10000
     };
   },
+
   computed: {
-    ...mapState({}),
+    // ...mapState({}),
     getSeriesData() {
       const result = [];
       if (this.status) {
@@ -97,10 +103,10 @@ export default {
     this.startAutoPoller();
   },
   methods: {
-    ...mapMutations({
-      setToken: 'auth/setToken'
-    }),
-    ...mapActions("api", ["get_usersession_status"]),
+    // ...mapMutations({
+    //   setToken: 'auth/setToken'
+    // }),
+    // ...mapActions("api", ["get_usersession_status"]),
     getValue(day) {
       return this.status[day];
     },
@@ -170,21 +176,20 @@ export default {
     },
 
     startAutoPoller() {
-      this.get_usersession_status({
+      this.$store.dispatch("api/get_usersession_status", {
         callbackfunc: (data) => {
           this.status = data;
         }
-      });
+      })
       this.polling = setInterval(() => {
-        this.get_usersession_status({
+        this.$store.dispatch("api/get_usersession_status", {
           callbackfunc: (data) => {
             this.status = data;
           }
-        });
+        })
       }, this.interval);
     },
   },
-  components: { StatsNode }
 };
 </script>
 

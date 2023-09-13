@@ -1,9 +1,13 @@
-export const state = () => ({
-  authToken: ''
-});
-
-export const mutations = {
-  setToken (state, token) {
-    state.authToken = token;
+export default {
+  name: "auth",
+  namespaced: true,
+  state() {
+    authToken: ''
   },
-};
+  mutations: {
+    setToken (state, token) {
+      state.authToken = token;
+    },
+  }
+}
+
