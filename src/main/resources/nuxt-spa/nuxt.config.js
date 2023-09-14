@@ -30,7 +30,9 @@ export default defineNuxtConfig({
   ],
 
   googleFonts: {
-    download: true
+    families: {
+      "Noto+Sans":true
+    },
   },
   modules: [
     '@nuxtjs/google-fonts',
@@ -61,6 +63,7 @@ export default defineNuxtConfig({
   //     logErrors: true
   //   },
   // },
+  //
   nitro: {
     devProxy: { // routeRules for prod
       '/api': { target: 'http://localhost:8088', changeOrigin: true},

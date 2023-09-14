@@ -1,10 +1,11 @@
+$family-primary: 'Noto Sans', sans-serif;
+
 @import "~/node_modules/bulma/sass/utilities/derived-variables.sass";
 @import "~/node_modules/bulma/sass/utilities/functions.sass";
 
 $color-whydah-black: #1C1C1D;
 $color-whydah-white: #E7E9EB;
 
-$family-primary: 'Noto Sans', sans-serif;
 
 $black: $color-whydah-black;
 $black-invert: findColorInvert($color-whydah-black);
