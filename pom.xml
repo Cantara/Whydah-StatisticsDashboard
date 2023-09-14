@@ -5,7 +5,7 @@
     <groupId>no.cantara.tools</groupId>
     <artifactId>Whydah-StatisticsDashboard</artifactId>
     <name>${project.artifactId}</name>
-    <version>1.12.5-SNAPSHOT</version>
+    <version>1.20.2-SNAPSHOT</version>
 
     <repositories>
         <!-- Needed for parent    -->
@@ -51,7 +51,7 @@
     <properties>
         <mainClass>no.cantara.tools.stats.Main</mainClass>
         <slf4j.version>1.7.36</slf4j.version>
-        <helidon.version>2.6.2</helidon.version>
+        <helidon.version>2.6.3</helidon.version>
         <jackson.version>2.15.2</jackson.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>no.cantara.base</groupId>
             <artifactId>Hystrix-BaseCommands</artifactId>
-            <version>0.1.42</version>
+            <version>0.1.43</version>
         </dependency>
 
         <!--Config-->
@@ -161,7 +161,7 @@
         <dependency>
             <groupId>com.slack.api</groupId>
             <artifactId>slack-api-client</artifactId>
-            <version>1.30.0</version>
+            <version>1.32.0</version>
         </dependency>
 
         <!-- <dependency>
@@ -240,7 +240,7 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.13.4</version>
+                <version>1.14.0</version>
                 <configuration>
                     <workingDirectory>${basedir}/src/main/resources/nuxt-spa</workingDirectory>
                     <installDirectory>target</installDirectory>
