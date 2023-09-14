@@ -95,6 +95,7 @@ export default {
           backgroundColor: '#eef2e1',
           type: 'line'
         },
+        credits: false,
         xAxis: {
           type: 'datetime'
         },
@@ -139,6 +140,7 @@ export default {
           backgroundColor: '#eef2e1',
           type: 'column'
         },
+        credits: false,
         xAxis: {
           type: 'datetime'
         },
