@@ -1,0 +1,15 @@
+$color-whydah-black: #1C1C1D;
+$color-whydah-white: #E7E9EB;
+$color-terra-cotta: #D1603D;
+$color-desert: #DDB967;
+$color-dull-blue: #547AA5;
+$color-topaz: #50D8D7;
+
+:export {
+  colorWhydahBlack: $color-whydah-black;
+  colorWhydahWhite: $color-whydah-white;
+  colorTerraCotta: $color-terra-cotta;
+  colorDesert: $color-desert;
+  colorDullBlue: $color-dull-blue;
+  colorTopaz: $color-topaz;
+}

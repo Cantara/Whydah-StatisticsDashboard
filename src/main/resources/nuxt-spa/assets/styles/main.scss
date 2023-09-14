@@ -1,12 +1,6 @@
 @import "~/node_modules/bulma/sass/utilities/derived-variables.sass";
 @import "~/node_modules/bulma/sass/utilities/functions.sass";
-
-$color-whydah-black: #1C1C1D;
-$color-whydah-white: #E7E9EB;
-$color-terra-cotta: #D1603D;
-$color-desert: #DDB967;
-$color-dull-blue: #547AA5;
-$color-topaz: #50D8D7;
+@import "_colors.module.scss";
 
 $family-primary: 'Noto Sans', sans-serif;
 

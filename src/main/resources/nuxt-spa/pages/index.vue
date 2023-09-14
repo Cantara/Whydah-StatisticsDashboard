@@ -3,7 +3,7 @@
     v-if="status"
     class="has-background-black has-text-white min-height-full"
   >
-    <div class="columns is-marginless is-1">
+    <div class="columns is-marginless is-1 p-2">
       <div class="column is-half p-2">
         <highchart
           ref="columnChart"
@@ -45,6 +45,7 @@ import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-lin
 // import { parseISO, compareAsc, isToday, parse } from "date-fns";
 import StatsNode from "../domain/pages/StatsNode.vue";
 import toaster from "@/mixins/toaster";
+import colors from "@/assets/styles/_colors.module.scss";
 
 export default {
   auth: false,
@@ -94,7 +95,7 @@ export default {
     chartOptions() {
       return {
         chart: {
-          backgroundColor: '#eef2e1',
+          backgroundColor: colors.colorDullBlue,
           // backgroundColor: '#547AA5',
           type: 'line'
         },
