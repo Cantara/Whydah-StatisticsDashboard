@@ -8,7 +8,12 @@ This app runs on the latest version of `nuxt 3`, and it was migrated from `nuxt
 
 ## Developing
 
-For the frontend to work correctly you need to build a java package that can answer our api calls:
+
+For the frontend to work correctly you need to build a java package that can
+answer our api calls. The first thing you'll need is an
+`application.properties`, ask @totto, @misterhuydo, or @roosta for the correct
+values depending on your development target.
+
 Start by cd to the root of this project, then build a java package
 
 ```bash
