@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/google-fonts',
     'nuxt-highcharts',
+    '@nuxtjs/eslint-module',
   ],
   toast: {
     position: 'top-center',
