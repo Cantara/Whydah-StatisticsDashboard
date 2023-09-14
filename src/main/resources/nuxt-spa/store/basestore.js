@@ -1,6 +1,5 @@
 // import {set} from "vue";
 
-
 export default class {
   constructor(endpoint) {
     this.state = {
@@ -20,7 +19,7 @@ export default class {
       // )
     };
     this.actions = {
-      async get({ commit }, { affixPath = "", key = "", axiosConfig = {}}) {
+      async get({ commit }, { affixPath = "", key = ""}) {
         commit("SET_RESET_STATUS");
         await $fetch(`${endpoint}${affixPath}`).then(data => {
           if (key !== "") {

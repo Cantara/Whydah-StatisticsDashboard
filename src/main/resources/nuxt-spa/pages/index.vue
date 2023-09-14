@@ -1,12 +1,29 @@
 <template>
-  <div v-if="status" class="has-background-black is-flex is-flex-direction-column is-flex-wrap-wrap">
-    <highchart ref="columnChart" class="hc" :options="chartOptions"></highchart>
-    <div v-for="(x, i) in getAllAppIdsForChart()" :key="i">
-      <highchart ref="columnChart" class="hc" :options="getChartOptions(x)"></highchart>
+  <div
+    v-if="status"
+    class="has-background-black is-flex is-flex-direction-column is-flex-wrap-wrap"
+  >
+    <highchart
+      ref="columnChart"
+      class="hc"
+      :options="chartOptions"
+    />
+    <div
+      v-for="(x, i) in getAllAppIdsForChart()"
+      :key="i"
+    >
+      <highchart
+        ref="columnChart"
+        class="hc"
+        :options="getChartOptions(x)"
+      />
     </div>
     <div class="container">
-      <StatsNode v-for="(b, i) in Object.keys(status).reverse()" :key="i" :stats="getValue(b)">
-      </StatsNode>
+      <StatsNode
+        v-for="(b, i) in Object.keys(status).reverse()"
+        :key="i"
+        :stats="getValue(b)"
+      />
     </div>
   </div>
 </template>
@@ -22,11 +39,10 @@ import toaster from "@/mixins/toaster";
 
 export default {
   auth: false,
-  mixins: [toaster],
   components: {
     StatsNode
   },
-  // mixins: [toaster],
+  mixins: [toaster],
   data() {
     return {
       status: null,
@@ -35,7 +51,6 @@ export default {
   },
 
   computed: {
-    // ...mapState({}),
     getSeriesData() {
       const result = [];
       if (this.status) {

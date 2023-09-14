@@ -17,7 +17,7 @@ export default {
 
   mounted() {
 
-    this.unsubscribe = this.$store.subscribe((mutation, state) => {
+    this.unsubscribe = this.$store.subscribe((mutation) => {
 
       if (this.suppress) {
         return;

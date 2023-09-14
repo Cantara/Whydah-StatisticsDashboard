@@ -1,26 +1,7 @@
-//const config = require('./config.js')
-
 export default defineNuxtConfig({
-  /*
-   ** Nuxt rendering mode
-   ** See https://nuxtjs.org/api/configuration-mode
-   */
   ssr: false,
-
-  /*
-   ** Nuxt target
-   ** See https://nuxtjs.org/api/configuration-target
-   */
   target: 'static',
 
-  // router: {
-  //   middleware: 'query-parameters'
-  // },
-
-  /*
-   ** Headers of the page
-   ** See https://nuxtjs.org/api/configuration-head
-   */
   app: {
     head: {
       title: process.env.npm_package_name || '',
@@ -47,68 +28,18 @@ export default defineNuxtConfig({
   css: [
     '@/assets/styles/main.scss',
   ],
-  /*
-   ** Plugins to load before mounting the App
-   ** https://nuxtjs.org/guide/plugins
-   */
 
-  // plugins: [
-  //   // {src:'~/plugins/font-awesome.js', mode: 'client'},
-  //   // '~plugins/highcharts.js',
-  //   // '~plugins/lodash.js',
-  //   // // '~plugins/axios.js',
-  //   // '~plugins/date-fns.js',
-  //
-  // ],
-  /*
-   ** Auto import components
-   ** See https://nuxtjs.org/api/configuration-components
-   */
-  // components: false,
-  /*
-   ** Nuxt.js dev-modules
-   */
-  // buildModules: [
-  //   // Doc: https://github.com/nuxt-community/eslint-module
-  //   // '@nuxtjs/eslint-module',
-  // ],
   googleFonts: {
     download: true
   },
-  /*
-   ** Nuxt.js modules
-   */
   modules: [
-    // '@nuxtjs/proxy',
-    // ["nuxt-buefy", {
-    //   materialDesignIcons: true,
-    //   css: true,
-    //   defaultIconPack: "fas",
-    //   defaultIconComponent: "font-awesome-icon",
-    // }],
-    // '@nuxtjs/toast',
     '@nuxtjs/google-fonts',
     'nuxt-highcharts',
-    // '@nuxtjs/sentry',
-    // '@nuxtjs/axios',
-  //   ['nuxt-fontawesome', {
-  //     component: 'fa',
-  //     imports: [
-  //       {
-  //         set: '@fortawesome/free-solid-svg-icons',
-  //         icons: ['fas']
-  //       },
-  //       {
-  //         set: '@fortawesome/free-regular-svg-icons',
-  //         icons: ['far']
-  //       },
-  //       {
-  //         set: '@fortawesome/free-brands-svg-icons',
-  //         icons: ['fab']
-  //       }
-  //     ]
-  //   }]
+    '@nuxtjs/eslint-module',
   ],
+  eslint: {
+    lintOnStart: false
+  },
   toast: {
     position: 'top-center',
     fullWidth:true,
@@ -130,13 +61,6 @@ export default defineNuxtConfig({
   //     logErrors: true
   //   },
   // },
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  // axios: {
-  //   proxy: true,
-  // },
   nitro: {
     devProxy: { // routeRules for prod
       '/api': { target: 'http://localhost:8088', changeOrigin: true},
@@ -146,7 +70,6 @@ export default defineNuxtConfig({
   generate: {
     dir: process.env.APP_ENV === 'production' ? 'dist' : `dist-${process.env.APP_ENV}`
   },
-
 
   build: {
     parallel: true,
@@ -160,42 +83,5 @@ export default defineNuxtConfig({
         }
       }
     },
-    // babel: {
-    //   "presets": [
-    //     [
-    //       "@babel/preset-env",
-    //       {
-    //         targets: {
-    //           esmodules: true
-    //         },
-    //         "loose": true,
-    //         "shippedProposals": true
-    //       }
-    //     ]
-    //   ]
-    // },
-    // loaders:  {
-    //   vue: {
-    //     prettify: false
-    //   },
-    //   sass: {
-    //     implementation: require('sass')
-    //   },
-    //   scss: {
-    //     implementation: require('sass')
-    //   }
-    // },
-    // extend(config, ctx) {
-    //   config.module.rules.push({
-    //     enforce: 'pre',
-    //     test: /\.(js|vue)$/,
-    //     loader: 'eslint-loader',
-    //     exclude: /(node_modules)/,
-    //     options: {
-    //       fix: true,
-    //       cache:false
-    //     }
-    //   });
-    // }
   }
 })
