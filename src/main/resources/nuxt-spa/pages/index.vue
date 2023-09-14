@@ -3,11 +3,11 @@
     v-if="status"
     class="has-background-black has-text-white min-height-full"
   >
-    <div class="columns is-marginless">
+    <div class="columns is-marginless is-1">
       <div class="column is-half p-2">
         <highchart
           ref="columnChart"
-          class="hc mb-2"
+          class="hc border-radius mb-4"
           :options="chartOptions"
         />
         <div
@@ -16,13 +16,15 @@
         >
           <highchart
             ref="columnChart"
-            class="hc"
+            class="hc border-radius"
             :options="getChartOptions(x)"
           />
         </div>
       </div>
-      <div class="column is-half">
-        <div></div>
+      <div class="column is-half p-2">
+        <div
+          class="has-background-terra-cotta h-100 border-radius"
+        />
       </div>
     </div>
     <!-- <div class="container"> -->
@@ -237,8 +239,11 @@ export default {
 
 .hc {
   height: 300px;
-  /* padding: 16px; */
+}
+.border-radius {
   border-radius: 1rem;
-
+}
+.h-100 {
+  height: 100%;
 }
 </style>
