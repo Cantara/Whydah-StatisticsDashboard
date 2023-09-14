@@ -14,7 +14,7 @@
     "generate": "cross-env APP_ENV=production nuxt generate",
     "test": "jest",
     "analyze": "cross-env APP_ENV=production nuxt build --analyze",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+    "lint": "eslint ."
   },
   "dependencies": {
     "bulma": "0.9.4",

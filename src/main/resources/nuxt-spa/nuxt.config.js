@@ -37,6 +37,9 @@ export default defineNuxtConfig({
     'nuxt-highcharts',
     '@nuxtjs/eslint-module',
   ],
+  eslint: {
+    lintOnStart: false
+  },
   toast: {
     position: 'top-center',
     fullWidth:true,
@@ -67,7 +70,6 @@ export default defineNuxtConfig({
   generate: {
     dir: process.env.APP_ENV === 'production' ? 'dist' : `dist-${process.env.APP_ENV}`
   },
-
 
   build: {
     parallel: true,

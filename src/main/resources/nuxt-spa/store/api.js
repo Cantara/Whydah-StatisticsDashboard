@@ -1,5 +1,5 @@
 import Crud from "@/store/basestore"
-import { createStore } from 'vuex'
+// import { createStore } from 'vuex'
 const crud = new Crud('')
 export default {
   namespaced: true,
