@@ -1,30 +1,37 @@
 <template>
   <div
     v-if="status"
-    class="has-background-black is-flex is-flex-direction-column is-flex-wrap-wrap"
+    class="has-background-black has-text-white min-height-full"
   >
-    <highchart
-      ref="columnChart"
-      class="hc"
-      :options="chartOptions"
-    />
-    <div
-      v-for="(x, i) in getAllAppIdsForChart()"
-      :key="i"
-    >
-      <highchart
-        ref="columnChart"
-        class="hc"
-        :options="getChartOptions(x)"
-      />
+    <div class="columns is-marginless">
+      <div class="column is-half">
+        <highchart
+          ref="columnChart"
+          class="hc"
+          :options="chartOptions"
+        />
+        <div
+          v-for="(x, i) in getAllAppIdsForChart()"
+          :key="i"
+        >
+          <highchart
+            ref="columnChart"
+            class="hc"
+            :options="getChartOptions(x)"
+          />
+        </div>
+      </div>
+      <div class="column is-half">
+        world
+      </div>
     </div>
-    <div class="container">
-      <StatsNode
-        v-for="(b, i) in Object.keys(status).reverse()"
-        :key="i"
-        :stats="getValue(b)"
-      />
-    </div>
+    <!-- <div class="container"> -->
+    <!--   <StatsNode -->
+    <!--     v-for="(b, i) in Object.keys(status).reverse()" -->
+    <!--     :key="i" -->
+    <!--     :stats="getValue(b)" -->
+    <!--   /> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -209,16 +216,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 1rem;
+
+.min-height-full {
+  min-height: 100vh;
+
 }
+/* .container { */
+/*   margin-left: 10px; */
+/*   margin-right: 10px; */
+/*   margin-top: 20px; */
+/*   display: flex; */
+/*   flex-direction: row; */
+/*   flex-wrap: wrap; */
+/*   align-content: flex-start; */
+/*   gap: 1rem; */
+/* } */
 
 .hc {
   height: 450px;
