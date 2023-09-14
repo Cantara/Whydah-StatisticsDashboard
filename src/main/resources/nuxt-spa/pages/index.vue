@@ -4,10 +4,10 @@
     class="has-background-black has-text-white min-height-full"
   >
     <div class="columns is-marginless">
-      <div class="column is-half">
+      <div class="column is-half p-2">
         <highchart
           ref="columnChart"
-          class="hc"
+          class="hc mb-2"
           :options="chartOptions"
         />
         <div
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="column is-half">
-        world
+        <div></div>
       </div>
     </div>
     <!-- <div class="container"> -->
@@ -93,6 +93,7 @@ export default {
       return {
         chart: {
           backgroundColor: '#eef2e1',
+          // backgroundColor: '#547AA5',
           type: 'line'
         },
         credits: false,
@@ -235,8 +236,9 @@ export default {
 /* } */
 
 .hc {
-  height: 450px;
-  padding: 16px;
+  height: 300px;
+  /* padding: 16px; */
+  border-radius: 1rem;
 
 }
 </style>
