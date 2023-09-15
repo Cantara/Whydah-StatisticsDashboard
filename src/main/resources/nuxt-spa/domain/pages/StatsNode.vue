@@ -1,7 +1,7 @@
 <template>
   <div
     class="has-text-white item p-4 is-flex is-flex-direction-column"
-    style="background: #373E40"
+    style="background: #2E2F2F"
   >
     <div class="is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between">
       <span class="is-size-5 has-text-weight-semibold">
