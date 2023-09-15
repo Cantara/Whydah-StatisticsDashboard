@@ -1,15 +1,30 @@
+// Dark colors (white text)
 $color-whydah-black: #1C1C1D;
-$color-whydah-white: #E7E9EB;
 $color-terra-cotta: #D1603D;
 $color-desert: #DDB967;
 $color-dull-blue: #547AA5;
+$color-slate-blue: #3C6089;
 $color-topaz: #50D8D7;
+$color-dark-grey: #545E75;
+$color-slate-green: #497356;
+$color-accent: rgba(255, 255, 255, 0.2);
 
+// Bright colors (dark text)
+$color-light-seafoam: #9FFFCB;
+$color-light-mustard: #E0BD52;
+$color-rose-pink: #EF798A;
+$color-whydah-white: #FAFBFD;
+$color-off-white: #D0DBE7;
+$color-ice: #DFF3E4;
+$color-charcoal: #292F36;
+
+// Export to javascript
 :export {
   colorWhydahBlack: $color-whydah-black;
   colorWhydahWhite: $color-whydah-white;
   colorTerraCotta: $color-terra-cotta;
   colorDesert: $color-desert;
   colorDullBlue: $color-dull-blue;
+  colorSlateBlue: $color-slate-blue;
   colorTopaz: $color-topaz;
 }

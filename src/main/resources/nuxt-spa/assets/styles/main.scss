@@ -1,6 +1,9 @@
+@import "_colors.module.scss";
+
+// Bulma: {{{
+
 @import "~/node_modules/bulma/sass/utilities/derived-variables.sass";
 @import "~/node_modules/bulma/sass/utilities/functions.sass";
-@import "_colors.module.scss";
 
 $family-primary: 'Noto Sans', sans-serif;
 
@@ -27,3 +30,44 @@ $addColors: (
 $colors: mergeColorMaps($colors, $addColors);
 
 @import "~/node_modules/bulma/bulma";
+
+// }}}
+// Highcharts: {{{
+@import  "~/node_modules/highcharts/css/highcharts.css";
+
+.highcharts-axis-title {
+  fill: $color-whydah-white;
+}
+
+:root {
+  --highcharts-neutral-color-80: #{$color-off-white};
+  --highcharts-neutral-color-10: #{$color-accent};
+
+  // Chart colors
+  --highcharts-color-0: #{$color-ice}; // new user
+  --highcharts-color-1: #{$color-charcoal}; // new login
+  --highcharts-color-2: #{$color-terra-cotta}; // deleted user
+}
+
+
+#line-chart {
+  --highcharts-background-color: #{$color-slate-blue};
+
+  .highcharts-graph {
+    stroke-width: 5px;
+  }
+  .highcharts-point, .highcharts-markers {
+    stroke-width: 8px;
+  }
+}
+
+#column-chart {
+  --highcharts-background-color: #{$color-slate-green};
+
+  .highcharts-point, .highcharts-markers {
+    stroke-width: 3px;
+  }
+}
+
+// }}}
+//  vim: set ts=2 sw=2 tw=0 fdm=marker et :

@@ -6,7 +6,7 @@
     <div class="columns is-marginless is-1 p-2">
       <div class="column is-half p-2">
         <highchart
-          ref="columnChart"
+          id="line-chart"
           class="hc border-radius mb-4"
           :options="chartOptions"
         />
@@ -15,7 +15,7 @@
           :key="i"
         >
           <highchart
-            ref="columnChart"
+            id="column-chart"
             class="hc border-radius"
             :options="getChartOptions(x)"
           />
@@ -50,7 +50,7 @@ import colors from "@/assets/styles/_colors.module.scss";
 export default {
   auth: false,
   components: {
-    StatsNode
+    // StatsNode
   },
   mixins: [toaster],
   data() {
@@ -95,9 +95,8 @@ export default {
     chartOptions() {
       return {
         chart: {
-          backgroundColor: colors.colorDullBlue,
-          // backgroundColor: '#547AA5',
-          type: 'line'
+          type: 'line',
+          styledMode: true,
         },
         credits: false,
         xAxis: {
@@ -105,11 +104,11 @@ export default {
         },
         yAxis: {
           title: {
-            text: 'Number of user activities'
+            text: 'Number of user activities',
           }
         },
         title: {
-          text: 'User activities ' + ' from ' + this.getStartDateForChart
+          text: 'User activities ' + ' from ' + this.getStartDateForChart,
         },
         plotOptions: {
           series: {
@@ -141,8 +140,8 @@ export default {
     getChartOptions(appId){
       return {
         chart: {
-          backgroundColor: '#eef2e1',
-          type: 'column'
+          type: 'column',
+          styledMode: true,
         },
         credits: false,
         xAxis: {
