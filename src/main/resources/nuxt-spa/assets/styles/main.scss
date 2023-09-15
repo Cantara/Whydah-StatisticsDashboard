@@ -7,27 +7,14 @@
 
 $family-primary: 'Noto Sans', sans-serif;
 
-$black: $color-whydah-black;
-$black-invert: findColorInvert($color-whydah-black);
-$terra-cotta: $color-terra-cotta;
-$terra-cotta-invert: findColorInvert($color-terra-cotta);
-$cool-grey: $color-cool-grey;
-$cool-grey-invert: findColorInvert($color-cool-grey);
-$desert: $color-desert;
-$desert-invert: findColorInvert($color-desert);
-$dull-blue: $color-dull-blue;
-$dull-blue-invert: findColorInvert($color-dull-blue);
-$topaz: $color-topaz;
-$topaz-invert: findColorInvert($color-topaz);
-
 // Setup $colors to use as bulma classes (e.g. 'is-warning')
 $addColors: (
-  "black": ($black, $black-invert),
-  "terra-cotta": ($terra-cotta, $terra-cotta-invert),
-  "desert": ($desert, $desert-invert),
-  "dull-blue": ($dull-blue, $dull-blue-invert),
-  "topaz": ($topaz, $topaz-invert),
-  "cool-grey": ($cool-grey, $cool-grey-invert)
+  "black": ($color-whydah-black, findColorInvert($color-whydah-black)),
+  "terra-cotta": ($color-terra-cotta, findColorInvert($color-terra-cotta)),
+  "desert": ($color-desert, findColorInvert($color-desert)),
+  "dull-blue": ($color-dull-blue, findColorInvert($color-dull-blue)),
+  "topaz": ($color-topaz, findColorInvert($color-topaz)),
+  "cool-grey": ($color-cool-grey, findColorInvert($color-cool-grey))
 );
 
 $colors: mergeColorMaps($colors, $addColors);

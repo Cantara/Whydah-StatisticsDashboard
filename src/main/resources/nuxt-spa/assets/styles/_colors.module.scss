@@ -1,23 +1,22 @@
-// Dark colors (white text)
-$color-whydah-black: #1C1C1D;
+// Accent colors
+$color-accent: rgba(255, 255, 255, 0.2);
 $color-terra-cotta: #D1603D;
 $color-desert: #DDB967;
-$color-dull-blue: #547AA5;
-$color-slate-blue: #506174;
 $color-topaz: #50D8D7;
-$color-dark-grey: #545E75;
+
+// Dark colors (white text)
+$color-whydah-black: #1C1C1D;
+$color-slate-blue: #506174;
 $color-slate-green: #57655B;
-$color-accent: rgba(255, 255, 255, 0.2);
-$color-cool-grey: #8F9B9D;
+$color-dark-grey: #545E75;
 
 // Bright colors (dark text)
-$color-light-seafoam: #9FFFCB;
-$color-light-mustard: #E0BD52;
-$color-rose-pink: #EF798A;
+$color-dull-blue: #547AA5;
 $color-whydah-white: #FAFBFD;
 $color-off-white: #D0DBE7;
-$color-ice: #DFF3E4;
 $color-charcoal: #292F36;
+$color-ice: #DFF3E4;
+$color-cool-grey: #8F9B9D;
 
 // Export to javascript
 :export {
@@ -28,4 +27,5 @@ $color-charcoal: #292F36;
   colorDullBlue: $color-dull-blue;
   colorSlateBlue: $color-slate-blue;
   colorTopaz: $color-topaz;
+  coolGrey: $color-cool-grey;
 }
