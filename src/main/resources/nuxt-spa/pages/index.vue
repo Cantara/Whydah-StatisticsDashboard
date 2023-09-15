@@ -23,7 +23,7 @@
       </div>
       <div class="column is-half p-2">
         <div
-          class="has-background-terra-cotta h-100 border-radius"
+          class="has-background-cool-grey h-100 border-radius"
         />
       </div>
     </div>

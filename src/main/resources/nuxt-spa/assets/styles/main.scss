@@ -11,6 +11,8 @@ $black: $color-whydah-black;
 $black-invert: findColorInvert($color-whydah-black);
 $terra-cotta: $color-terra-cotta;
 $terra-cotta-invert: findColorInvert($color-terra-cotta);
+$cool-grey: $color-cool-grey;
+$cool-grey-invert: findColorInvert($color-cool-grey);
 $desert: $color-desert;
 $desert-invert: findColorInvert($color-desert);
 $dull-blue: $color-dull-blue;
@@ -25,6 +27,7 @@ $addColors: (
   "desert": ($desert, $desert-invert),
   "dull-blue": ($dull-blue, $dull-blue-invert),
   "topaz": ($topaz, $topaz-invert),
+  "cool-grey": ($cool-grey, $cool-grey-invert)
 );
 
 $colors: mergeColorMaps($colors, $addColors);
