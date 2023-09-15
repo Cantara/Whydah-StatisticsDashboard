@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="status"
-    class="has-background-black has-text-white min-height-full"
+    class="has-background-black has-text-white min-height-full p-2"
   >
-    <div class="columns is-marginless is-1 p-2">
+    <div class="columns is-marginless is-1">
       <div class="column is-half p-2">
         <highchart
           id="line-chart"
@@ -27,13 +27,19 @@
         />
       </div>
     </div>
-    <!-- <div class="container"> -->
-    <!--   <StatsNode -->
-    <!--     v-for="(b, i) in Object.keys(status).reverse()" -->
-    <!--     :key="i" -->
-    <!--     :stats="getValue(b)" -->
-    <!--   /> -->
-    <!-- </div> -->
+    <div class="column is-full is-paddingless">
+      <div class="columns is-multiline is-marginless is-2 is-variable">
+        <div
+          v-for="(b, i) in Object.keys(status).reverse()"
+          :key="i"
+          class="column is-one-fifth"
+        >
+          <StatsNode
+            :stats="getValue(b)"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -50,7 +56,7 @@ import colors from "@/assets/styles/_colors.module.scss";
 export default {
   auth: false,
   components: {
-    // StatsNode
+    StatsNode
   },
   mixins: [toaster],
   data() {
@@ -245,5 +251,8 @@ export default {
 }
 .h-100 {
   height: 100%;
+}
+.w-100 {
+  width: 100%;
 }
 </style>
