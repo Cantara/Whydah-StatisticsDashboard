@@ -1,5 +1,8 @@
 <template>
-  <div class="has-text-white item is-flex is-flex-direction-column">
+  <div
+    class="has-text-white item p-4 is-flex is-flex-direction-column"
+    style="background: #373E40"
+  >
     <div class="is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between">
       <span class="is-size-5 has-text-weight-semibold">
         {{ getTheDay() }}
@@ -104,12 +107,12 @@ ul.a {
 }
 
 .item {
+  border-radius: 1rem;
   /* width: 400px; */
-  padding: 5px;
-  opacity: 0.8;
-  -webkit-border-radius: 1px 1px 1px 1px;
-  border-radius: 1px 1px 1px 1px;
-  border: 1px solid #fff;
+  /* padding: 5px; */
+  /* opacity: 0.8; */
+  /* border-radius: 1px 1px 1px 1px; */
+  /* border: 1px solid #fff; */
   /* margin-bottom: 5px; */
 }
 

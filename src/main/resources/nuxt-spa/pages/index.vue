@@ -51,7 +51,7 @@ import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-lin
 // import { parseISO, compareAsc, isToday, parse } from "date-fns";
 import StatsNode from "../domain/pages/StatsNode.vue";
 import toaster from "@/mixins/toaster";
-import colors from "@/assets/styles/_colors.module.scss";
+// import colors from "@/assets/styles/_colors.module.scss";
 
 export default {
   auth: false,
