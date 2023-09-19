@@ -173,6 +173,8 @@ public class StatusService {
                     dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
                 }
             }
+            ActivityStatistics s = dailyStatus.getActivityStatistics();
+            s.getActivities().getUserSessions().addAll(stats.getActivities().getUserSessions());
             dailyStatus.setUserSessionStatus(status);
             dailyStatusMap.put(todayString, dailyStatus);
            

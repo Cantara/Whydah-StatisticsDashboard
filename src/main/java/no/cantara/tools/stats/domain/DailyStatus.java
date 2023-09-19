@@ -9,5 +9,6 @@ import java.util.List;
 public class DailyStatus implements Serializable {
     private UserSessionStatus userSessionStatus;
     private List<UserApplicationStatistics> userApplicationStatistics;
+    ActivityStatistics activityStatistics = new ActivityStatistics();
 
 }
