@@ -188,6 +188,10 @@ export default {
             result[0].data.push(found.number_of_registered_users_this_day);
             result[1].data.push(found.number_of_unique_logins_this_day);
             result[2].data.push(found.number_of_deleted_users_this_day);
+          } else {
+            result[0].data.push(0);
+            result[1].data.push(0);
+            result[2].data.push(0);
           }
         });
 
