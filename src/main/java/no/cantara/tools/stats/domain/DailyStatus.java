@@ -1,14 +1,66 @@
 package no.cantara.tools.stats.domain;
 
-import lombok.Data;
+
+import no.cantara.tools.stats.status.StatusService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
 public class DailyStatus implements Serializable {
+    public static final Logger log= LoggerFactory.getLogger(DailyStatus.class);
+
     private UserSessionStatus userSessionStatus;
     private List<UserApplicationStatistics> userApplicationStatistics;
-    ActivityStatistics activityStatistics = new ActivityStatistics();
+    private ActivityStatistics activityStatistics = new ActivityStatistics();
+
+
+    public UserSessionStatus getUserSessionStatus() {
+        return userSessionStatus;
+    }
+
+    public void setUserSessionStatus(UserSessionStatus userSessionStatus) {
+        this.userSessionStatus = userSessionStatus;
+    }
+
+    public List<UserApplicationStatistics> getUserApplicationStatistics() {
+        return userApplicationStatistics;
+    }
+
+    public void setUserApplicationStatistics(List<UserApplicationStatistics> userApplicationStatistics) {
+        this.userApplicationStatistics = userApplicationStatistics;
+    }
+
+    public ActivityStatistics getActivityStatistics() {
+        if (activityStatistics==null){
+            activityStatistics=new ActivityStatistics();
+        }
+        return activityStatistics;
+    }
+
+    public void setActivityStatistics(ActivityStatistics activityStatistics) {
+        this.activityStatistics = activityStatistics;
+    }
+
+    public void addActivityStatistics(List<UserSessionActivity> userSessions) {
+        try {
+            if (this.activityStatistics.getActivities() == null) {
+              this.activityStatistics.setActivities(new ActivityCollection());
+            }
+            if (this.activityStatistics.getActivities().getUserSessions() == null) {
+                ActivityCollection activities = this.activityStatistics.getActivities();
+                List<UserSessionActivity> userSessionActivity = activities.getUserSessions();
+                userSessionActivity = new ArrayList<>();
+            }
+            ActivityCollection activities = this.activityStatistics.getActivities();
+            List<UserSessionActivity> userSessionActivity = activities.getUserSessions();
+            userSessionActivity.addAll(userSessions);
+
+        } catch (Exception e) {
+            log.error("Exception in trying to populate userSessions", e);
+        }
+    }
 
 }
