@@ -26,41 +26,47 @@
         Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
       </li>
     </ul>
-    <div class="tags">
-      <span class="tag is-info">
-        {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered
-      </span>
-      <span class="tag is-success">
-        {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins
-      </span>
-      <span class="tag is-danger">
-        {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted
-      </span>
-      <span class="tag is-warning">
-        {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions
-      </span>
-    </div>
+    <highchart
+      class="hc"
+      :more="true"
+      :options="chartOptions"
+    />
 
-    <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
-      <div
-        v-for="p in stats.userApplicationStatistics"
-        :key="p.last_updated"
-        class="is-flex is-flex-direction-column app-item"
-      >
-        <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1">
-          appid - {{ p.for_application }}
-        </span>
-        <span class="has-background-info is-small pl-2 pr-2">
-          {{ p.number_of_registered_users_this_day }} new users registered today
-        </span>
-        <span class="has-background-success is-small pl-2 pr-2">
-          {{ p.number_of_unique_logins_this_day }} unique user logins today
-        </span>
-        <span class="has-background-danger is-small pl-2 pr-2">
-          {{ p.number_of_deleted_users_this_day }} users deleted
-        </span>
-      </div>
-    </div>
+    <!-- <div class="tags"> -->
+    <!--   <span class="tag is-info"> -->
+    <!--     {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered -->
+    <!--   </span> -->
+    <!--   <span class="tag is-success"> -->
+    <!--     {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins -->
+    <!--   </span> -->
+    <!--   <span class="tag is-danger"> -->
+    <!--     {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted -->
+    <!--   </span> -->
+    <!--   <span class="tag is-warning"> -->
+    <!--     {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions -->
+    <!--   </span> -->
+    <!-- </div> -->
+
+    <!-- <div class="is-flex is-flex-direction-row is-flex-wrap-wrap"> -->
+    <!--   <div -->
+    <!--     v-for="p in stats.userApplicationStatistics" -->
+    <!--     :key="p.last_updated" -->
+    <!--     class="is-flex is-flex-direction-column app-item" -->
+    <!--   > -->
+    <!--     <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1"> -->
+    <!--       appid - {{ p.for_application }} -->
+    <!--     </span> -->
+    <!--     <span class="has-background-info is-small pl-2 pr-2"> -->
+    <!--       {{ p.number_of_registered_users_this_day }} new users registered today -->
+    <!--     </span> -->
+    <!--     <span class="has-background-success is-small pl-2 pr-2"> -->
+    <!--       {{ p.number_of_unique_logins_this_day }} unique user logins today -->
+    <!--     </span> -->
+    <!--     <span class="has-background-danger is-small pl-2 pr-2"> -->
+    <!--       {{ p.number_of_deleted_users_this_day }} users deleted -->
+    <!--     </span> -->
+    <!--   </div> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -78,6 +84,52 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    categories() {
+      return ["New users", "New logins", "Deleted", "Active user sessions"]
+    },
+    chartOptions() {
+      return {
+        chart: {
+          polar: true,
+          type: "column",
+          height: null,
+          width: null,
+        },
+        xAxis: {
+          tickmarkPlacement: "on",
+          type: "category",
+          categories: this.categories,
+        },
+        series: this.series,
+        credits: false,
+        yAxis: {
+          visible: false,
+          min: 0,
+          endOnTick: false,
+          showLastLabel: true,
+          reversedStacks: false
+        },
+
+        plotOptions: {
+          series: {
+            stacking: "normal",
+            shadow: false,
+            groupPadding: 0,
+            pointPlacement: "on"
+          }
+        }
+      }
+    },
+    series() {
+      return [
+        { name: "New users", data: [500] },
+        { name: "New logins", data: [421] },
+        { name: "Deleted", data: [2] },
+        { name: "Active user sessions", data: [1204] }
+      ]
+    }
   },
   mounted() {
   },
@@ -126,6 +178,10 @@ ul.a {
 .item:hover {
   opacity: 1;
   transition: .9s;
+}
+
+.hc {
+  /* height: 300px; */
 }
 </style>
 
