@@ -18,6 +18,9 @@ public class DailyStatus implements Serializable {
 
 
     public UserSessionStatus getUserSessionStatus() {
+        if (userSessionStatus==null){
+            userSessionStatus=new UserSessionStatus();
+        }
         return userSessionStatus;
     }
 
