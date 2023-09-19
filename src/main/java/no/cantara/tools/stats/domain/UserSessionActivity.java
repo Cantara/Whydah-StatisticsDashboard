@@ -14,6 +14,6 @@ public class UserSessionActivity  implements Serializable {
 	String prefix="";
 	String name="usersession";
 	long startTime=0;
-	UserSessionActivityData data;
+	UserSessionActivityData data=new UserSessionActivityData();
     
 }
