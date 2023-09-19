@@ -26,47 +26,47 @@
         Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
       </li>
     </ul>
-    <highchart
-      class="hc"
-      :more="true"
-      :options="chartOptions"
-    />
+    <!-- <highchart -->
+    <!--   class="hc" -->
+    <!--   :more="true" -->
+    <!--   :options="chartOptions" -->
+    <!-- /> -->
 
-    <!-- <div class="tags"> -->
-    <!--   <span class="tag is-info"> -->
-    <!--     {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered -->
-    <!--   </span> -->
-    <!--   <span class="tag is-success"> -->
-    <!--     {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins -->
-    <!--   </span> -->
-    <!--   <span class="tag is-danger"> -->
-    <!--     {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted -->
-    <!--   </span> -->
-    <!--   <span class="tag is-warning"> -->
-    <!--     {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions -->
-    <!--   </span> -->
-    <!-- </div> -->
+    <div class="tags">
+      <span class="tag is-info">
+        {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered
+      </span>
+      <span class="tag is-success">
+        {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins
+      </span>
+      <span class="tag is-danger">
+        {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted
+      </span>
+      <span class="tag is-warning">
+        {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions
+      </span>
+    </div>
 
-    <!-- <div class="is-flex is-flex-direction-row is-flex-wrap-wrap"> -->
-    <!--   <div -->
-    <!--     v-for="p in stats.userApplicationStatistics" -->
-    <!--     :key="p.last_updated" -->
-    <!--     class="is-flex is-flex-direction-column app-item" -->
-    <!--   > -->
-    <!--     <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1"> -->
-    <!--       appid - {{ p.for_application }} -->
-    <!--     </span> -->
-    <!--     <span class="has-background-info is-small pl-2 pr-2"> -->
-    <!--       {{ p.number_of_registered_users_this_day }} new users registered today -->
-    <!--     </span> -->
-    <!--     <span class="has-background-success is-small pl-2 pr-2"> -->
-    <!--       {{ p.number_of_unique_logins_this_day }} unique user logins today -->
-    <!--     </span> -->
-    <!--     <span class="has-background-danger is-small pl-2 pr-2"> -->
-    <!--       {{ p.number_of_deleted_users_this_day }} users deleted -->
-    <!--     </span> -->
-    <!--   </div> -->
-    <!-- </div> -->
+    <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
+      <div
+        v-for="p in stats.userApplicationStatistics"
+        :key="p.last_updated"
+        class="is-flex is-flex-direction-column app-item"
+      >
+        <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1">
+          appid - {{ p.for_application }}
+        </span>
+        <span class="has-background-info is-small pl-2 pr-2">
+          {{ p.number_of_registered_users_this_day }} new users registered today
+        </span>
+        <span class="has-background-success is-small pl-2 pr-2">
+          {{ p.number_of_unique_logins_this_day }} unique user logins today
+        </span>
+        <span class="has-background-danger is-small pl-2 pr-2">
+          {{ p.number_of_deleted_users_this_day }} users deleted
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
