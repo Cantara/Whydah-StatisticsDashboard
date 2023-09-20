@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+
 
 public class DailyStatus implements Serializable {
     public static final Logger log= LoggerFactory.getLogger(DailyStatus.class);
@@ -15,6 +17,8 @@ public class DailyStatus implements Serializable {
     private UserSessionStatus userSessionStatus;
     private List<UserApplicationStatistics> userApplicationStatistics;
     private ActivityStatistics activityStatistics = new ActivityStatistics();
+
+    private TreeMap<String, HourlyStatus> hourlyStatusTreeMap = new TreeMap<>();
 
 
     public UserSessionStatus getUserSessionStatus() {
@@ -76,4 +80,19 @@ public class DailyStatus implements Serializable {
         }
     }
 
+    public void updateHourlyStatus(String hourstring,HourlyStatus hourlyStatus){
+        this.hourlyStatusTreeMap.put(hourstring,hourlyStatus);
+
+    }
+
+    public  TreeMap<String, HourlyStatus> getHourlyStatusTreeMap() {
+        if (hourlyStatusTreeMap==null){
+            hourlyStatusTreeMap = new TreeMap<>();
+        }
+        return hourlyStatusTreeMap;
+    }
+
+    public  void setHourlyStatusTreeMap(TreeMap<String, HourlyStatus> hourlyStatusTreeMap) {
+        this.hourlyStatusTreeMap = hourlyStatusTreeMap;
+    }
 }

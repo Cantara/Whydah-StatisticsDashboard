@@ -49,15 +49,26 @@ public class StatusService {
 
     public static final String dateformat = "yyyy-MM-dd";
 
+    public static final String hourformat = "yyyy-MM-dd:HH";
+
     public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
+    public static final SimpleDateFormat simpleHourFormatter = new SimpleDateFormat(hourformat);
 
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
+
+    private UserSessionStatusCache lastHourUpdatedStatusCache = new UserSessionStatusCache();
     private UserSessionStatus recentStatus = null;
     private static TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
+
+    private static TreeMap<String, HourlyStatus> hourlyStatusMap = new TreeMap<>();
+
+    private static String currentHour;
 
     LocalDate localDate = LocalDate.now();
 
     public StatusService() {
+        simpleDateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        simpleHourFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         report_service = ApplicationProperties.getInstance().get("app.reportservice", "");
         report_service = report_service.replaceFirst("/$", "");
         if (report_service.isEmpty()) {
@@ -138,6 +149,17 @@ public class StatusService {
                 String todayString = simpleDateFormatter.format(new Date());
                 dailyStatusMap.put(todayString, dailyStatus);
             }
+            if (lastHourUpdatedStatusCache.getStarttime_of_today() == null || lastHourUpdatedStatusCache.getStarttime_of_today().plusHours(1).isBefore(ZonedDateTime.now())) {
+                lastHourUpdatedStatusCache = new UserSessionStatusCache();
+
+                // add a new hourlystatus object for the new day
+                HourlyStatus hourlyStatus = new HourlyStatus();
+                ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
+                lastHourUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
+                currentHour = simpleHourFormatter.format(new Date());
+                hourlyStatusMap.put(currentHour,hourlyStatus);
+
+            }
 
             String starttime_param = String.valueOf(lastUpdatedStatusCache.getStarttime_of_today().toInstant().toEpochMilli());
             if (lastUpdatedStatusCache.getLasttime_requested() != 0) {
@@ -176,9 +198,11 @@ public class StatusService {
                     dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
                 }
             }
+            HourlyStatus hourlyStatus = updateHourlyStatus();
             dailyStatus.setUserSessionStatus(status);
             dailyStatus.setActivityStatistics(stats);
             dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
+            dailyStatus.updateHourlyStatus(currentHour,hourlyStatus);
             dailyStatusMap.put(todayString, dailyStatus);
            
             return status;
@@ -190,6 +214,20 @@ public class StatusService {
 
     }
 
+    private HourlyStatus updateHourlyStatus(){
+        HourlyStatus hourlyStatus= hourlyStatusMap.get(currentHour);
+        if (hourlyStatus==null){
+            hourlyStatus=new HourlyStatus();
+
+        }
+        Set<String> logins = new HashSet<>(lastHourUpdatedStatusCache.getLogins());
+        Set<String> registered_users = new HashSet<>(lastHourUpdatedStatusCache.getRegistered_users());
+        Set<String> deleted_users = new HashSet<>(lastHourUpdatedStatusCache.getDeleted_users());
+        hourlyStatus.setNumber_of_unique_logins_this_hour(logins.size());
+        hourlyStatus.setNumber_of_registered_users_this_hour(registered_users.size());
+        hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users.size());
+        return hourlyStatus;
+    }
 
     protected int getTotalOfUsers() {
         try {
@@ -260,24 +298,42 @@ public class StatusService {
         	String todayString = simpleDateFormatter.format(new Date());
         	activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
         		if (appIds.contains(activity.getData().getApplicationid()) && todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
-        			
-        			if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
-        				if(!lastUpdatedStatusCache.getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
-        					lastUpdatedStatusCache.getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
-        				}
-        				lastUpdatedStatusCache.getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-        			} else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
-        				if(!lastUpdatedStatusCache.getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
-        					lastUpdatedStatusCache.getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
-        				}
-        				lastUpdatedStatusCache.getRegistered_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-        			} else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
-        				if(!lastUpdatedStatusCache.getDeleted_users_by_appId().containsKey(activity.getData().getApplicationid())) {
-        					lastUpdatedStatusCache.getDeleted_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
-        				}
-        				lastUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());        				
-        			}
-        		}
+
+                    if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
+                        if (!lastUpdatedStatusCache.getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
+                            lastUpdatedStatusCache.getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                        }
+                        lastUpdatedStatusCache.getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                    } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
+                        if (!lastUpdatedStatusCache.getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+                            lastUpdatedStatusCache.getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                        }
+                        lastUpdatedStatusCache.getRegistered_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                    } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
+                        if (!lastUpdatedStatusCache.getDeleted_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+                            lastUpdatedStatusCache.getDeleted_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                        }
+                        lastUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                    }
+                    if (appIds.contains(activity.getData().getApplicationid()) && currentHour.equalsIgnoreCase(simpleHourFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
+                        if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
+                            if (!lastHourUpdatedStatusCache.getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
+                                lastHourUpdatedStatusCache.getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                            }
+                            lastUpdatedStatusCache.getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                        } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
+                            if (!lastHourUpdatedStatusCache.getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+                                lastHourUpdatedStatusCache.getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                            }
+                            lastHourUpdatedStatusCache.getRegistered_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                        } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
+                            if (!lastHourUpdatedStatusCache.getDeleted_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+                                lastHourUpdatedStatusCache.getDeleted_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                            }
+                            lastHourUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                        }
+                    }
+                }
         	});
         	appIds.forEach(id -> {
         		UserApplicationStatistics d = statsByAppId.get(id);
