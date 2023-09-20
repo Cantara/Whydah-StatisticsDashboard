@@ -58,9 +58,12 @@ public class DailyStatus implements Serializable {
                 userSessionActivity = new ArrayList<>();
             }
             ActivityCollection activities = this.activityStatistics.getActivities();
-            List<UserSessionActivity> userSessionActivity = activities.getUserSessions();
+            //List<UserSessionActivity> userSessionActivity = activities.getUserSessions();
             //userSessionActivity.addAll(userSessions);  //TODO  move into HourlyStatus
-            userSessionActivity=userSessions;
+            //userSessionActivity=userSessions;
+            List<UserSessionActivity> myLastUserSessions = userSessions.subList(userSessions.size()-100, userSessions.size());
+
+            activities.setUserSessions(myLastUserSessions);
 
         } catch (Exception e) {
             log.error("Exception in trying to populate userSessions", e);
