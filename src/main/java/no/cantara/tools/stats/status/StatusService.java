@@ -27,16 +27,18 @@ import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 import no.cantara.config.ApplicationProperties;
 import no.cantara.tools.stats.exception.AppExceptionCode;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 public class StatusService {
 
     public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
 
-    private static final String MAPFILENAME="data/dailyStatusMap.json";
-    ObjectMapper mapper =  new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+    private static final String MAPFILENAME = "data/dailyStatusMap.json";
+    ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER.mappedFeature())
@@ -87,14 +89,14 @@ public class StatusService {
 
         try {
             Files.createDirectories(Paths.get("data"));
-        } catch (Exception e){
-            logger.error("Unable to create path to persistence",e);
+        } catch (Exception e) {
+            logger.error("Unable to create path to persistence", e);
         }
-        if (readMap()!=null){
-            dailyStatusMap=readMap();
+        if (readMap() != null) {
+            dailyStatusMap = readMap();
             String todayString = simpleDateFormatter.format(new Date());
-            if(dailyStatusMap.get(todayString)!=null && dailyStatusMap.get(todayString).getUserSessionStatus()!=null){
-                recentStatus=dailyStatusMap.get(todayString).getUserSessionStatus();
+            if (dailyStatusMap.get(todayString) != null && dailyStatusMap.get(todayString).getUserSessionStatus() != null) {
+                recentStatus = dailyStatusMap.get(todayString).getUserSessionStatus();
             }
         }
 
@@ -105,16 +107,16 @@ public class StatusService {
                         try {
 
                             getUserSessionStatusForToday();
-                            
+
                             //remove old data
                             int maxHistory = ApplicationProperties.getInstance().asInt("app.stats.keep-history-in-days", 7);
                             int numberToRemove = dailyStatusMap.size() - maxHistory - 1;
-                            while(numberToRemove>0) {
-                            	Entry<String, DailyStatus> en = dailyStatusMap.pollFirstEntry();
-                            	numberToRemove --;
-                            	logger.debug("remove date {}. We keep a history of {} statistics records according to the config", en.getKey(), maxHistory);
+                            while (numberToRemove > 0) {
+                                Entry<String, DailyStatus> en = dailyStatusMap.pollFirstEntry();
+                                numberToRemove--;
+                                logger.debug("remove date {}. We keep a history of {} statistics records according to the config", en.getKey(), maxHistory);
                             }
-                            
+
                             //store map
                             storeMap();
 
@@ -157,7 +159,7 @@ public class StatusService {
                 ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
                 lastHourUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
                 currentHour = simpleHourFormatter.format(new Date());
-                hourlyStatusMap.put(currentHour,hourlyStatus);
+                hourlyStatusMap.put(currentHour, hourlyStatus);
 
             }
 
@@ -186,14 +188,14 @@ public class StatusService {
                 //dailyStatusMap.put(new SimpleDateFormat("yyyy-MM-dd").format(new Date()),dailyStatus);
             }
             if (dailyStatus.getUserApplicationStatistics() == null) {
-            	String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
-            	if(!appIds.equals("")) {
-            		String[] parts = appIds.split("\\s*[;,]\\s*");
-            		dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
-            	}
+                String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
+                if (!appIds.equals("")) {
+                    String[] parts = appIds.split("\\s*[;,]\\s*");
+                    dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+                }
             } else {
                 String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
-                if(!appIds.equals("")) {
+                if (!appIds.equals("")) {
                     String[] parts = appIds.split("\\s*[;,]\\s*");
                     dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
                 }
@@ -202,9 +204,9 @@ public class StatusService {
             dailyStatus.setUserSessionStatus(status);
             dailyStatus.setActivityStatistics(stats);
             dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
-            dailyStatus.updateHourlyStatus(currentHour,hourlyStatus);
+            dailyStatus.updateHourlyStatus(currentHour, hourlyStatus);
             dailyStatusMap.put(todayString, dailyStatus);
-           
+
             return status;
         } catch (Exception ex) {
             logger.error("get: %s", ex.getMessage());
@@ -214,24 +216,27 @@ public class StatusService {
 
     }
 
-    private HourlyStatus updateHourlyStatus(){
-        HourlyStatus hourlyStatus= hourlyStatusMap.get(currentHour);
-        if (hourlyStatus==null){
-            hourlyStatus=new HourlyStatus();
+    private HourlyStatus updateHourlyStatus() {
+        HourlyStatus hourlyStatus = hourlyStatusMap.get(currentHour);
+        if (hourlyStatus == null) {
+            hourlyStatus = new HourlyStatus();
 
         }
-        Set<String> logins = new HashSet<>(lastHourUpdatedStatusCache.getLogins());
-        Set<String> registered_users = new HashSet<>(lastHourUpdatedStatusCache.getRegistered_users());
-        Set<String> deleted_users = new HashSet<>(lastHourUpdatedStatusCache.getDeleted_users());
-        hourlyStatus.setNumber_of_unique_logins_this_hour(logins.size());
-        hourlyStatus.setNumber_of_registered_users_this_hour(registered_users.size());
-        hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users.size());
+        int logins = lastHourUpdatedStatusCache.getLogins().size() +
+                lastHourUpdatedStatusCache.getLogins_by_appId().size();
+        int registered_users = lastHourUpdatedStatusCache.getRegistered_users().size() +
+                lastHourUpdatedStatusCache.getRegistered_users_by_appId().size();
+        int deleted_users = lastHourUpdatedStatusCache.getDeleted_users().size() +
+                lastHourUpdatedStatusCache.getDeleted_users_by_appId().size();
+        hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
+        hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
+        hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
         return hourlyStatus;
     }
 
     protected int getTotalOfUsers() {
         try {
-          
+
             String count_from_uib = Unirest.get(uib_health_service)
                     .asJson()
                     .getBody()
@@ -261,7 +266,7 @@ public class StatusService {
 
     protected int getTotalOfApplications() {
         try {
-           
+
             String count_from_sts = Unirest.get(sts_health_service)
                     .asJson()
                     .getBody()
@@ -276,7 +281,7 @@ public class StatusService {
 
     protected int getTotalOfThreats() {
         try {
-           
+
 
             String count_from_sts = Unirest.get(sts_health_service)
                     .asJson()
@@ -289,15 +294,15 @@ public class StatusService {
         }
         return 0;
     }
-    
+
     protected List<UserApplicationStatistics> getUserApplicationStatisticsDataFromActivityStatistics(Set<String> appIds, ActivityStatistics stats) {
-    	Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
-    	appIds.forEach(id -> statsByAppId.put(id, new UserApplicationStatistics(id)));
-        if (stats!=null){
-        	ActivityCollection activities = stats.getActivities();
-        	String todayString = simpleDateFormatter.format(new Date());
-        	activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
-        		if (appIds.contains(activity.getData().getApplicationid()) && todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
+        Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
+        appIds.forEach(id -> statsByAppId.put(id, new UserApplicationStatistics(id)));
+        if (stats != null) {
+            ActivityCollection activities = stats.getActivities();
+            String todayString = simpleDateFormatter.format(new Date());
+            activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
+                if (appIds.contains(activity.getData().getApplicationid()) && todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
 
                     if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                         if (!lastUpdatedStatusCache.getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
@@ -334,17 +339,17 @@ public class StatusService {
                         }
                     }
                 }
-        	});
-        	appIds.forEach(id -> {
-        		UserApplicationStatistics d = statsByAppId.get(id);
-        		d.setFor_application(id);
-        		d.setLast_updated(ZonedDateTime.now());
-        		d.setNumber_of_deleted_users_this_day(lastUpdatedStatusCache.getDeleted_users_by_appId().get(id)!=null?lastUpdatedStatusCache.getDeleted_users_by_appId().get(id).size():0);
-        		d.setNumber_of_registered_users_this_day(lastUpdatedStatusCache.getRegistered_users_by_appId().get(id)!=null?lastUpdatedStatusCache.getRegistered_users_by_appId().get(id).size():0);
-        		d.setNumber_of_unique_logins_this_day(lastUpdatedStatusCache.getLogins_by_appId().get(id)!=null?lastUpdatedStatusCache.getLogins_by_appId().get(id).size():0);
-        		d.setStarttime_of_this_day(lastUpdatedStatusCache.getStarttime_of_today());
-        		statsByAppId.put(id, d);
-        	});
+            });
+            appIds.forEach(id -> {
+                UserApplicationStatistics d = statsByAppId.get(id);
+                d.setFor_application(id);
+                d.setLast_updated(ZonedDateTime.now());
+                d.setNumber_of_deleted_users_this_day(lastUpdatedStatusCache.getDeleted_users_by_appId().get(id) != null ? lastUpdatedStatusCache.getDeleted_users_by_appId().get(id).size() : 0);
+                d.setNumber_of_registered_users_this_day(lastUpdatedStatusCache.getRegistered_users_by_appId().get(id) != null ? lastUpdatedStatusCache.getRegistered_users_by_appId().get(id).size() : 0);
+                d.setNumber_of_unique_logins_this_day(lastUpdatedStatusCache.getLogins_by_appId().get(id) != null ? lastUpdatedStatusCache.getLogins_by_appId().get(id).size() : 0);
+                d.setStarttime_of_this_day(lastUpdatedStatusCache.getStarttime_of_today());
+                statsByAppId.put(id, d);
+            });
         }
         return new ArrayList<UserApplicationStatistics>(statsByAppId.values());
 
@@ -352,40 +357,40 @@ public class StatusService {
 
     protected UserSessionStatus getUserSessionStatusDataFromActivityStatistics(ActivityStatistics stats) {
         UserSessionStatus status = new UserSessionStatus();
-        if (stats!=null){
+        if (stats != null) {
 
-        ActivityCollection activities = stats.getActivities();
-        Set<String> logins = new HashSet<>(lastUpdatedStatusCache.getLogins());
-        Set<String> registered_users = new HashSet<>(lastUpdatedStatusCache.getRegistered_users());
-        Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
-        String todayString = simpleDateFormatter.format(new Date());
+            ActivityCollection activities = stats.getActivities();
+            Set<String> logins = new HashSet<>(lastUpdatedStatusCache.getLogins());
+            Set<String> registered_users = new HashSet<>(lastUpdatedStatusCache.getRegistered_users());
+            Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
+            String todayString = simpleDateFormatter.format(new Date());
 
-        activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
-            if (todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
-                if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
-                    logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-                    // increase session activity count  - may count twice...
-                    status.setTotal_number_of_session_actions_this_day(1 + status.getTotal_number_of_session_actions_this_day());
-                } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
-                    registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-                } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
-                    deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
-                } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionVerification")) {
-                    // increase session activity count  - may count twice...
-                    status.setTotal_number_of_session_actions_this_day(1 + status.getTotal_number_of_session_actions_this_day());
+            activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
+                if (todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
+                    if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
+                        logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                        // increase session activity count  - may count twice...
+                        status.setTotal_number_of_session_actions_this_day(1 + status.getTotal_number_of_session_actions_this_day());
+                    } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
+                        registered_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                    } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
+                        deleted_users.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                    } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionVerification")) {
+                        // increase session activity count  - may count twice...
+                        status.setTotal_number_of_session_actions_this_day(1 + status.getTotal_number_of_session_actions_this_day());
+                    }
                 }
-            }
-        });
-        status.setNumber_of_deleted_users_this_day(deleted_users.size());
-        status.setNumber_of_unique_logins_this_day(logins.size());
-        status.setNumber_of_registered_users_this_day(registered_users.size());
-        status.setLast_updated(ZonedDateTime.now());
-        status.setStarttime_of_this_day(lastUpdatedStatusCache.getStarttime_of_today());
-        //store to the cache
-        lastUpdatedStatusCache.setLogins(logins);
-        lastUpdatedStatusCache.setRegistered_users(registered_users);
-        lastUpdatedStatusCache.setDeleted_users(deleted_users);
-        lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
+            });
+            status.setNumber_of_deleted_users_this_day(deleted_users.size());
+            status.setNumber_of_unique_logins_this_day(logins.size());
+            status.setNumber_of_registered_users_this_day(registered_users.size());
+            status.setLast_updated(ZonedDateTime.now());
+            status.setStarttime_of_this_day(lastUpdatedStatusCache.getStarttime_of_today());
+            //store to the cache
+            lastUpdatedStatusCache.setLogins(logins);
+            lastUpdatedStatusCache.setRegistered_users(registered_users);
+            lastUpdatedStatusCache.setDeleted_users(deleted_users);
+            lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
         }
 
         return status;
@@ -411,35 +416,37 @@ public class StatusService {
         try {
 
             Path path = Paths.get(MAPFILENAME);
-            String json =mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dailyStatusMap);
+            String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dailyStatusMap);
             Files.writeString(path, json, StandardCharsets.UTF_8);
 
         } catch (FileNotFoundException e) {
-            logger.error("File not found",e);
+            logger.error("File not found", e);
         } catch (IOException e) {
-            logger.error("Error initializing stream",e);
+            logger.error("Error initializing stream", e);
         }
     }
 
     public TreeMap<String, DailyStatus> readMap() {
         try {
-            TypeReference<TreeMap<String, DailyStatus>> typeRef = new TypeReference<TreeMap<String, DailyStatus>>() {};
+            TypeReference<TreeMap<String, DailyStatus>> typeRef = new TypeReference<TreeMap<String, DailyStatus>>() {
+            };
             TreeMap<String, DailyStatus> dailyStatusMap = mapper.readValue(new File(MAPFILENAME), typeRef);
             return dailyStatusMap;
         } catch (FileNotFoundException e) {
-            logger.error("File not found",e);
+            logger.error("File not found", e);
         } catch (IOException e) {
-            logger.error("Error initializing stream",e);
+            logger.error("Error initializing stream", e);
         }
         //fallback
         try {
-            TypeReference<HashMap<String, DailyStatus>> typeRef = new TypeReference<HashMap<String, DailyStatus>>() {};
+            TypeReference<HashMap<String, DailyStatus>> typeRef = new TypeReference<HashMap<String, DailyStatus>>() {
+            };
             Map<String, DailyStatus> dailyStatusMap = mapper.readValue(new File(MAPFILENAME), typeRef);
             return new TreeMap<>(dailyStatusMap);
         } catch (FileNotFoundException e) {
-            logger.error("File not found",e);
+            logger.error("File not found", e);
         } catch (IOException e) {
-            logger.error("Error initializing stream",e);
+            logger.error("Error initializing stream", e);
         }
         return null;
 
