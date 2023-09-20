@@ -58,16 +58,31 @@ export default {
   },
   methods: {
     getLastUpdated(){
-      const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);
-      return this.$datefns.format(parsed, "H:mm")
+      if(dateIsValid(this.stats.userSessionStatus.last_updated)) {
+        const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);
+        return this.$datefns.format(parsed, "H:mm")
+      } else {
+        console.log('invalid date format value=' + this.stats.userSessionStatus.last_updated);
+        return 'N/A';
+      }
+      
+    },
+    dateIsValid(date) {
+      return !Number.isNaN(new Date(date).getTime());
     },
     getTheDay() {
-      const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.starttime_of_this_day);
-      if (this.$datefns.isToday(parsed)) {
-        return 'Today';
+      if(dateIsValid(this.stats.userSessionStatus.starttime_of_this_day)) {
+        const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.starttime_of_this_day);
+        if (this.$datefns.isToday(parsed)) {
+          return 'Today';
+        } else {
+          return this.$datefns.format(parsed, "dd MMM yyyy")
+        }
       } else {
-        return this.$datefns.format(parsed, "dd MMM yyyy")
+        console.log('invalid date value=' + this.stats.userSessionStatus.starttime_of_this_day);
+        return 'N/A';
       }
+      
     }
 
   },
