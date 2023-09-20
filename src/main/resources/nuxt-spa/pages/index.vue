@@ -10,16 +10,11 @@
           class="hc border-radius mb-4"
           :options="chartOptions"
         />
-        <div
-          v-for="(x, i) in getAllAppIdsForChart()"
-          :key="i"
-        >
-          <highchart
-            id="column-chart"
-            class="hc border-radius"
-            :options="getChartOptions(x)"
-          />
-        </div>
+        <highchart
+          id="column-chart"
+          class="hc border-radius"
+          :options="getChartOptions()"
+        />
       </div>
       <div class="column is-half p-2">
         <div
@@ -48,10 +43,10 @@
 // import { runInThisContext } from "vm";
 import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-line
 // import toaster from "@/mixins/toaster";
-// import { parseISO, compareAsc, isToday, parse } from "date-fns";
+import { parseISO, compareAsc, isToday, parse, format } from "date-fns"; // eslint-disable-line
 import StatsNode from "../domain/pages/StatsNode.vue";
 import toaster from "@/mixins/toaster";
-// import colors from "@/assets/styles/_colors.module.scss";
+import colors from "@/assets/styles/_colors.module.scss";
 
 export default {
   auth: false,
@@ -62,7 +57,8 @@ export default {
   data() {
     return {
       status: null,
-      interval: 10000
+      interval: 10000,
+      prev: null,
     };
   },
 
@@ -133,17 +129,26 @@ export default {
   watch: {},
   mounted() {
     this.startAutoPoller();
+    console.log(colors)
   },
   methods: {
     // ...mapMutations({
     //   setToken: 'auth/setToken'
     // }),
     // ...mapActions("api", ["get_usersession_status"]),
+
+    categories(st) {
+      return Object.keys(st).map(x => {
+        const parsed = parseISO(x);
+        const formatted = format(parsed, "dd MMM")
+        return formatted
+      })
+    },
     getValue(day) {
       return this.status[day];
     },
 
-    getChartOptions(appId){
+    getChartOptions(appId) {
       return {
         chart: {
           type: 'column',
@@ -151,7 +156,9 @@ export default {
         },
         credits: false,
         xAxis: {
-          type: 'datetime'
+          // type: 'datetime'
+          type: 'category',
+          categories: this.categories(this.status),
         },
         yAxis: {
           title: {
@@ -162,41 +169,82 @@ export default {
           text: 'User activities ' + ' for appid ' + appId
         },
         plotOptions: {
-          series: {
-            pointStart: this.getStartDateInUTCForChart,
-            pointInterval: 24 * 3600 * 1000 // one day
-          },
-          line: {
-            lineWidth: 3
+          // series: {
+          //   pointStart: this.getStartDateInUTCForChart,
+          //   pointInterval: 24 * 3600 * 1000 // one day
+          // },
+          column: {
+            stacking: 'normal'
           }
         },
-        series: this.getSeriesDataForAppId(appId)
+        series: this.getSeries()
 
       }
     },
+    getSeries() {
+      const series = this.getAllAppIdsForChart().map((id, idx) => {
+        return this.getSeriesDataForAppId(id, idx);
+      })
 
-    getSeriesDataForAppId(appId){
+      // const series = this.getSeriesDataForAppId();
+      console.log("SERIES: ", [
+        ...series[0],
+        ...series[1]
+      ])
+      return [
+        ...series[0],
+        ...series[1],
+      ]
+    },
+
+    getSeriesDataForAppId(appId, idx){
       const result = [];
       if (this.status) {
-        result.push({ "name": "New users", "data": [], "color": "#209cee" });
-        result.push({ "name": "Logins", "data": [], "color": "#23d160" });
-        result.push({ "name": "Deleted users", "data": [], "color": "#ff3860" });
+        result.push({ "name": "New users", "data": [], stack: appId});
+        result.push({ "name": "Logins", "data": [], stack: appId});
+        result.push({ "name": "Deleted users", "data": [], stack: appId});
+        if (idx === 0) {
+          result[0].id = "users"
+          result[1].id = "logins"
+          result[2].id = "deleted"
+        } else {
+          result[0].linkedTo = "users"
+          result[1].linkedTo = "logins"
+          result[2].linkedTo = "deleted"
 
-        Object.values(this.status).forEach(e => {
-          const found = e.userApplicationStatistics.find(x => x.for_application === appId);
-          if (found) {
-            result[0].data.push(found.number_of_registered_users_this_day);
-            result[1].data.push(found.number_of_unique_logins_this_day);
-            result[2].data.push(found.number_of_deleted_users_this_day);
-          } else {
-            result[0].data.push(0);
-            result[1].data.push(0);
-            result[2].data.push(0);
-          }
+        }
+        // console.log(this.categories(this.status))
+        Object.keys(this.status).forEach(key => {
+            this.status[key].userApplicationStatistics.forEach(x => {
+              const parsed = parseISO(key);
+              const formatted = format(parsed, "dd MMM")
+              if (x.for_application === appId) {
+                result[0].data.push([formatted, x.number_of_registered_users_this_day])
+                result[1].data.push([formatted, x.number_of_unique_logins_this_day])
+                result[2].data.push([formatted, x.number_of_deleted_users_this_day])
+              }
+            })
         });
+        // Object.keys(this.status).forEach(k => {
+        //   this.status[k].userApplicationStatistics.forEach(x => {
+        //     const parsed = parseISO(k);
+        //     const formatted = format(parsed, "dd MMM")
+        //     if (x.for_application === appId) {
+        //       result.push({
+        //         name: formatted,
+        //         data: [
+        //           x.number_of_registered_users_this_day,
+        //           x.number_of_unique_logins_this_day,
+        //           x.number_of_deleted_users_this_day
+        //       ]})
+        //     }
+        //   })
+        // });
 
       }
-      return result;
+      return result
+      // console.log("RESULT: ", result)
+      // return { name: appId, data: result };
     },
 
     getAllAppIdsForChart(){
@@ -207,7 +255,7 @@ export default {
             appids.add(j.for_application);
           })
         });
-        return appids;
+        return [...appids];
       }
       return [];
     },
