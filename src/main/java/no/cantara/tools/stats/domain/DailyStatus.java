@@ -40,6 +40,12 @@ public class DailyStatus implements Serializable {
         if (activityStatistics==null){
             activityStatistics=new ActivityStatistics();
         }
+        if (activityStatistics!=null && activityStatistics.getActivities().getUserSessions()!=null && activityStatistics.getActivities().getUserSessions().size() > 200){
+            ActivityCollection activities = this.activityStatistics.getActivities();
+            List<UserSessionActivity> userSessions = activities.getUserSessions();
+            List<UserSessionActivity> myLastUserSessions = userSessions.subList(userSessions.size()-100, userSessions.size());
+            activities.setUserSessions(myLastUserSessions);
+        }
         return activityStatistics;
     }
 

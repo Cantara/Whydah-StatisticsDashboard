@@ -17,5 +17,12 @@ public class ActivityStatistics implements Serializable {
     private String activityName="userSession";
     private long startTime=0;
     private long endTime=0;
-    private ActivityCollection activities;
+    private ActivityCollection activities=new ActivityCollection();
+
+    public ActivityCollection getActivities() {
+        if (activities==null){
+            activities=new ActivityCollection();
+        }
+        return activities;
+    }
 }

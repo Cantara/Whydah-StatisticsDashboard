@@ -53,7 +53,7 @@ public class StatusService {
 
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
     private UserSessionStatus recentStatus = null;
-    private TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
+    private static TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
 
     LocalDate localDate = LocalDate.now();
 
@@ -177,8 +177,8 @@ public class StatusService {
                 }
             }
             dailyStatus.setUserSessionStatus(status);
-            dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
             dailyStatus.setActivityStatistics(stats);
+            dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
             dailyStatusMap.put(todayString, dailyStatus);
            
             return status;
