@@ -205,8 +205,10 @@ public class StatusService {
             dailyStatus.setUserSessionStatus(status);
             dailyStatus.setActivityStatistics(stats);
             dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
-            dailyStatus.updateHourlyStatus(currentHour, hourlyStatus);
+            dailyStatus.setHourlyStatus(currentHour, hourlyStatus);
             dailyStatusMap.put(todayString, dailyStatus);
+            hourlyStatus = updateHourlyStatus();
+            hourlyStatusMap.put(currentHour, hourlyStatus);
 
             return status;
         } catch (Exception ex) {
