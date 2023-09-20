@@ -131,6 +131,9 @@ public class StatusService {
 
                 // add a new dailystatus object for the new day
                 DailyStatus dailyStatus = new DailyStatus();
+                recentStatus = new UserSessionStatus();
+                recentStatus.setStarttime_of_this_day(starttime_of_today);
+
                 dailyStatus.setUserSessionStatus(recentStatus);
                 String todayString = simpleDateFormatter.format(new Date());
                 dailyStatusMap.put(todayString, dailyStatus);
@@ -173,7 +176,9 @@ public class StatusService {
                     dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
                 }
             }
+            dailyStatus.setUserSessionStatus(status);
             dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
+            dailyStatus.setActivityStatistics(stats);
             dailyStatusMap.put(todayString, dailyStatus);
            
             return status;
