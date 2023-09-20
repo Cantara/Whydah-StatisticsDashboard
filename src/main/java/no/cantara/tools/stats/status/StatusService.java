@@ -159,6 +159,7 @@ public class StatusService {
                 ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
                 lastHourUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
                 currentHour = simpleHourFormatter.format(new Date());
+                hourlyStatus = updateHourlyStatus();
                 hourlyStatusMap.put(currentHour, hourlyStatus);
 
             }
