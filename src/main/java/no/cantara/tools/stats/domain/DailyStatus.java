@@ -80,7 +80,7 @@ public class DailyStatus implements Serializable {
         }
     }
 
-    public void updateHourlyStatus(String hourstring,HourlyStatus hourlyStatus){
+    public void setHourlyStatus(String hourstring,HourlyStatus hourlyStatus){
         this.hourlyStatusTreeMap.put(hourstring,hourlyStatus);
 
     }
