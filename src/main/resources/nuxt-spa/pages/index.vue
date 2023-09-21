@@ -132,10 +132,6 @@ export default {
     console.log(colors)
   },
   methods: {
-    // ...mapMutations({
-    //   setToken: 'auth/setToken'
-    // }),
-    // ...mapActions("api", ["get_usersession_status"]),
 
     categories(st) {
       return Object.keys(st).map(x => {
