@@ -144,7 +144,7 @@ export default {
       return this.status[day];
     },
 
-    getChartOptions(appId) {
+    getChartOptions() {
       return {
         chart: {
           type: 'column',
@@ -170,7 +170,7 @@ export default {
           }
         },
         title: {
-          text: 'User activities ' + ' for appid ' + appId
+          text: `User activities for apps ${this.getAllAppIdsForChart().join(", ")}`
         },
         plotOptions: {
           // series: {
