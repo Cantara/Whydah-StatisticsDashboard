@@ -190,15 +190,7 @@ export default {
         return this.getSeriesDataForAppId(id, idx);
       })
 
-      // const series = this.getSeriesDataForAppId();
-      console.log("SERIES: ", [
-        ...series[0],
-        ...series[1]
-      ])
-      return [
-        ...series[0],
-        ...series[1],
-      ]
+      return this.$lodash.flatten(series)
     },
 
     getSeriesDataForAppId(appId, idx){
