@@ -200,9 +200,9 @@ export default {
     getSeriesDataForAppId(appId, idx){
       const result = [];
       if (this.status) {
-        result.push({ "name": "New users", "data": [], stack: appId});
-        result.push({ "name": "Logins", "data": [], stack: appId});
-        result.push({ "name": "Deleted users", "data": [], stack: appId});
+        result.push({ "name": "New users", "data": [], stack: "New users"});
+        result.push({ "name": "Logins", "data": [], stack: "Logins"});
+        result.push({ "name": "Deleted users", "data": [], stack: "Deleted users"});
         if (idx === 0) {
           result[0].id = "users"
           result[1].id = "logins"
@@ -213,7 +213,6 @@ export default {
           result[2].linkedTo = "deleted"
 
         }
-        // console.log(this.categories(this.status))
         Object.keys(this.status).forEach(key => {
             this.status[key].userApplicationStatistics.forEach(x => {
               const parsed = parseISO(key);
@@ -225,26 +224,9 @@ export default {
               }
             })
         });
-        // Object.keys(this.status).forEach(k => {
-        //   this.status[k].userApplicationStatistics.forEach(x => {
-        //     const parsed = parseISO(k);
-        //     const formatted = format(parsed, "dd MMM")
-        //     if (x.for_application === appId) {
-        //       result.push({
-        //         name: formatted,
-        //         data: [
-        //           x.number_of_registered_users_this_day,
-        //           x.number_of_unique_logins_this_day,
-        //           x.number_of_deleted_users_this_day
-        //       ]})
-        //     }
-        //   })
-        // });
 
       }
       return result
-      // console.log("RESULT: ", result)
-      // return { name: appId, data: result };
     },
 
     getAllAppIdsForChart(){
