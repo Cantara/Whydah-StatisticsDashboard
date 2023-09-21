@@ -263,17 +263,6 @@ export default {
   min-height: 100vh;
 
 }
-/* .container { */
-/*   margin-left: 10px; */
-/*   margin-right: 10px; */
-/*   margin-top: 20px; */
-/*   display: flex; */
-/*   flex-direction: row; */
-/*   flex-wrap: wrap; */
-/*   align-content: flex-start; */
-/*   gap: 1rem; */
-/* } */
-
 .hc {
   height: 300px;
 }
