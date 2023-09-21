@@ -33,15 +33,14 @@ $colors: mergeColorMaps($colors, $addColors);
   --highcharts-neutral-color-80: #{$color-off-white};
   --highcharts-neutral-color-10: #{$color-accent};
 
-  // Chart colors
-  --highcharts-color-0: #{$color-ice}; // new user
-  --highcharts-color-1: #{$color-charcoal}; // new login
-  --highcharts-color-2: #{$color-terra-cotta}; // deleted user
 }
 
 
 #line-chart {
   --highcharts-background-color: #{$color-slate-blue};
+  --highcharts-color-0: #{$color-ice}; // new user
+  --highcharts-color-1: #{$color-charcoal}; // new login
+  --highcharts-color-2: #{$color-terra-cotta}; // deleted user
 
   .highcharts-graph {
     stroke-width: 5px;
@@ -53,6 +52,12 @@ $colors: mergeColorMaps($colors, $addColors);
 
 #column-chart {
   --highcharts-background-color: #{$color-slate-green};
+  --highcharts-color-0: #{$color-ice};
+  --highcharts-color-1: #{$color-dark-jean};
+  --highcharts-color-3: #{$color-light-grey};
+  --highcharts-color-4: #{$color-charcoal};
+  --highcharts-color-2: #{$color-terra-cotta};
+  --highcharts-color-5: #{$color-terra-dark};
 
   .highcharts-point, .highcharts-markers {
     stroke-width: 3px;
