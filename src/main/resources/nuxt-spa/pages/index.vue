@@ -153,9 +153,10 @@ export default {
 
         tooltip: {
           formatter: function () {
-            return "<b>" + this.x + "</b><br/>" +
-              this.series.name + ": " + this.y + "<br/>" +
-              "Total: " + this.point.stackTotal;
+            return `<b>
+              ${this.x} - ${this.point.appId}
+              </b></br>${this.series.name}: ${this.y}
+              <br/>Total: ${this.point.stackTotal}`
           }
         },
         credits: false,
@@ -214,9 +215,9 @@ export default {
               const parsed = parseISO(key);
               const formatted = format(parsed, "dd MMM")
               if (x.for_application === appId) {
-                result[0].data.push([formatted, x.number_of_registered_users_this_day])
-                result[1].data.push([formatted, x.number_of_unique_logins_this_day])
-                result[2].data.push([formatted, x.number_of_deleted_users_this_day])
+                result[0].data.push({ name: formatted, y: x.number_of_registered_users_this_day, appId})
+                result[1].data.push({ name: formatted, y: x.number_of_unique_logins_this_day, appId })
+                result[2].data.push({ name: formatted, y: x.number_of_deleted_users_this_day, appId })
               }
             })
         });
