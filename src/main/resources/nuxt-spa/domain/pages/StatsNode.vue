@@ -102,6 +102,15 @@ export default {
           type: "column",
           styledMode: true,
         },
+
+        tooltip: {
+          formatter: function () {
+            return `<b>
+              ${this.x} - ${this.point.appId}
+              </b></br>${this.series.name}: ${this.y}
+              <br/>Total: ${this.point.stackTotal}`
+          }
+        },
         title: {
           text: ""
         },
