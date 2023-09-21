@@ -1,9 +1,10 @@
 // import lodash from 'lodash'
 import merge from "lodash/merge";
+import flatten from "lodash/flatten";
 
-console.log(merge)
 const lodash = {
-  merge
+  merge,
+  flatten
 };
 
 export default defineNuxtPlugin(nuxtApp => {
