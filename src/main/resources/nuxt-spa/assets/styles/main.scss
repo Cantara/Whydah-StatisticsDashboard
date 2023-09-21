@@ -14,7 +14,8 @@ $addColors: (
   "desert": ($color-desert, findColorInvert($color-desert)),
   "dull-blue": ($color-dull-blue, findColorInvert($color-dull-blue)),
   "topaz": ($color-topaz, findColorInvert($color-topaz)),
-  "cool-grey": ($color-cool-grey, findColorInvert($color-cool-grey))
+  "cool-grey": ($color-cool-grey, findColorInvert($color-cool-grey)),
+  "dark-grey": ($color-dark-grey, findColorInvert($color-dark-grey))
 );
 
 $colors: mergeColorMaps($colors, $addColors);
@@ -62,6 +63,10 @@ $colors: mergeColorMaps($colors, $addColors);
   .highcharts-point, .highcharts-markers {
     stroke-width: 3px;
   }
+}
+
+#stats-node-chart {
+
 }
 
 // }}}
