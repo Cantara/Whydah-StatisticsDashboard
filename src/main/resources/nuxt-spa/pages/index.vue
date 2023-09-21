@@ -157,7 +157,7 @@ export default {
             return `<b>
               ${this.x} - ${this.point.appId}
               </b></br>${this.series.name}: ${this.y}
-              <br/>Total: ${this.point.stackTotal}`
+              `
           }
         },
         credits: false,
@@ -198,9 +198,9 @@ export default {
     getSeriesDataForAppId(appId, idx){
       const result = [];
       if (this.status) {
-        result.push({ "name": "New users", "data": [], stack: "New users"});
-        result.push({ "name": "Logins", "data": [], stack: "Logins"});
-        result.push({ "name": "Deleted users", "data": [], stack: "Deleted users"});
+        result.push({ "name": "New users", "data": [], stack: appId});
+        result.push({ "name": "Logins", "data": [], stack: appId});
+        result.push({ "name": "Deleted users", "data": [], stack: appId});
         if (idx === 0) {
           result[0].id = "users"
           result[1].id = "logins"
