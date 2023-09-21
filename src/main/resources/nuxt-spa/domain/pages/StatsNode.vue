@@ -94,7 +94,7 @@ export default {
   },
   computed: {
     categories() {
-      return ["New users", "Logins", "Deleted users"]
+      return ["New users", "Logins", "Deleted"]
     },
     chartOptions() {
       return {
@@ -133,14 +133,18 @@ export default {
             shadow: false,
             groupPadding: 0,
             // pointPlacement: 'on'
+          },
+          column: {
+            grouping: false,
           }
         },
       }
     },
   },
   mounted() {
-    console.log("series: ", this.getSeries())
-    console.log("in stats: : ", this.stats)
+    // console.log(this.categories)
+    // console.log("series: ", this.getSeries())
+    // console.log("in stats: : ", this.stats)
   },
   methods: {
 
@@ -148,29 +152,28 @@ export default {
       const series = this.ids.map((id, idx) => {
         return this.getSeriesDataForAppId(id, idx);
       })
-      console.log("final series: ", this.$lodash.flatten(series))
+      // console.log("final series: ", this.$lodash.flatten(series))
       return this.$lodash.flatten(series)
     },
     getSeriesDataForAppId(appId, idx) {
       const result = [];
       result.push({ "name": "New users", "data": [], stack: "New users"});
       result.push({ "name": "Logins", "data": [], stack: "Logins"});
-      result.push({ "name": "Deleted users", "data": [], stack: "Deleted users"});
-      if (idx === 0) {
-        result[0].id = "users"
-        result[1].id = "logins"
-        result[2].id = "deleted"
-      } else {
-        result[0].linkedTo = "users"
-        result[1].linkedTo = "logins"
-        result[2].linkedTo = "deleted"
-
-      }
+      // if (idx === 0) {
+      //   result[0].id = "users"
+      //   result[1].id = "logins"
+      //   result[2].id = "deleted"
+      // } else {
+      //   result[0].linkedTo = "users"
+      //   result[1].linkedTo = "logins"
+      //   result[2].linkedTo = "deleted"
+      // }
+      result.push({ "name": "Deleted", "data": [], stack: "Deleted users"});
       this.stats.userApplicationStatistics.forEach(x => {
         if (x.for_application === appId) {
-          result[0].data.push({ y: x.number_of_registered_users_this_day, appId})
-          result[1].data.push({ y: x.number_of_unique_logins_this_day, appId })
-          result[2].data.push({ y: x.number_of_deleted_users_this_day, appId })
+          result[0].data.push({ name: "New users", y: x.number_of_registered_users_this_day, appId})
+          result[1].data.push({ name: "Logins", y: x.number_of_unique_logins_this_day, appId })
+          result[2].data.push({ name: "Deleted", y: x.number_of_deleted_users_this_day, appId })
         }
       })
 
