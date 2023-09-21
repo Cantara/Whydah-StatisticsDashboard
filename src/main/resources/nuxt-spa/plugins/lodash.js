@@ -1,5 +1,13 @@
-import lodash from 'lodash'
+// import lodash from 'lodash'
+import merge from "lodash/merge";
+
+console.log(merge)
+const lodash = {
+  merge
+};
 
 export default defineNuxtPlugin(nuxtApp => {
-  nuxtApp.provide('lodash', () => lodash)
+  nuxtApp.provide('lodash', lodash)
 })
+
+
