@@ -142,7 +142,6 @@ export default {
         console.log('invalid date format value=' + this.stats.userSessionStatus.last_updated);
         return 'N/A';
       }
-      
     },
     dateIsValid(date) {
       return !Number.isNaN(new Date(date).getTime());
@@ -159,7 +158,6 @@ export default {
         console.log('invalid date value=' + this.stats.userSessionStatus.starttime_of_this_day);
         return 'N/A';
       }
-      
     }
 
   },
