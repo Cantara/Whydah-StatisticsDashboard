@@ -5,7 +5,7 @@
     <groupId>no.cantara.tools</groupId>
     <artifactId>Whydah-StatisticsDashboard</artifactId>
     <name>${project.artifactId}</name>
-    <version>1.20.8-SNAPSHOT</version>
+    <version>1.20.16-SNAPSHOT</version>
 
     <repositories>
         <!-- Needed for parent    -->
@@ -218,7 +218,7 @@
 		<dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
+            <version>1.18.30</version>
         </dependency>
         <dependency>
 		    <groupId>com.konghq</groupId>

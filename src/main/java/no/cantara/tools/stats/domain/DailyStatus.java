@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+
 
 public class DailyStatus implements Serializable {
     public static final Logger log= LoggerFactory.getLogger(DailyStatus.class);
@@ -15,6 +17,8 @@ public class DailyStatus implements Serializable {
     private UserSessionStatus userSessionStatus;
     private List<UserApplicationStatistics> userApplicationStatistics;
     private ActivityStatistics activityStatistics = new ActivityStatistics();
+
+    private TreeMap<String, HourlyStatus> hourlyStatusTreeMap = new TreeMap<>();
 
 
     public UserSessionStatus getUserSessionStatus() {
@@ -40,6 +44,12 @@ public class DailyStatus implements Serializable {
         if (activityStatistics==null){
             activityStatistics=new ActivityStatistics();
         }
+        if (activityStatistics!=null && activityStatistics.getActivities().getUserSessions()!=null && activityStatistics.getActivities().getUserSessions().size() > 200){
+            ActivityCollection activities = this.activityStatistics.getActivities();
+            List<UserSessionActivity> userSessions = activities.getUserSessions();
+            List<UserSessionActivity> myLastUserSessions = userSessions.subList(userSessions.size()-100, userSessions.size());
+            activities.setUserSessions(myLastUserSessions);
+        }
         return activityStatistics;
     }
 
@@ -58,13 +68,31 @@ public class DailyStatus implements Serializable {
                 userSessionActivity = new ArrayList<>();
             }
             ActivityCollection activities = this.activityStatistics.getActivities();
-            List<UserSessionActivity> userSessionActivity = activities.getUserSessions();
+            //List<UserSessionActivity> userSessionActivity = activities.getUserSessions();
             //userSessionActivity.addAll(userSessions);  //TODO  move into HourlyStatus
-            userSessionActivity=userSessions;
+            //userSessionActivity=userSessions;
+            List<UserSessionActivity> myLastUserSessions = userSessions.subList(userSessions.size()-100, userSessions.size());
+
+            activities.setUserSessions(myLastUserSessions);
 
         } catch (Exception e) {
             log.error("Exception in trying to populate userSessions", e);
         }
     }
 
+    public void setHourlyStatus(String hourstring,HourlyStatus hourlyStatus){
+        this.hourlyStatusTreeMap.put(hourstring,hourlyStatus);
+
+    }
+
+    public  TreeMap<String, HourlyStatus> getHourlyStatusTreeMap() {
+        if (hourlyStatusTreeMap==null){
+            hourlyStatusTreeMap = new TreeMap<>();
+        }
+        return hourlyStatusTreeMap;
+    }
+
+    public  void setHourlyStatusTreeMap(TreeMap<String, HourlyStatus> hourlyStatusTreeMap) {
+        this.hourlyStatusTreeMap = hourlyStatusTreeMap;
+    }
 }
