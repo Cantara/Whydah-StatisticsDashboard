@@ -138,7 +138,7 @@ export default {
         const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);
         return this.$datefns.format(parsed, "H:mm")
       } else {
-        console.log('invalid date format value=' + this.stats.userSessionStatus.last_updated);
+        console.error('invalid date format value=' + this.stats.userSessionStatus.last_updated);
         return 'N/A';
       }
     },
@@ -154,7 +154,7 @@ export default {
           return this.$datefns.format(parsed, "dd MMM yyyy")
         }
       } else {
-        console.log('invalid date value=' + this.stats.userSessionStatus.starttime_of_this_day);
+        console.error('invalid date value=' + this.stats.userSessionStatus.starttime_of_this_day);
         return 'N/A';
       }
     }
