@@ -30,6 +30,7 @@
           class="column is-one-fifth"
         >
           <StatsNode
+            :ids="getAllAppIdsForChart()"
             :stats="getValue(b)"
           />
         </div>

@@ -25,47 +25,48 @@
         Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
       </li>
     </ul>
-    <!-- <highchart -->
-    <!--   class="hc" -->
-    <!--   :more="true" -->
-    <!--   :options="chartOptions" -->
-    <!-- /> -->
+    <highchart
+      id="stats-node-chart"
+      class="hc"
+      :more="true"
+      :options="chartOptions"
+    />
 
-    <div class="tags">
-      <span class="tag is-info">
-        {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered
-      </span>
-      <span class="tag is-success">
-        {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins
-      </span>
-      <span class="tag is-danger">
-        {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted
-      </span>
-      <span class="tag is-warning">
-        {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions
-      </span>
-    </div>
+    <!-- <div class="tags"> -->
+    <!--   <span class="tag is-info"> -->
+    <!--     {{ stats.userSessionStatus.number_of_registered_users_this_day }} new users registered -->
+    <!--   </span> -->
+    <!--   <span class="tag is-success"> -->
+    <!--     {{ stats.userSessionStatus.number_of_unique_logins_this_day }} unique new logins -->
+    <!--   </span> -->
+    <!--   <span class="tag is-danger"> -->
+    <!--     {{ stats.userSessionStatus.number_of_deleted_users_this_day }} users deleted -->
+    <!--   </span> -->
+    <!--   <span class="tag is-warning"> -->
+    <!--     {{ stats.userSessionStatus.number_of_active_user_sessions }} active user sessions -->
+    <!--   </span> -->
+    <!-- </div> -->
 
-    <div class="is-flex is-flex-direction-row is-flex-wrap-wrap">
-      <div
-        v-for="p in stats.userApplicationStatistics"
-        :key="p.last_updated"
-        class="is-flex is-flex-direction-column app-item"
-      >
-        <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1">
-          appid - {{ p.for_application }}
-        </span>
-        <span class="has-background-info is-small pl-2 pr-2">
-          {{ p.number_of_registered_users_this_day }} new users registered today
-        </span>
-        <span class="has-background-success is-small pl-2 pr-2">
-          {{ p.number_of_unique_logins_this_day }} unique user logins today
-        </span>
-        <span class="has-background-danger is-small pl-2 pr-2">
-          {{ p.number_of_deleted_users_this_day }} users deleted
-        </span>
-      </div>
-    </div>
+    <!-- <div class="is-flex is-flex-direction-row is-flex-wrap-wrap"> -->
+    <!--   <div -->
+    <!--     v-for="p in stats.userApplicationStatistics" -->
+    <!--     :key="p.last_updated" -->
+    <!--     class="is-flex is-flex-direction-column app-item" -->
+    <!--   > -->
+    <!--     <span class="is-size-6 has-text-weight-semibold pl-3 pr-3 pt-1 pb-1"> -->
+    <!--       appid - {{ p.for_application }} -->
+    <!--     </span> -->
+    <!--     <span class="has-background-info is-small pl-2 pr-2"> -->
+    <!--       {{ p.number_of_registered_users_this_day }} new users registered today -->
+    <!--     </span> -->
+    <!--     <span class="has-background-success is-small pl-2 pr-2"> -->
+    <!--       {{ p.number_of_unique_logins_this_day }} unique user logins today -->
+    <!--     </span> -->
+    <!--     <span class="has-background-danger is-small pl-2 pr-2"> -->
+    <!--       {{ p.number_of_deleted_users_this_day }} users deleted -->
+    <!--     </span> -->
+    <!--   </div> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -79,60 +80,93 @@ import toaster from "@/mixins/toaster";
 export default {
   mixins: [toaster],
   props: {
-    stats: { type: Object, default: () => ({}) },
+    stats: {
+      type: Object,
+      default: () => ({})
+    },
+    ids: {
+      required: true,
+      type: Array,
+    }
   },
   data() {
     return {};
   },
   computed: {
     categories() {
-      return ["New users", "New logins", "Deleted", "Active user sessions"]
+      return ["New users", "Logins", "Deleted users"]
     },
     chartOptions() {
       return {
         chart: {
-          polar: true,
           type: "column",
-          height: null,
-          width: null,
+          styledMode: true,
+        },
+        title: {
+          text: ""
         },
         xAxis: {
-          tickmarkPlacement: "on",
+          // tickmarkPlacement: "on",
           type: "category",
           categories: this.categories,
         },
-        series: this.series,
+        series: this.getSeries(),
         credits: false,
         yAxis: {
-          visible: false,
-          min: 0,
-          endOnTick: false,
-          showLastLabel: true,
-          reversedStacks: false
         },
 
+        legend: {
+          enabled: false,
+        },
         plotOptions: {
           series: {
-            stacking: "normal",
+            stacking: 'normal',
             shadow: false,
             groupPadding: 0,
-            pointPlacement: "on"
+            // pointPlacement: 'on'
           }
-        }
+        },
       }
     },
-    series() {
-      return [
-        { name: "New users", data: [500] },
-        { name: "New logins", data: [421] },
-        { name: "Deleted", data: [2] },
-        { name: "Active user sessions", data: [1204] }
-      ]
-    }
   },
   mounted() {
+    console.log("series: ", this.getSeries())
+    console.log("in stats: : ", this.stats)
   },
   methods: {
+
+    getSeries() {
+      const series = this.ids.map((id, idx) => {
+        return this.getSeriesDataForAppId(id, idx);
+      })
+      console.log("final series: ", this.$lodash.flatten(series))
+      return this.$lodash.flatten(series)
+    },
+    getSeriesDataForAppId(appId, idx) {
+      const result = [];
+      result.push({ "name": "New users", "data": [], stack: "New users"});
+      result.push({ "name": "Logins", "data": [], stack: "Logins"});
+      result.push({ "name": "Deleted users", "data": [], stack: "Deleted users"});
+      if (idx === 0) {
+        result[0].id = "users"
+        result[1].id = "logins"
+        result[2].id = "deleted"
+      } else {
+        result[0].linkedTo = "users"
+        result[1].linkedTo = "logins"
+        result[2].linkedTo = "deleted"
+
+      }
+      this.stats.userApplicationStatistics.forEach(x => {
+        if (x.for_application === appId) {
+          result[0].data.push({ y: x.number_of_registered_users_this_day, appId})
+          result[1].data.push({ y: x.number_of_unique_logins_this_day, appId })
+          result[2].data.push({ y: x.number_of_deleted_users_this_day, appId })
+        }
+      })
+
+      return result
+    },
     getLastUpdated(){
       if(this.dateIsValid(this.stats.userSessionStatus.last_updated)) {
         const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);

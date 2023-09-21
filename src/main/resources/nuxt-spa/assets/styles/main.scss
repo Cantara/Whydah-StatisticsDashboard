@@ -66,6 +66,7 @@ $colors: mergeColorMaps($colors, $addColors);
 }
 
 #stats-node-chart {
+  --highcharts-background-color: #{$color-dark-grey};
 
 }
 
