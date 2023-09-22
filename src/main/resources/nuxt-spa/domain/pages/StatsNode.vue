@@ -22,19 +22,11 @@
       </span>
     </div>
 
-    <div
-      class="p-2 bullet is-flex is-justify-content-space-between mb-2"
-    >
-      <div>
-        <span class="icon mr-2">
-          <font-awesome-icon icon="fas fa-user" />
-        </span>
-        <span class="">Total registered users:</span>
-      </div>
-      <span class="has-text-weight-bold">
-        {{ stats.userSessionStatus.total_number_of_users }}
-      </span>
-    </div>
+    <StatsRow
+      label="Total registered users:"
+      :value="stats.userSessionStatus.total_number_of_users"
+      icon-class="fa-user"
+    />
 
     <!-- <ul class=""> -->
     <!--   <li> -->
@@ -97,9 +89,13 @@
 // import { runInThisContext } from "vm";
 import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-line
 import toaster from "@/mixins/toaster";
+import StatsRow from "~/domain/pages/StatsRow.vue";
 // import { parseISO, compareAsc, isToday } from "date-fns";
 
 export default {
+  components: {
+    StatsRow
+  },
   mixins: [toaster],
   props: {
     stats: {
@@ -259,10 +255,10 @@ export default {
 /*   margin-right: 5px; */
 /* } */
 
-.bullet {
-  border-radius: 6px;
-  background: lighten($color-dark-grey, 3);
-}
+/* .bullet { */
+/*   border-radius: 6px; */
+/*   background: lighten($color-dark-grey, 3); */
+/* } */
 
 .item:hover {
   opacity: 1;
@@ -275,6 +271,7 @@ export default {
   border: 2px solid transparent;
   transition: all 100ms ease-in-out;
 }
+
 .more-menu:hover {
   border: 2px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;

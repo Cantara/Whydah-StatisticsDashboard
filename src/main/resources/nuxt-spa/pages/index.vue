@@ -202,7 +202,7 @@ export default {
       return this.$lodash.flatten(series)
     },
 
-    getSeriesDataForAppId(appId, idx){
+    getSeriesDataForAppId(appId, idx) {
       const result = [];
       if (this.status) {
         result.push({ "name": "New users", "data": [], stack: appId});
