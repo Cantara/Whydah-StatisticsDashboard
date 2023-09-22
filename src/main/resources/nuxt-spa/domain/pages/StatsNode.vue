@@ -25,20 +25,18 @@
     <StatsRow
       label="Total registered users:"
       :value="stats.userSessionStatus.total_number_of_users"
+      icon-class="fa-users"
+    />
+    <StatsRow
+      label="Total applications:"
+      :value="stats.userSessionStatus.total_number_of_applications"
+      icon-class="fa-folder"
+    />
+    <StatsRow
+      label="Total user session activities"
+      :value="stats.userSessionStatus.total_number_of_session_actions_this_day"
       icon-class="fa-user"
     />
-
-    <!-- <ul class=""> -->
-    <!--   <li> -->
-    <!--     Total number of registered users: {{ stats.userSessionStatus.total_number_of_users }} -->
-    <!--   </li> -->
-    <!--   <li> -->
-    <!--     Total number of applications: {{ stats.userSessionStatus.total_number_of_applications }} -->
-    <!--   </li> -->
-    <!--   <li> -->
-    <!--     Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }} -->
-    <!--   </li> -->
-    <!-- </ul> -->
     <highchart
       id="stats-node-chart"
       class="hc"
