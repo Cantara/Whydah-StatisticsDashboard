@@ -2,13 +2,12 @@
   <div
     class="has-text-white has-background-dark-grey item p-4 is-flex is-flex-direction-column"
   >
-    <div class="is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between">
-      <span class="is-size-5 has-text-weight-semibold">
+    <div class="is-flex is-flex-direction-column">
+      <span class="is-size-4">
         {{ getTheDay() }}
       </span>
       <span
-        v-if="getTheDay()=='Today'"
-        class="is-size-7 mt-1 ml-3"
+        class="is-size-7 has-text-grey-light"
       >
         Last updated: {{ getLastUpdated() }}
       </span>
@@ -144,7 +143,7 @@ export default {
   mounted() {
     // console.log(this.categories)
     // console.log("series: ", this.getSeries())
-    // console.log("in stats: : ", this.stats)
+    console.log("in stats: : ", this.stats)
   },
   methods: {
 
