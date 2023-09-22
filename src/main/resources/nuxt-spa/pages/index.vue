@@ -169,7 +169,13 @@ export default {
         yAxis: {
           title: {
             text: 'Number of user activities'
-          }
+          },
+          stackLabels: {
+            enabled: true,
+            formatter: function() {
+              return this.stack
+            }
+          },
         },
         title: {
           text: `User activities for apps ${this.getAllAppIdsForChart().join(", ")}`
