@@ -172,6 +172,7 @@ export default {
           },
           stackLabels: {
             enabled: true,
+            allowOverlap: true,
             formatter: function() {
               return this.stack
             }
@@ -181,10 +182,10 @@ export default {
           text: `User activities for apps ${this.getAllAppIdsForChart().join(", ")}`
         },
         plotOptions: {
-          // series: {
-          //   pointStart: this.getStartDateInUTCForChart,
-          //   pointInterval: 24 * 3600 * 1000 // one day
-          // },
+          series: {
+            pointStart: this.getStartDateInUTCForChart,
+            pointInterval: 24 * 3600 * 1000 // one day
+          },
           column: {
             stacking: 'normal'
           }
