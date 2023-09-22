@@ -2,8 +2,8 @@
 
 // Bulma: {{{
 
-@import "~/node_modules/bulma/sass/utilities/derived-variables.sass";
-@import "~/node_modules/bulma/sass/utilities/functions.sass";
+@import "bulma/sass/utilities/derived-variables.sass";
+@import "bulma/sass/utilities/functions.sass";
 
 $family-primary: 'Noto Sans', sans-serif;
 
@@ -20,11 +20,11 @@ $addColors: (
 
 $colors: mergeColorMaps($colors, $addColors);
 
-@import "~/node_modules/bulma/bulma";
+@import "bulma/bulma";
 
 // }}}
 // Highcharts: {{{
-@import  "~/node_modules/highcharts/css/highcharts.css";
+@import  "highcharts/css/highcharts.css";
 
 .highcharts-axis-title {
   fill: $color-whydah-white;
