@@ -5,6 +5,7 @@
     <div class="is-size-3">
       Today
     </div>
+    <div> {{ formattedDate() }} </div>
   </div>
 </template>
 
@@ -19,9 +20,17 @@ export default {
       }
     }
   },
-  mounted() {
-    // console.log(this.stats)
-  }
+  methods: {
+    dateIsValid(date) {
+      return !Number.isNaN(new Date(date).getTime());
+    },
+    formattedDate() {
+      if(this.dateIsValid(this.stats.userSessionStatus.starttime_of_this_day)) {
+        const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.starttime_of_this_day);
+        return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
+      }
+    }
+  },
 }
 </script>
 
