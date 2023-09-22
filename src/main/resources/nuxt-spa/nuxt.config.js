@@ -17,9 +17,9 @@ export default defineNuxtConfig({
           href: '/favicon.ico'
         },
       ],
-      style: [
-        { cssText: '.icon svg { height: 20px !important; }', type: 'text/css' }
-      ],
+      // style: [
+      //   { cssText: '.icon svg { height: 20px !important; }', type: 'text/css' }
+      // ],
     },
   },
   /*
