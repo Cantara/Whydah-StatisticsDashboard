@@ -160,7 +160,7 @@ export default {
   mounted() {
     // console.log(this.categories)
     // console.log("series: ", this.getSeries())
-    console.log("in stats: : ", this.stats)
+    // console.log("in stats: : ", this.stats)
   },
   methods: {
 
