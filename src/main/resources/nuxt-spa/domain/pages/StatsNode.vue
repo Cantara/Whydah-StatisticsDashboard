@@ -233,32 +233,9 @@ export default {
 @import "~/assets/styles/_colors.module.scss";
 @import 'bulma/sass/utilities/derived-variables.sass';
 
-/* ul.a { */
-/*   list-style-type: circle; */
-/*   padding-left: 20px; */
-/* } */
-
 .item {
   border-radius: 1rem;
-  /* width: 400px; */
-  /* padding: 5px; */
-  /* opacity: 0.8; */
-  /* border-radius: 1px 1px 1px 1px; */
-  /* border: 1px solid #fff; */
-  /* margin-bottom: 5px; */
 }
-
-/* .app-item { */
-/*   -webkit-border-radius: 5px 5px 5px 5px; */
-/*   border-radius: 5px 5px 5px 5px; */
-/*   border: 1px solid #000; */
-/*   margin-right: 5px; */
-/* } */
-
-/* .bullet { */
-/*   border-radius: 6px; */
-/*   background: lighten($color-dark-grey, 3); */
-/* } */
 
 .item:hover {
   opacity: 1;
