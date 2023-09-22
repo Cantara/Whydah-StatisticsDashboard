@@ -17,7 +17,7 @@
         />
       </div>
       <div class="column is-half p-2">
-        <Today />
+        <Today :stats="getToday()" />
       </div>
     </div>
     <div class="column is-full is-paddingless">
@@ -64,6 +64,9 @@ export default {
   },
 
   computed: {
+    dateIsValid(date) {
+      return !Number.isNaN(new Date(date).getTime());
+    },
     getSeriesData() {
       const result = [];
       if (this.status) {
@@ -130,9 +133,16 @@ export default {
   watch: {},
   mounted() {
     this.startAutoPoller();
-    console.log(colors)
   },
   methods: {
+
+    getToday() {
+      return Object.values(this.status).find(x => {
+        const d = x.userSessionStatus.starttime_of_this_day;
+        const parsed = this.$datefns.parseISO(d);
+        return this.$datefns.isValid(parsed) && this.$datefns.isToday(parsed)
+      })
+    },
 
     categories(st) {
       return Object.keys(st).map(x => {
