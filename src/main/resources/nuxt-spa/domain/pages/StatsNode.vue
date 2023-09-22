@@ -1,11 +1,20 @@
 <template>
   <div
-    class="has-text-white has-background-dark-grey item p-4 is-flex is-flex-direction-column"
+    class="has-text-white has-text-center has-background-dark-grey item p-4 is-flex is-flex-direction-column"
   >
-    <div class="is-flex is-flex-direction-column">
-      <span class="is-size-4">
-        {{ getTheDay() }}
-      </span>
+    <div class="is-flex is-flex-direction-column mb-2">
+      <div class="is-flex is-align-items-center is-justify-content-space-between">
+        <span class="is-size-4">
+          {{ getTheDay() }}
+        </span>
+        <div
+          class="p-2 more-menu"
+        >
+          <span class="icon">
+            <font-awesome-icon icon="fas fa-ellipsis" />
+          </span>
+        </div>
+      </div>
       <span
         class="is-size-7 has-text-grey-light"
       >
@@ -13,17 +22,31 @@
       </span>
     </div>
 
-    <ul class="a mt-5 mb-5">
-      <li>
-        Total number of registered users: {{ stats.userSessionStatus.total_number_of_users }}
-      </li>
-      <li>
-        Total number of applications: {{ stats.userSessionStatus.total_number_of_applications }}
-      </li>
-      <li>
-        Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
-      </li>
-    </ul>
+    <div
+      class="p-2 bullet is-flex is-justify-content-space-between mb-2"
+    >
+      <div>
+        <span class="icon mr-2">
+          <font-awesome-icon icon="fas fa-user" />
+        </span>
+        <span class="">Total registered users:</span>
+      </div>
+      <span class="has-text-weight-bold">
+        {{ stats.userSessionStatus.total_number_of_users }}
+      </span>
+    </div>
+
+    <!-- <ul class=""> -->
+    <!--   <li> -->
+    <!--     Total number of registered users: {{ stats.userSessionStatus.total_number_of_users }} -->
+    <!--   </li> -->
+    <!--   <li> -->
+    <!--     Total number of applications: {{ stats.userSessionStatus.total_number_of_applications }} -->
+    <!--   </li> -->
+    <!--   <li> -->
+    <!--     Total number of user session activities: {{ stats.userSessionStatus.total_number_of_session_actions_this_day }} -->
+    <!--   </li> -->
+    <!-- </ul> -->
     <highchart
       id="stats-node-chart"
       class="hc"
@@ -181,7 +204,7 @@ export default {
     getLastUpdated(){
       if(this.dateIsValid(this.stats.userSessionStatus.last_updated)) {
         const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);
-        return this.$datefns.format(parsed, "H:mm")
+        return this.$datefns.format(parsed, "HH:mm")
       } else {
         console.error('invalid date format value=' + this.stats.userSessionStatus.last_updated);
         return 'N/A';
@@ -196,7 +219,7 @@ export default {
         if (this.$datefns.isToday(parsed)) {
           return 'Today';
         } else {
-          return this.$datefns.format(parsed, "dd MMM yyyy")
+          return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
         }
       } else {
         console.error('invalid date value=' + this.stats.userSessionStatus.starttime_of_this_day);
@@ -210,10 +233,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-ul.a {
-  list-style-type: circle;
-  padding-left: 20px;
-}
+
+@import "~/assets/styles/_colors.module.scss";
+@import 'bulma/sass/utilities/derived-variables.sass';
+
+/* ul.a { */
+/*   list-style-type: circle; */
+/*   padding-left: 20px; */
+/* } */
 
 .item {
   border-radius: 1rem;
@@ -225,16 +252,33 @@ ul.a {
   /* margin-bottom: 5px; */
 }
 
-.app-item {
-  -webkit-border-radius: 5px 5px 5px 5px;
-  border-radius: 5px 5px 5px 5px;
-  border: 1px solid #000;
-  margin-right: 5px;
+/* .app-item { */
+/*   -webkit-border-radius: 5px 5px 5px 5px; */
+/*   border-radius: 5px 5px 5px 5px; */
+/*   border: 1px solid #000; */
+/*   margin-right: 5px; */
+/* } */
+
+.bullet {
+  border-radius: 6px;
+  background: lighten($color-dark-grey, 3);
 }
 
 .item:hover {
   opacity: 1;
   transition: .9s;
+}
+
+.more-menu {
+  background: darken($color-dark-grey, 3);
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: all 100ms ease-in-out;
+}
+.more-menu:hover {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  /* background: darken($color-dark-grey, 5); */
 }
 
 .hc {
