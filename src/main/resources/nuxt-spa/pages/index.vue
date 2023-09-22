@@ -23,13 +23,13 @@
     <div class="column is-full is-paddingless">
       <div class="columns is-multiline is-marginless is-2 is-variable">
         <div
-          v-for="(b, i) in Object.keys(status).reverse()"
-          :key="i"
+          v-for="stat in getFilteredDays()"
+          :key="stat.userSessionStatus.starttime_of_this_day"
           class="column is-one-fifth"
         >
           <StatsNode
             :ids="getAllAppIdsForChart()"
-            :stats="getValue(b)"
+            :stats="stat"
           />
         </div>
       </div>
@@ -136,11 +136,22 @@ export default {
   },
   methods: {
 
+    getFilteredDays() {
+     return Object.values(this.status).filter(x => {
+        const d = x.userSessionStatus.starttime_of_this_day;
+        const parsed = this.$datefns.parseISO(d);
+        return !this.isToday(parsed)
+      }).reverse()
+    },
+    isToday(d) {
+      return this.$datefns.isValid(d) && this.$datefns.isToday(d)
+    },
+
     getToday() {
       return Object.values(this.status).find(x => {
         const d = x.userSessionStatus.starttime_of_this_day;
         const parsed = this.$datefns.parseISO(d);
-        return this.$datefns.isValid(parsed) && this.$datefns.isToday(parsed)
+        return this.isToday(parsed)
       })
     },
 
