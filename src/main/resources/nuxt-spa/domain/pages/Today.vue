@@ -1,8 +1,10 @@
 <template>
   <div
-    class="has-background-cool-grey h-100 border-radius"
+    class="has-background-cool-grey has-text-dark h-100 border-radius p-4"
   >
-    {{ stats }}
+    <div class="is-size-3">
+      Today
+    </div>
   </div>
 </template>
 
@@ -18,7 +20,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.stats)
+    // console.log(this.stats)
   }
 }
 </script>
