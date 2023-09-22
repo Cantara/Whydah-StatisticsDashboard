@@ -67,6 +67,12 @@ $colors: mergeColorMaps($colors, $addColors);
 
 #stats-node-chart {
   --highcharts-background-color: #{$color-dark-grey};
+  --highcharts-color-0: #{$color-asparagus};
+  --highcharts-color-1: #{$color-slate-blue};
+  --highcharts-color-2: #{$color-terra-cotta};
+  --highcharts-color-3: #{darken($color-asparagus, 10)};
+  --highcharts-color-4: #{darken($color-slate-blue, 5)};
+  --highcharts-color-5: #{darken($color-terra-cotta, 5)};
 
 }
 
