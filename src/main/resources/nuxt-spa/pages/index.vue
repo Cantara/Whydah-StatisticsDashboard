@@ -17,9 +17,7 @@
         />
       </div>
       <div class="column is-half p-2">
-        <div
-          class="has-background-cool-grey h-100 border-radius"
-        />
+        <Today />
       </div>
     </div>
     <div class="column is-full is-paddingless">
@@ -46,13 +44,15 @@ import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-lin
 // import toaster from "@/mixins/toaster";
 import { parseISO, compareAsc, isToday, parse, format } from "date-fns"; // eslint-disable-line
 import StatsNode from "../domain/pages/StatsNode.vue";
+import Today from "../domain/pages/Today.vue";
 import toaster from "@/mixins/toaster";
 import colors from "@/assets/styles/_colors.module.scss";
 
 export default {
   auth: false,
   components: {
-    StatsNode
+    StatsNode,
+    Today
   },
   mixins: [toaster],
   data() {
