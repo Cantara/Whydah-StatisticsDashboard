@@ -27,6 +27,7 @@ export default defineNuxtConfig({
    */
   css: [
     '@/assets/styles/main.scss',
+    "@fortawesome/fontawesome-svg-core/styles.css",
   ],
 
   googleFonts: {
