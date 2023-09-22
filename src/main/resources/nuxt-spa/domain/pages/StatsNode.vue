@@ -148,13 +148,13 @@ export default {
   methods: {
 
     getSeries() {
-      const series = this.ids.map((id, idx) => {
-        return this.getSeriesDataForAppId(id, idx);
+      const series = this.ids.map((id) => {
+        return this.getSeriesDataForAppId(id);
       })
       // console.log("final series: ", this.$lodash.flatten(series))
       return this.$lodash.flatten(series)
     },
-    getSeriesDataForAppId(appId, idx) {
+    getSeriesDataForAppId(appId) {
       const result = [];
       result.push({ "name": "New users", "data": [], stack: "New users"});
       result.push({ "name": "Logins", "data": [], stack: "Logins"});
