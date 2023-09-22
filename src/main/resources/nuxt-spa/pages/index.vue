@@ -67,9 +67,9 @@ export default {
     getSeriesData() {
       const result = [];
       if (this.status) {
-        result.push({ "name": "New users", "data": [], "color": "#209cee" });
-        result.push({ "name": "Logins", "data": [], "color": "#23d160" });
-        result.push({ "name": "Deleted users", "data": [], "color": "#ff3860" });
+        result.push({ "name": "New users", "data": []});
+        result.push({ "name": "Logins", "data": []});
+        result.push({ "name": "Deleted users", "data": []});
         Object.values(this.status).forEach(e => {
           result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
           result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
