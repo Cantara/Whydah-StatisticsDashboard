@@ -259,9 +259,11 @@ export default {
       if (this.status) {
         const appids = new Set();
         Object.values(this.status).forEach(e => {
-          e.userApplicationStatistics.forEach(j => {
-            appids.add(j.for_application);
-          })
+          if (e.userApplicationStatistics) {
+            e.userApplicationStatistics.forEach(j => {
+              appids.add(j.for_application);
+            })
+          }
         });
         return [...appids];
       }
