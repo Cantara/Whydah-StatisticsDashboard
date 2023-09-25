@@ -1,6 +1,6 @@
 <template>
   <div
-    class="has-background-cool-grey has-text-dark h-100 border-radius p-4"
+    class="has-background-cool-grey has-text-dark h-100 border-radius p-4 is-flex is-flex-direction-column is-flex-grow-1"
   >
     <header class="mb-2">
       <div class="is-size-3 has-text-weight-bold">
@@ -57,7 +57,7 @@
         </div>
       </div>
     </summary>
-    <main>
+    <main class="is-flex is-flex-grow-1">
       <highchart
         id="today-chart"
         class="hc border-radius"
@@ -84,6 +84,8 @@ export default {
         chart: {
           type: 'line',
           styledMode: true,
+          height: null,
+          width: null,
         },
         accessibility: {
           enabled: false,
@@ -174,11 +176,9 @@ export default {
   background: lighten($color-cool-grey, 4);
   padding: 0.5rem;
   border-radius: 6px;
-
 }
 
 .hc {
-  height: 100%;
   width: 100%;
 }
 </style>
