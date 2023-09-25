@@ -10,7 +10,7 @@
       <div> Last updated: {{ getLastUpdated() }} </div>
     </header>
     <summary class="is-flex flex-gap">
-      <div>
+      <div class="summary-item">
         <div class="is-size-6">
           Total registered users
         </div>
@@ -24,7 +24,7 @@
           <span>{{ stats.userSessionStatus.total_number_of_users }}</span>
         </div>
       </div>
-      <div>
+      <div class="summary-item">
         <div class="is-size-6">
           Total applications
         </div>
@@ -40,7 +40,7 @@
           </span>
         </div>
       </div>
-      <div>
+      <div class="summary-item">
         <div class="is-size-6">
           Total user session activities
         </div>
@@ -101,11 +101,20 @@ export default {
 
 <style lang="scss" scoped>
 
+@import "~/assets/styles/_colors.module.scss";
+@import 'bulma/sass/utilities/derived-variables.sass';
+
 .border-radius {
   border-radius: 1rem;
 }
 
 .flex-gap {
-  gap: 2.5rem;
+  gap: 1rem;
+}
+.summary-item {
+  background: lighten($color-cool-grey, 4);
+  padding: 0.5rem;
+  border-radius: 6px;
+
 }
 </style>
