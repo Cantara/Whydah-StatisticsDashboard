@@ -26,11 +26,9 @@ $colors: mergeColorMaps($colors, $addColors);
 // Highcharts: {{{
 @import  "highcharts/css/highcharts.css";
 
-.highcharts-axis-title {
-  fill: $color-whydah-white;
-}
 
 :root {
+  font-family: "Noto Sans";
   --highcharts-neutral-color-80: #{$color-off-white};
   --highcharts-neutral-color-10: #{$color-accent};
 
@@ -43,6 +41,9 @@ $colors: mergeColorMaps($colors, $addColors);
   --highcharts-color-1: #{$color-charcoal}; // new login
   --highcharts-color-2: #{$color-terra-cotta}; // deleted user
 
+  .highcharts-axis-title {
+    fill: $color-whydah-white;
+  }
   .highcharts-graph {
     stroke-width: 5px;
   }
@@ -60,6 +61,9 @@ $colors: mergeColorMaps($colors, $addColors);
   --highcharts-color-2: #{$color-terra-cotta};
   --highcharts-color-5: #{$color-terra-dark};
 
+  .highcharts-axis-title {
+    fill: $color-whydah-white;
+  }
   .highcharts-point, .highcharts-markers {
     stroke-width: 3px;
   }
@@ -74,6 +78,14 @@ $colors: mergeColorMaps($colors, $addColors);
   --highcharts-color-4: #{darken($color-slate-blue, 5)};
   --highcharts-color-5: #{darken($color-terra-cotta, 5)};
 
+}
+
+#today-chart {
+  --highcharts-background-color: #{darken($color-cool-grey, 5)};
+  .highcharts-title {
+    fill: $dark;
+    font-size: 1.5rem;
+  }
 }
 
 // }}}

@@ -9,7 +9,7 @@
       </div>
       <div> Last updated: {{ getLastUpdated() }} </div>
     </header>
-    <summary class="is-flex flex-gap">
+    <summary class="is-flex flex-gap mb-4">
       <div class="summary-item">
         <div class="is-size-6">
           Total registered users:
@@ -57,6 +57,13 @@
         </div>
       </div>
     </summary>
+    <main>
+      <highchart
+        id="today-chart"
+        class="hc border-radius"
+        :options="chartOptions"
+      />
+    </main>
   </div>
 </template>
 
@@ -69,6 +76,58 @@ export default {
       default() {
         return null
       }
+    }
+  },
+  computed: {
+    chartOptions() {
+      return {
+        chart: {
+          type: 'line',
+          styledMode: true,
+        },
+        accessibility: {
+          enabled: false,
+        },
+        credits: false,
+        xAxis: {
+          type: 'datetime'
+        },
+        yAxis: {
+          title: {
+            text: 'Number of user activities',
+          }
+        },
+        title: {
+          text: "Todays hourly statistics",
+          align: "left",
+        },
+        plotOptions: {
+          // series: {
+          //   pointStart: this.getStartDateInUTCForChart,
+          //   pointInterval: 24 * 3600 * 1000 // one day
+          // },
+          // line: {
+          //   lineWidth: 5
+          // }
+        },
+        series: this.getSeriesData
+
+      }
+    },
+    getSeriesData() {
+      const result = [];
+      // if (this.status) {
+      //   result.push({ "name": "New users", "data": []});
+      //   result.push({ "name": "Logins", "data": []});
+      //   result.push({ "name": "Deleted users", "data": []});
+      //   Object.values(this.status).forEach(e => {
+      //     result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
+      //     result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
+      //     result[2].data.push(e.userSessionStatus.number_of_deleted_users_this_day);
+      //   });
+      //
+      // }
+      return result;
     }
   },
   mounted() {
@@ -94,7 +153,7 @@ export default {
         const parsed = this.$datefns.parseISO(target);
         return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
       }
-    }
+    },
   },
 }
 </script>
@@ -116,5 +175,10 @@ export default {
   padding: 0.5rem;
   border-radius: 6px;
 
+}
+
+.hc {
+  height: 100%;
+  width: 100%;
 }
 </style>
