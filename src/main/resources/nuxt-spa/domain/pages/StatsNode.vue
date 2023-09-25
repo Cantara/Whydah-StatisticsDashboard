@@ -196,8 +196,9 @@ export default {
       return result
     },
     getLastUpdated(){
-      if(this.dateIsValid(this.stats.userSessionStatus.last_updated)) {
-        const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.last_updated);
+      const d = this.stats.userSessionStatus.last_updated
+      if(this.dateIsValid(d)) {
+        const parsed = this.$datefns.parseISO(d);
         return this.$datefns.format(parsed, "HH:mm")
       } else {
         console.error('invalid date format value=' + this.stats.userSessionStatus.last_updated);
@@ -205,11 +206,12 @@ export default {
       }
     },
     dateIsValid(date) {
-      return !Number.isNaN(new Date(date).getTime());
+      return date && !Number.isNaN(new Date(date).getTime());
     },
     getTheDay() {
-      if(this.dateIsValid(this.stats.userSessionStatus.starttime_of_this_day)) {
-        const parsed = this.$datefns.parseISO(this.stats.userSessionStatus.starttime_of_this_day);
+      const d = this.stats.userSessionStatus.starttime_of_this_day;
+      if(this.dateIsValid(d)) {
+        const parsed = this.$datefns.parseISO(d);
         if (this.$datefns.isToday(parsed)) {
           return 'Today';
         } else {

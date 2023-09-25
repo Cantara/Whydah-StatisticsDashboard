@@ -46,7 +46,7 @@ import { parseISO, compareAsc, isToday, parse, format } from "date-fns"; // esli
 import StatsNode from "../domain/pages/StatsNode.vue";
 import Today from "../domain/pages/Today.vue";
 import toaster from "@/mixins/toaster";
-import colors from "@/assets/styles/_colors.module.scss";
+// import colors from "@/assets/styles/_colors.module.scss";
 
 export default {
   auth: false,
