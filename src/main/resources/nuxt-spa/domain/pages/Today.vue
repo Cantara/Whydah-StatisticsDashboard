@@ -15,10 +15,10 @@
           Total registered users
         </div>
         <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
-          <span class="icon">
+          <span class="icon mr-1">
             <font-awesome-icon
               icon="fas fa-users"
-              size="2xs"
+              size="xs"
             />
           </span>
           <span>{{ stats.userSessionStatus.total_number_of_users }}</span>
@@ -29,10 +29,10 @@
           Total applications
         </div>
         <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
-          <span class="icon">
+          <span class="icon mr-1">
             <font-awesome-icon
               icon="fas fa-folder"
-              size="2xs"
+              size="xs"
             />
           </span>
           <span>
@@ -45,10 +45,10 @@
           Total user session activities
         </div>
         <div class="has-text-weight-bold is-size-4">
-          <span class="icon">
+          <span class="icon mr-1">
             <font-awesome-icon
               icon="fas fa-user"
-              size="2xs"
+              size="xs"
             />
           </span>
           <span>
