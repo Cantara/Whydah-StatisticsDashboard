@@ -81,7 +81,7 @@ $colors: mergeColorMaps($colors, $addColors);
 }
 
 #today-chart {
-  --highcharts-background-color: #{darken($color-cool-grey, 5)};
+  --highcharts-background-color: #{$color-cool-grey};
   .highcharts-title {
     fill: $dark;
     font-size: 1.5rem;

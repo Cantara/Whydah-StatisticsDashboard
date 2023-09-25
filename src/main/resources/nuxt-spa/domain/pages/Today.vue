@@ -100,7 +100,7 @@ export default {
           }
         },
         title: {
-          text: "Todays hourly statistics",
+          text: "Hourly statistics",
           align: "left",
         },
         plotOptions: {
