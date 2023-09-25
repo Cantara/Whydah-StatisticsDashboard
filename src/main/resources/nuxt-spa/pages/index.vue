@@ -3,8 +3,8 @@
     v-if="status"
     class="has-background-black has-text-white min-height-full p-2"
   >
-    <div class="columns is-marginless is-1">
-      <div class="column is-half p-2">
+    <div class="columns is-marginless is-1 is-multiline">
+      <div class="column is-half is-full-touch p-2">
         <highchart
           id="line-chart"
           class="hc border-radius mb-4"
@@ -16,7 +16,7 @@
           :options="getChartOptions()"
         />
       </div>
-      <div class="column is-half p-2">
+      <div class="column is-half is-full-touch p-2">
         <Today :stats="getToday()" />
       </div>
     </div>
@@ -25,7 +25,7 @@
         <div
           v-for="stat in getFilteredDays()"
           :key="stat.userSessionStatus.starttime_of_this_day"
-          class="column is-one-fifth"
+          class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
         >
           <StatsNode
             :ids="getAllAppIdsForChart()"
