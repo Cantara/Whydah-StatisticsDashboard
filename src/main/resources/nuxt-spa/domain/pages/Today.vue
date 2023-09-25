@@ -12,7 +12,7 @@
     <summary class="is-flex flex-gap">
       <div class="summary-item">
         <div class="is-size-6">
-          Total registered users
+          Total registered users:
         </div>
         <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
           <span class="icon mr-1">
@@ -26,7 +26,7 @@
       </div>
       <div class="summary-item">
         <div class="is-size-6">
-          Total applications
+          Total applications:
         </div>
         <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
           <span class="icon mr-1">
@@ -42,7 +42,7 @@
       </div>
       <div class="summary-item">
         <div class="is-size-6">
-          Total user session activities
+          Total user session activities:
         </div>
         <div class="has-text-weight-bold is-size-4">
           <span class="icon mr-1">
