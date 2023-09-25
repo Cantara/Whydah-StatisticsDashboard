@@ -95,6 +95,7 @@ export default {
     StatsRow
   },
   mixins: [toaster],
+
   props: {
     stats: {
       type: Object,
@@ -119,6 +120,9 @@ export default {
           styledMode: true,
         },
 
+        accessibility: {
+          enabled: false,
+        },
         tooltip: {
           formatter: function () {
             return `<b>

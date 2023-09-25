@@ -101,6 +101,9 @@ export default {
           type: 'line',
           styledMode: true,
         },
+        accessibility: {
+          enabled: false,
+        },
         credits: false,
         xAxis: {
           type: 'datetime'
@@ -181,6 +184,9 @@ export default {
           styledMode: true,
         },
 
+        accessibility: {
+          enabled: false,
+        },
         tooltip: {
           formatter: function () {
             return `<b>
