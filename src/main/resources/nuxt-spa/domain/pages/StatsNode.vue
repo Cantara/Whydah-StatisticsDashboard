@@ -175,6 +175,7 @@ export default {
       const result = [];
       result.push({ "name": "New users", "data": [], stack: "New users"});
       result.push({ "name": "Logins", "data": [], stack: "Logins"});
+      result.push({ "name": "Deleted", "data": [], stack: "Deleted users"});
       // if (idx === 0) {
       //   result[0].id = "users"
       //   result[1].id = "logins"
@@ -184,14 +185,16 @@ export default {
       //   result[1].linkedTo = "logins"
       //   result[2].linkedTo = "deleted"
       // }
-      result.push({ "name": "Deleted", "data": [], stack: "Deleted users"});
-      this.stats.userApplicationStatistics.forEach(x => {
-        if (x.for_application === appId) {
-          result[0].data.push({ name: "New users", y: x.number_of_registered_users_this_day, appId})
-          result[1].data.push({ name: "Logins", y: x.number_of_unique_logins_this_day, appId })
-          result[2].data.push({ name: "Deleted", y: x.number_of_deleted_users_this_day, appId })
-        }
-      })
+      const target = this.stats.userApplicationStatistics;
+      if (target) {
+        target.forEach(x => {
+          if (x.for_application === appId) {
+            result[0].data.push({ name: "New users", y: x.number_of_registered_users_this_day, appId})
+            result[1].data.push({ name: "Logins", y: x.number_of_unique_logins_this_day, appId })
+            result[2].data.push({ name: "Deleted", y: x.number_of_deleted_users_this_day, appId })
+          }
+        })
+      }
 
       return result
     },
