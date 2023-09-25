@@ -3,9 +3,9 @@
     class="has-background-cool-grey has-text-dark h-100 border-radius p-4"
   >
     <header class="mb-2">
-      <div class="is-size-3">
+      <div class="is-size-3 has-text-weight-bold">
         Today
-        <span class="is-size-6">({{ formattedDate() }})</span>
+        <span class="is-size-6 has-text-weight-normal">({{ formattedDate() }})</span>
       </div>
       <div> Last updated: {{ getLastUpdated() }} </div>
     </header>
