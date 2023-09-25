@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     dateIsValid(date) {
-      return !Number.isNaN(new Date(date).getTime());
+      return date && !Number.isNaN(new Date(date).getTime());
     },
     formattedDate() {
       if(this.dateIsValid(this.stats.userSessionStatus.starttime_of_this_day)) {

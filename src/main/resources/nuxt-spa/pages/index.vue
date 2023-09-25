@@ -64,9 +64,6 @@ export default {
   },
 
   computed: {
-    dateIsValid(date) {
-      return !Number.isNaN(new Date(date).getTime());
-    },
     getSeriesData() {
       const result = [];
       if (this.status) {
