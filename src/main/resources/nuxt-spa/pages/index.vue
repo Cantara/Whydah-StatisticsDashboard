@@ -133,11 +133,18 @@ export default {
   },
   methods: {
 
+    dateIsValid(date) {
+      return date && !Number.isNaN(new Date(date).getTime());
+    },
     getFilteredDays() {
      return Object.values(this.status).filter(x => {
-        const d = x.userSessionStatus.starttime_of_this_day;
-        const parsed = this.$datefns.parseISO(d);
-        return !this.isToday(parsed)
+       const d = x.userSessionStatus.starttime_of_this_day;
+       if (this.dateIsValid(d)) {
+         const parsed = this.$datefns.parseISO(d);
+         return !this.isToday(parsed)
+       } else {
+         return false;
+       }
       }).reverse()
     },
     isToday(d) {
@@ -147,8 +154,12 @@ export default {
     getToday() {
       return Object.values(this.status).find(x => {
         const d = x.userSessionStatus.starttime_of_this_day;
-        const parsed = this.$datefns.parseISO(d);
-        return this.isToday(parsed)
+        if (this.dateIsValid(d)) {
+          const parsed = this.$datefns.parseISO(d);
+          return this.isToday(parsed)
+        } else {
+          return false
+        }
       })
     },
 
