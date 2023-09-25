@@ -248,7 +248,9 @@ export default {
 
         }
         Object.keys(this.status).forEach(key => {
-            this.status[key].userApplicationStatistics.forEach(x => {
+          const target = this.status[key].userApplicationStatistics;
+          if (target) {
+            target.forEach(x => {
               const parsed = parseISO(key);
               const formatted = format(parsed, "dd MMM")
               if (x.for_application === appId) {
@@ -257,6 +259,8 @@ export default {
                 result[2].data.push({ name: formatted, y: x.number_of_deleted_users_this_day, appId })
               }
             })
+          }
+
         });
 
       }
