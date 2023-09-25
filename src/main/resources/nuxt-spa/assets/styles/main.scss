@@ -1,1 +1,80 @@
-@import "~/node_modules/bulma/bulma";
+@import "_colors.module.scss";
+
+// Bulma: {{{
+
+@import "bulma/sass/utilities/derived-variables.sass";
+@import "bulma/sass/utilities/functions.sass";
+
+$family-primary: 'Noto Sans', sans-serif;
+
+// Setup $colors to use as bulma classes (e.g. 'is-warning')
+$addColors: (
+  "black": ($color-whydah-black, findColorInvert($color-whydah-black)),
+  "terra-cotta": ($color-terra-cotta, findColorInvert($color-terra-cotta)),
+  "desert": ($color-desert, findColorInvert($color-desert)),
+  "dull-blue": ($color-dull-blue, findColorInvert($color-dull-blue)),
+  "topaz": ($color-topaz, findColorInvert($color-topaz)),
+  "cool-grey": ($color-cool-grey, findColorInvert($color-cool-grey)),
+  "dark-grey": ($color-dark-grey, findColorInvert($color-dark-grey))
+);
+
+$colors: mergeColorMaps($colors, $addColors);
+
+@import "bulma/bulma";
+
+// }}}
+// Highcharts: {{{
+@import  "highcharts/css/highcharts.css";
+
+.highcharts-axis-title {
+  fill: $color-whydah-white;
+}
+
+:root {
+  --highcharts-neutral-color-80: #{$color-off-white};
+  --highcharts-neutral-color-10: #{$color-accent};
+
+}
+
+
+#line-chart {
+  --highcharts-background-color: #{$color-slate-blue};
+  --highcharts-color-0: #{$color-ice}; // new user
+  --highcharts-color-1: #{$color-charcoal}; // new login
+  --highcharts-color-2: #{$color-terra-cotta}; // deleted user
+
+  .highcharts-graph {
+    stroke-width: 5px;
+  }
+  .highcharts-point, .highcharts-markers {
+    stroke-width: 8px;
+  }
+}
+
+#column-chart {
+  --highcharts-background-color: #{$color-slate-green};
+  --highcharts-color-0: #{$color-ice};
+  --highcharts-color-1: #{$color-dark-jean};
+  --highcharts-color-3: #{$color-light-grey};
+  --highcharts-color-4: #{$color-charcoal};
+  --highcharts-color-2: #{$color-terra-cotta};
+  --highcharts-color-5: #{$color-terra-dark};
+
+  .highcharts-point, .highcharts-markers {
+    stroke-width: 3px;
+  }
+}
+
+#stats-node-chart {
+  --highcharts-background-color: #{$color-dark-grey};
+  --highcharts-color-0: #{$color-asparagus};
+  --highcharts-color-1: #{$color-slate-blue};
+  --highcharts-color-2: #{$color-terra-cotta};
+  --highcharts-color-3: #{darken($color-asparagus, 10)};
+  --highcharts-color-4: #{darken($color-slate-blue, 5)};
+  --highcharts-color-5: #{darken($color-terra-cotta, 5)};
+
+}
+
+// }}}
+//  vim: set ts=2 sw=2 tw=0 fdm=marker et :

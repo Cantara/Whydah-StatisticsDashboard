@@ -10,5 +10,7 @@ module.exports = {
     "$fetch": "readonly"
   },
   rules: {
+    "no-unused-vars": "warn",
+    "vue/no-unused-components": "warn",
   }
 }

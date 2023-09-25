@@ -17,9 +17,9 @@ export default defineNuxtConfig({
           href: '/favicon.ico'
         },
       ],
-      style: [
-        { cssText: '.icon svg { height: 20px !important; }', type: 'text/css' }
-      ],
+      // style: [
+      //   { cssText: '.icon svg { height: 20px !important; }', type: 'text/css' }
+      // ],
     },
   },
   /*
@@ -27,10 +27,13 @@ export default defineNuxtConfig({
    */
   css: [
     '@/assets/styles/main.scss',
+    "@fortawesome/fontawesome-svg-core/styles.css",
   ],
 
   googleFonts: {
-    download: true
+    families: {
+      "Noto+Sans":true
+    },
   },
   modules: [
     '@nuxtjs/google-fonts',
@@ -61,6 +64,7 @@ export default defineNuxtConfig({
   //     logErrors: true
   //   },
   // },
+  //
   nitro: {
     devProxy: { // routeRules for prod
       '/api': { target: 'http://localhost:8088', changeOrigin: true},

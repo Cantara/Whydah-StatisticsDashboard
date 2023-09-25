@@ -1,0 +1,39 @@
+// Accent colors
+$color-accent: rgba(255, 255, 255, 0.2);
+$color-terra-cotta: #D1603D;
+$color-terra-dark: #AE5033;
+$color-desert: #DDB967;
+$color-topaz: #50D8D7;
+
+// Dark colors (white text)
+$color-whydah-black: #1C1C1D;
+$color-slate-blue: #506174;
+$color-slate-green: #57655B;
+$color-dark-grey: #2E2F2F;
+
+// Bright colors (dark text)
+$color-dull-blue: #547AA5;
+$color-whydah-white: #FAFBFD;
+$color-off-white: #D0DBE7;
+$color-charcoal: #292F36;
+$color-ice: #DFF3E4;
+$color-cool-grey: #8F9B9D;
+$color-sky-blue: #0094C6;
+$color-light-grey: #AAB9AE;
+$color-dark-jean: #333B44;
+$color-denim-blue: #4F73AD;
+$color-dusky-blue: #456599;
+$color-asparagus: #7EA16B;
+
+// Export to javascript
+:export {
+  colorWhydahBlack: $color-whydah-black;
+  colorWhydahWhite: $color-whydah-white;
+  colorTerraCotta: $color-terra-cotta;
+  colorDesert: $color-desert;
+  colorDullBlue: $color-dull-blue;
+  colorSlateBlue: $color-slate-blue;
+  colorTopaz: $color-topaz;
+  coolGrey: $color-cool-grey;
+  darkGrey: $color-dark-grey;
+}

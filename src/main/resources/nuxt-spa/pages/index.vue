@@ -1,29 +1,38 @@
 <template>
   <div
     v-if="status"
-    class="has-background-black is-flex is-flex-direction-column is-flex-wrap-wrap"
+    class="has-background-black has-text-white min-height-full p-2"
   >
-    <highchart
-      ref="columnChart"
-      class="hc"
-      :options="chartOptions"
-    />
-    <div
-      v-for="(x, i) in getAllAppIdsForChart()"
-      :key="i"
-    >
-      <highchart
-        ref="columnChart"
-        class="hc"
-        :options="getChartOptions(x)"
-      />
+    <div class="columns is-marginless is-1 is-multiline">
+      <div class="column is-half is-full-touch p-2">
+        <highchart
+          id="line-chart"
+          class="hc border-radius mb-4"
+          :options="chartOptions"
+        />
+        <highchart
+          id="column-chart"
+          class="hc border-radius"
+          :options="getChartOptions()"
+        />
+      </div>
+      <div class="column is-half is-full-touch p-2">
+        <Today :stats="getToday()" />
+      </div>
     </div>
-    <div class="container">
-      <StatsNode
-        v-for="(b, i) in Object.keys(status).reverse()"
-        :key="i"
-        :stats="getValue(b)"
-      />
+    <div class="column is-full is-paddingless">
+      <div class="columns is-multiline is-marginless is-2 is-variable">
+        <div
+          v-for="stat in getFilteredDays()"
+          :key="stat.userSessionStatus.starttime_of_this_day"
+          class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
+        >
+          <StatsNode
+            :ids="getAllAppIdsForChart()"
+            :stats="stat"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,20 +42,24 @@
 // import { runInThisContext } from "vm";
 import { mapState, mapActions, mapMutations } from 'vuex'; // eslint-disable-line
 // import toaster from "@/mixins/toaster";
-// import { parseISO, compareAsc, isToday, parse } from "date-fns";
+import { parseISO, compareAsc, isToday, parse, format } from "date-fns"; // eslint-disable-line
 import StatsNode from "../domain/pages/StatsNode.vue";
+import Today from "../domain/pages/Today.vue";
 import toaster from "@/mixins/toaster";
+// import colors from "@/assets/styles/_colors.module.scss";
 
 export default {
   auth: false,
   components: {
-    StatsNode
+    StatsNode,
+    Today
   },
   mixins: [toaster],
   data() {
     return {
       status: null,
-      interval: 10000
+      interval: 10000,
+      prev: null,
     };
   },
 
@@ -54,9 +67,9 @@ export default {
     getSeriesData() {
       const result = [];
       if (this.status) {
-        result.push({ "name": "New users", "data": [], "color": "#209cee" });
-        result.push({ "name": "Logins", "data": [], "color": "#23d160" });
-        result.push({ "name": "Deleted users", "data": [], "color": "#ff3860" });
+        result.push({ "name": "New users", "data": []});
+        result.push({ "name": "Logins", "data": []});
+        result.push({ "name": "Deleted users", "data": []});
         Object.values(this.status).forEach(e => {
           result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
           result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
@@ -85,19 +98,20 @@ export default {
     chartOptions() {
       return {
         chart: {
-          backgroundColor: '#eef2e1',
-          type: 'line'
+          type: 'line',
+          styledMode: true,
         },
+        credits: false,
         xAxis: {
           type: 'datetime'
         },
         yAxis: {
           title: {
-            text: 'Number of user activities'
+            text: 'Number of user activities',
           }
         },
         title: {
-          text: 'User activities ' + ' from ' + this.getStartDateForChart
+          text: 'User activities ' + ' from ' + this.getStartDateForChart,
         },
         plotOptions: {
           series: {
@@ -118,74 +132,152 @@ export default {
     this.startAutoPoller();
   },
   methods: {
-    // ...mapMutations({
-    //   setToken: 'auth/setToken'
-    // }),
-    // ...mapActions("api", ["get_usersession_status"]),
+
+    dateIsValid(date) {
+      return date && !Number.isNaN(new Date(date).getTime());
+    },
+    getFilteredDays() {
+     return Object.values(this.status).filter(x => {
+       const d = x.userSessionStatus.starttime_of_this_day;
+       if (this.dateIsValid(d)) {
+         const parsed = this.$datefns.parseISO(d);
+         return !this.isToday(parsed)
+       } else {
+         return false;
+       }
+      }).reverse()
+    },
+    isToday(d) {
+      return this.$datefns.isValid(d) && this.$datefns.isToday(d)
+    },
+
+    getToday() {
+      return Object.values(this.status).find(x => {
+        const d = x.userSessionStatus.starttime_of_this_day;
+        if (this.dateIsValid(d)) {
+          const parsed = this.$datefns.parseISO(d);
+          return this.isToday(parsed)
+        } else {
+          return false
+        }
+      })
+    },
+
+    categories(st) {
+      return Object.keys(st).map(x => {
+        const parsed = parseISO(x);
+        const formatted = format(parsed, "dd MMM")
+        return formatted
+      })
+    },
     getValue(day) {
       return this.status[day];
     },
 
-    getChartOptions(appId){
+    getChartOptions() {
       return {
         chart: {
-          backgroundColor: '#eef2e1',
-          type: 'column'
+          type: 'column',
+          styledMode: true,
         },
+
+        tooltip: {
+          formatter: function () {
+            return `<b>
+              ${this.x} - ${this.point.appId}
+              </b></br>${this.series.name}: ${this.y}
+              `
+          }
+        },
+        credits: false,
         xAxis: {
-          type: 'datetime'
+          // type: 'datetime'
+          type: 'category',
+          categories: this.categories(this.status),
         },
         yAxis: {
           title: {
             text: 'Number of user activities'
-          }
+          },
+          stackLabels: {
+            enabled: true,
+            allowOverlap: true,
+            formatter: function() {
+              return this.stack
+            }
+          },
         },
         title: {
-          text: 'User activities ' + ' for appid ' + appId
+          text: `User activities for apps ${this.getAllAppIdsForChart().join(", ")}`
         },
         plotOptions: {
           series: {
             pointStart: this.getStartDateInUTCForChart,
             pointInterval: 24 * 3600 * 1000 // one day
           },
-          line: {
-            lineWidth: 3
+          column: {
+            stacking: 'normal'
           }
         },
-        series: this.getSeriesDataForAppId(appId)
+        series: this.getSeries()
 
       }
     },
+    getSeries() {
+      const series = this.getAllAppIdsForChart().map((id, idx) => {
+        return this.getSeriesDataForAppId(id, idx);
+      })
 
-    getSeriesDataForAppId(appId){
+      return this.$lodash.flatten(series)
+    },
+
+    getSeriesDataForAppId(appId, idx) {
       const result = [];
       if (this.status) {
-        result.push({ "name": "New users", "data": [], "color": "#209cee" });
-        result.push({ "name": "Logins", "data": [], "color": "#23d160" });
-        result.push({ "name": "Deleted users", "data": [], "color": "#ff3860" });
+        result.push({ "name": "New users", "data": [], stack: appId});
+        result.push({ "name": "Logins", "data": [], stack: appId});
+        result.push({ "name": "Deleted users", "data": [], stack: appId});
+        if (idx === 0) {
+          result[0].id = "users"
+          result[1].id = "logins"
+          result[2].id = "deleted"
+        } else {
+          result[0].linkedTo = "users"
+          result[1].linkedTo = "logins"
+          result[2].linkedTo = "deleted"
 
-        Object.values(this.status).forEach(e => {
-          const found = e.userApplicationStatistics.find(x => x.for_application === appId);
-          if (found) {
-            result[0].data.push(found.number_of_registered_users_this_day);
-            result[1].data.push(found.number_of_unique_logins_this_day);
-            result[2].data.push(found.number_of_deleted_users_this_day);
+        }
+        Object.keys(this.status).forEach(key => {
+          const target = this.status[key].userApplicationStatistics;
+          if (target) {
+            target.forEach(x => {
+              const parsed = parseISO(key);
+              const formatted = format(parsed, "dd MMM")
+              if (x.for_application === appId) {
+                result[0].data.push({ name: formatted, y: x.number_of_registered_users_this_day, appId})
+                result[1].data.push({ name: formatted, y: x.number_of_unique_logins_this_day, appId })
+                result[2].data.push({ name: formatted, y: x.number_of_deleted_users_this_day, appId })
+              }
+            })
           }
+
         });
 
       }
-      return result;
+      return result
     },
 
     getAllAppIdsForChart(){
       if (this.status) {
         const appids = new Set();
         Object.values(this.status).forEach(e => {
-          e.userApplicationStatistics.forEach(j => {
-            appids.add(j.for_application);
-          })
+          if (e.userApplicationStatistics) {
+            e.userApplicationStatistics.forEach(j => {
+              appids.add(j.for_application);
+            })
+          }
         });
-        return appids;
+        return [...appids];
       }
       return [];
     },
@@ -209,20 +301,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 1rem;
+
+.min-height-full {
+  min-height: 100vh;
+
 }
-
 .hc {
-  height: 450px;
-  padding: 16px;
-
+  height: 300px;
+}
+.border-radius {
+  border-radius: 1rem;
+}
+.h-100 {
+  height: 100%;
+}
+.w-100 {
+  width: 100%;
 }
 </style>
