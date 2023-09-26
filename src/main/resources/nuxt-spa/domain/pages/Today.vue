@@ -73,12 +73,16 @@ export default {
   props: {
     stats: {
       type: Object,
-      default() {
-        return null
-      }
+      required: true,
     }
   },
   computed: {
+    categories() {
+      return Object.keys(this.stats.hourlyStatusTreeMap).map(x => {
+        const [, h] = x.split(":");
+        return h
+      })
+    },
     chartOptions() {
       return {
         chart: {
@@ -97,7 +101,8 @@ export default {
         yAxis: {
           title: {
             text: 'Number of user activities',
-          }
+          },
+          categories: this.categories
         },
         title: {
           text: "Hourly statistics",
@@ -118,22 +123,20 @@ export default {
     },
     getSeriesData() {
       const result = [];
-      // if (this.status) {
-      //   result.push({ "name": "New users", "data": []});
-      //   result.push({ "name": "Logins", "data": []});
-      //   result.push({ "name": "Deleted users", "data": []});
-      //   Object.values(this.status).forEach(e => {
-      //     result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
-      //     result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
-      //     result[2].data.push(e.userSessionStatus.number_of_deleted_users_this_day);
-      //   });
-      //
-      // }
-      return result;
+      result.push({ "name": "New users", "data": []});
+      result.push({ "name": "Unique logins", "data": []});
+      result.push({ "name": "Deleted users", "data": []});
+      Object.values(this.stats.hourlyStatusTreeMap).forEach(e => {
+        result[0].data.push(e.number_of_registered_users_this_hour);
+        result[1].data.push(e.number_of_unique_logins_this_hour);
+        result[2].data.push(e.number_of_deleted_users_this_day);
+      });
+
+      return result
     }
   },
   mounted() {
-    console.log(this.stats)
+    console.log(this.stats.hourlyStatusTreeMap)
   },
   methods: {
     dateIsValid(date) {
