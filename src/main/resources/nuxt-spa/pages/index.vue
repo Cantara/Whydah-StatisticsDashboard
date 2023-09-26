@@ -149,23 +149,24 @@ export default {
       return date && !Number.isNaN(new Date(date).getTime());
     },
     getFilteredDays() {
-     return Object.values(this.status).filter(x => {
-       const d = x.userSessionStatus.starttime_of_this_day;
+     const days = Object.entries(this.status).filter(([k, v]) => {
+       const d = v?.userSessionStatus?.starttime_of_this_day ?? k;
        if (this.dateIsValid(d)) {
          const parsed = this.$datefns.parseISO(d);
          return !this.isToday(parsed)
        } else {
          return false;
        }
-      }).reverse()
+      })
+      return Object.values(days).reverse();
     },
     isToday(d) {
       return this.$datefns.isValid(d) && this.$datefns.isToday(d)
     },
 
     getToday() {
-      return Object.values(this.status).find(x => {
-        const d = x.userSessionStatus.starttime_of_this_day;
+      const today = Object.entries(this.status).find(([k, v]) => {
+        const d = v?.userSessionStatus?.starttime_of_this_day ?? k;
         if (this.dateIsValid(d)) {
           const parsed = this.$datefns.parseISO(d);
           return this.isToday(parsed)
@@ -173,6 +174,9 @@ export default {
           return false
         }
       })
+      if (today.length === 2) {
+        return today[1];
+      }
     },
 
     categories(st) {
