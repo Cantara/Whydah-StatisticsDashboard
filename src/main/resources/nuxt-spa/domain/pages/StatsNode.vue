@@ -40,7 +40,6 @@
     <highchart
       id="stats-node-chart"
       class="hc"
-      :more="true"
       :options="chartOptions"
     />
 
