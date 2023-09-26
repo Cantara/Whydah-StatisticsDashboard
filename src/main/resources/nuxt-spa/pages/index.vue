@@ -24,8 +24,8 @@
     <div class="column is-full is-paddingless">
       <div class="columns is-multiline is-marginless is-2 is-variable">
         <div
-          v-for="stat in getFilteredDays()"
-          :key="stat.userSessionStatus.starttime_of_this_day"
+          v-for="([k, v]) in getFilteredDays()"
+          :key="v?.userSessionStatus?.starttime_of_this_day ?? k"
           class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
         >
           <StatsNode
@@ -149,7 +149,7 @@ export default {
       return date && !Number.isNaN(new Date(date).getTime());
     },
     getFilteredDays() {
-     const days = Object.entries(this.status).filter(([k, v]) => {
+     return Object.entries(this.status).filter(([k, v]) => {
        const d = v?.userSessionStatus?.starttime_of_this_day ?? k;
        if (this.dateIsValid(d)) {
          const parsed = this.$datefns.parseISO(d);
@@ -157,8 +157,7 @@ export default {
        } else {
          return false;
        }
-      })
-      return Object.values(days).reverse();
+      }).reverse();
     },
     isToday(d) {
       return this.$datefns.isValid(d) && this.$datefns.isToday(d)
