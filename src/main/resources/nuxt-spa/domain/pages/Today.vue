@@ -21,7 +21,10 @@
               size="xs"
             />
           </span>
-          <span>{{ stats.userSessionStatus.total_number_of_users }}</span>
+          <span v-if="stats?.userSessionStatus">
+            {{ stats.userSessionStatus.total_number_of_users }}
+          </span>
+          <span v-else>N/A</span>
         </div>
       </div>
       <div class="summary-item">
@@ -35,9 +38,10 @@
               size="xs"
             />
           </span>
-          <span>
+          <span v-if="stats?.userSessionStatus">
             {{ stats.userSessionStatus.total_number_of_applications }}
           </span>
+          <span v-else>N/A</span>
         </div>
       </div>
       <div class="summary-item">
@@ -51,9 +55,10 @@
               size="xs"
             />
           </span>
-          <span>
+          <span v-if="stats?.userSessionStatus">
             {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
           </span>
+          <span v-else>N/A</span>
         </div>
       </div>
     </summary>
@@ -78,10 +83,14 @@ export default {
   },
   computed: {
     categories() {
-      return Object.keys(this.stats.hourlyStatusTreeMap).map(x => {
-        const [, h] = x.split(":");
-        return h
-      })
+      if (this.stats?.hourlyStatusMap) {
+        return Object.keys(this.stats.hourlyStatusTreeMap).map(x => {
+          const [, h] = x.split(":");
+          return h
+        })
+      } else {
+        return []
+      }
     },
     chartOptions() {
       return {
@@ -120,7 +129,7 @@ export default {
       result.push({ "name": "New users", "data": []});
       result.push({ "name": "Unique logins", "data": []});
       result.push({ "name": "Deleted users", "data": []});
-      Object.values(this.stats.hourlyStatusTreeMap).forEach(e => {
+      Object.values(this.stats?.hourlyStatusTreeMap ?? {}).forEach(e => {
         result[0].data.push(e.number_of_registered_users_this_hour);
         result[1].data.push(e.number_of_unique_logins_this_hour);
         result[2].data.push(e.number_of_deleted_users_this_day);
@@ -130,27 +139,30 @@ export default {
     }
   },
   mounted() {
-    console.log(this.stats.hourlyStatusTreeMap)
+    // console.log(this.stats)
   },
   methods: {
     dateIsValid(date) {
       return date && !Number.isNaN(new Date(date).getTime());
     },
     getLastUpdated() {
-      const d = this.stats.userSessionStatus.last_updated
+      const d = this.stats?.userSessionStatus?.last_updated
       if(this.dateIsValid(d)) {
         const parsed = this.$datefns.parseISO(d);
         return this.$datefns.format(parsed, "HH:mm")
       } else {
-        console.error('invalid date format value=' + this.stats.userSessionStatus.last_updated);
+        console.error('invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
         return 'N/A';
       }
     },
     formattedDate() {
-      const target = this.stats.userSessionStatus.starttime_of_this_day;
+      const target = this.stats?.userSessionStatus?.starttime_of_this_day;
       if(this.dateIsValid(target)) {
         const parsed = this.$datefns.parseISO(target);
         return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
+      } else {
+        console.error('invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
+        return "N/A"
       }
     },
   },
