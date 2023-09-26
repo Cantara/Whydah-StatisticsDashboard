@@ -71,6 +71,11 @@ export default {
         result.push({ "name": "Logins", "data": []});
         result.push({ "name": "Deleted users", "data": []});
         Object.values(this.status).forEach(e => {
+          const d = e.userSessionStatus.starttime_of_this_day;
+          if (this.dateIsValid(d)) {
+            const parsed = this.$datefns.parseISO(d);
+            if (this.isToday(parsed)) return;
+          }
           result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
           result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
           result[2].data.push(e.userSessionStatus.number_of_deleted_users_this_day);
@@ -254,6 +259,11 @@ export default {
 
         }
         Object.keys(this.status).forEach(key => {
+          const d = this.status[key].userSessionStatus.starttime_of_this_day;
+          if (this.dateIsValid(d)) {
+            const parsed = this.$datefns.parseISO(d);
+            if (this.isToday(parsed)) return;
+          }
           const target = this.status[key].userApplicationStatistics;
           if (target) {
             target.forEach(x => {
