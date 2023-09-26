@@ -96,26 +96,20 @@ export default {
         },
         credits: false,
         xAxis: {
-          type: 'datetime'
+          type: 'cateogory',
+          categories: this.categories
         },
         yAxis: {
           title: {
+            enabled: false,
             text: 'Number of user activities',
           },
-          categories: this.categories
         },
         title: {
           text: "Hourly statistics",
           align: "left",
         },
         plotOptions: {
-          // series: {
-          //   pointStart: this.getStartDateInUTCForChart,
-          //   pointInterval: 24 * 3600 * 1000 // one day
-          // },
-          // line: {
-          //   lineWidth: 5
-          // }
         },
         series: this.getSeriesData
 
