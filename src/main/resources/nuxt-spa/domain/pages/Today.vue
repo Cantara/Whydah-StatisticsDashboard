@@ -2,7 +2,7 @@
   <div
     class="has-background-cool-grey has-text-dark h-100 border-radius p-4 is-flex is-flex-direction-column is-flex-grow-1"
   >
-    <header class="mb-2">
+    <header class="mb-4">
       <div class="is-size-3 has-text-weight-bold">
         <div class="is-flex is-justify-content-space-between">
           <div>
@@ -20,56 +20,62 @@
       </div>
       <div> Last updated: {{ getLastUpdated() }} </div>
     </header>
-    <summary class="is-flex flex-gap mb-4">
-      <div class="summary-item">
-        <div class="is-size-6">
-          Total registered users:
-        </div>
-        <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
-          <span class="icon mr-1">
-            <font-awesome-icon
-              icon="fas fa-users"
-              size="xs"
-            />
-          </span>
-          <span v-if="stats?.userSessionStatus">
-            {{ stats.userSessionStatus.total_number_of_users }}
-          </span>
-          <span v-else>N/A</span>
-        </div>
-      </div>
-      <div class="summary-item">
-        <div class="is-size-6">
-          Total applications:
-        </div>
-        <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
-          <span class="icon mr-1">
-            <font-awesome-icon
-              icon="fas fa-folder"
-              size="xs"
-            />
-          </span>
-          <span v-if="stats?.userSessionStatus">
-            {{ stats.userSessionStatus.total_number_of_applications }}
-          </span>
-          <span v-else>N/A</span>
+    <summary class="columns is-multiline is-2 is-variable">
+      <div class="column is-full is-one-third-widescreen py-2">
+        <div class="summary-item">
+          <div class="is-size-6 truncate">
+            Total registered users:
+          </div>
+          <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
+            <span class="icon mr-1">
+              <font-awesome-icon
+                icon="fas fa-users"
+                size="xs"
+              />
+            </span>
+            <span v-if="stats?.userSessionStatus">
+              {{ stats.userSessionStatus.total_number_of_users }}
+            </span>
+            <span v-else>N/A</span>
+          </div>
         </div>
       </div>
-      <div class="summary-item">
-        <div class="is-size-6">
-          Total user session activities:
+      <div class="column is-full is-one-third-widescreen py-2">
+        <div class="summary-item">
+          <div class="is-size-6 truncate">
+            Total applications:
+          </div>
+          <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
+            <span class="icon mr-1">
+              <font-awesome-icon
+                icon="fas fa-folder"
+                size="xs"
+              />
+            </span>
+            <span v-if="stats?.userSessionStatus">
+              {{ stats.userSessionStatus.total_number_of_applications }}
+            </span>
+            <span v-else>N/A</span>
+          </div>
         </div>
-        <div class="has-text-weight-bold is-size-4">
-          <span class="icon mr-1">
-            <font-awesome-icon
-              icon="fas fa-user"
-              size="xs"
-            />
-          </span>
-          <span v-if="stats?.userSessionStatus">
-            {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
-          </span>
-          <span v-else>N/A</span>
+      </div>
+      <div class="column is-full is-one-third-widescreen py-2">
+        <div class="summary-item">
+          <div class="is-size-6 truncate">
+            Total user session activities:
+          </div>
+          <div class="has-text-weight-bold is-size-4">
+            <span class="icon mr-1">
+              <font-awesome-icon
+                icon="fas fa-user"
+                size="xs"
+              />
+            </span>
+            <span v-if="stats?.userSessionStatus">
+              {{ stats.userSessionStatus.total_number_of_session_actions_this_day }}
+            </span>
+            <span v-else>N/A</span>
+          </div>
         </div>
       </div>
     </summary>
@@ -219,4 +225,9 @@ export default {
   cursor: pointer;
 }
 
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>
