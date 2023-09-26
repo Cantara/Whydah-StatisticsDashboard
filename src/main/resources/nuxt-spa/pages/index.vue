@@ -3,6 +3,7 @@
     v-if="status"
     class="has-background-black has-text-white min-height-full p-2"
   >
+    <!-- {{ logStatus() }} -->
     <div class="columns is-marginless is-1 is-multiline">
       <div class="column is-half is-full-touch p-2">
         <highchart
@@ -140,6 +141,9 @@ export default {
     this.startAutoPoller();
   },
   methods: {
+    logStatus() {
+      console.log("status: ", this.status)
+    },
 
     dateIsValid(date) {
       return date && !Number.isNaN(new Date(date).getTime());
