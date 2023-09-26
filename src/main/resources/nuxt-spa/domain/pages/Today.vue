@@ -4,8 +4,19 @@
   >
     <header class="mb-2">
       <div class="is-size-3 has-text-weight-bold">
-        Today
-        <span class="is-size-6 has-text-weight-normal">({{ formattedDate() }})</span>
+        <div class="is-flex is-justify-content-space-between">
+          <div>
+            Today
+            <span class="is-size-6 has-text-weight-normal">({{ formattedDate() }})</span>
+          </div>
+          <div
+            class="p-2 more-menu is-align-items-center is-flex is-justify-content-center"
+          >
+            <span class="icon">
+              <font-awesome-icon icon="fas fa-ellipsis" />
+            </span>
+          </div>
+        </div>
       </div>
       <div> Last updated: {{ getLastUpdated() }} </div>
     </header>
@@ -193,4 +204,19 @@ export default {
 .hc {
   width: 100%;
 }
+
+.more-menu {
+  background: lighten($color-cool-grey, 4);
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: all 100ms ease-in-out;
+  width: 48px;
+  height: 48px
+}
+
+.more-menu:hover {
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
 </style>
