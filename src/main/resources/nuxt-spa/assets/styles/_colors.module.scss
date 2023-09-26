@@ -1,9 +1,4 @@
-// Accent colors
-$color-accent: rgba(255, 255, 255, 0.2);
-$color-terra-cotta: #D1603D;
-$color-terra-dark: #AE5033;
-$color-desert: #DDB967;
-$color-topaz: #50D8D7;
+@import "bulma/sass/utilities/functions.sass";
 
 // Dark colors (white text)
 $color-whydah-black: #1C1C1D;
@@ -24,6 +19,16 @@ $color-dark-jean: #333B44;
 $color-denim-blue: #4F73AD;
 $color-dusky-blue: #456599;
 $color-asparagus: #7EA16B;
+
+
+// derived variables
+$color-accent-light: rgba(255, 255, 255, 0.2);
+$color-accent-dark: #{darken($color-cool-grey, 15)};
+$color-off-black: #{lighten($color-whydah-black, 10)};
+$color-terra-cotta: #D1603D;
+$color-terra-dark: #AE5033;
+$color-desert: #DDB967;
+$color-topaz: #50D8D7;
 
 // Export to javascript
 :export {

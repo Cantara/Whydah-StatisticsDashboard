@@ -1,9 +1,9 @@
 @import "_colors.module.scss";
 
-// Bulma: {{{
-
 @import "bulma/sass/utilities/derived-variables.sass";
 @import "bulma/sass/utilities/functions.sass";
+
+// Bulma: {{{
 
 $family-primary: 'Noto Sans', sans-serif;
 
@@ -29,13 +29,13 @@ $colors: mergeColorMaps($colors, $addColors);
 
 :root {
   font-family: "Noto Sans";
-  --highcharts-neutral-color-80: #{$color-off-white};
-  --highcharts-neutral-color-10: #{$color-accent};
 
 }
 
 
 #line-chart {
+  --highcharts-neutral-color-80: #{$color-off-white};
+  --highcharts-neutral-color-10: #{$color-accent-light};
   --highcharts-background-color: #{$color-slate-blue};
   --highcharts-color-0: #{$color-ice}; // new user
   --highcharts-color-1: #{$color-charcoal}; // new login
@@ -53,6 +53,8 @@ $colors: mergeColorMaps($colors, $addColors);
 }
 
 #column-chart {
+  --highcharts-neutral-color-80: #{$color-off-white};
+  --highcharts-neutral-color-10: #{$color-accent-light};
   --highcharts-background-color: #{$color-slate-green};
   --highcharts-color-0: #{$color-ice};
   --highcharts-color-1: #{$color-dark-jean};
@@ -71,6 +73,8 @@ $colors: mergeColorMaps($colors, $addColors);
 
 #stats-node-chart {
   --highcharts-background-color: #{$color-dark-grey};
+  --highcharts-neutral-color-80: #{$color-off-white};
+  --highcharts-neutral-color-10: #{$color-accent-light};
   --highcharts-color-0: #{$color-asparagus};
   --highcharts-color-1: #{$color-slate-blue};
   --highcharts-color-2: #{$color-terra-cotta};
@@ -81,10 +85,22 @@ $colors: mergeColorMaps($colors, $addColors);
 }
 
 #today-chart {
+  --highcharts-neutral-color-80: #{$color-off-black};
+  --highcharts-neutral-color-10: #{$color-accent-dark};
   --highcharts-background-color: #{$color-cool-grey};
+  --highcharts-color-0: #{$color-ice}; // new user
+  --highcharts-color-1: #{$color-charcoal}; // new login
+  --highcharts-color-2: #{$color-terra-cotta}; // deleted user
   .highcharts-title {
     fill: $dark;
     font-size: 1.5rem;
+  }
+
+  .highcharts-graph {
+    stroke-width: 5px;
+  }
+  .highcharts-point, .highcharts-markers {
+    stroke-width: 8px;
   }
 }
 
