@@ -24,17 +24,17 @@
 
     <StatsRow
       label="Total registered users:"
-      :value="stats.userSessionStatus.total_number_of_users"
+      :value="stats?.userSessionStatus?.total_number_of_users ?? N/A"
       icon-class="fa-users"
     />
     <StatsRow
       label="Total applications:"
-      :value="stats.userSessionStatus.total_number_of_applications"
+      :value="stats?.userSessionStatus?.total_number_of_applications ?? N/A"
       icon-class="fa-folder"
     />
     <StatsRow
       label="Total user session activities"
-      :value="stats.userSessionStatus.total_number_of_session_actions_this_day"
+      :value="stats?.userSessionStatus?.total_number_of_session_actions_this_day ?? N/A"
       icon-class="fa-user"
     />
     <highchart
@@ -189,7 +189,7 @@ export default {
       //   result[1].linkedTo = "logins"
       //   result[2].linkedTo = "deleted"
       // }
-      const target = this.stats.userApplicationStatistics;
+      const target = this.stats?.userApplicationStatistics;
       if (target) {
         target.forEach(x => {
           if (x.for_application === appId) {
@@ -203,12 +203,12 @@ export default {
       return result
     },
     getLastUpdated(){
-      const d = this.stats.userSessionStatus.last_updated
+      const d = this.stats?.userSessionStatus?.last_updated
       if(this.dateIsValid(d)) {
         const parsed = this.$datefns.parseISO(d);
         return this.$datefns.format(parsed, "HH:mm")
       } else {
-        console.error('invalid date format value=' + this.stats.userSessionStatus.last_updated);
+        console.error('invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
         return 'N/A';
       }
     },
@@ -216,7 +216,7 @@ export default {
       return date && !Number.isNaN(new Date(date).getTime());
     },
     getTheDay() {
-      const d = this.stats.userSessionStatus.starttime_of_this_day;
+      const d = this.stats?.userSessionStatus?.starttime_of_this_day;
       if(this.dateIsValid(d)) {
         const parsed = this.$datefns.parseISO(d);
         if (this.$datefns.isToday(parsed)) {
@@ -225,7 +225,7 @@ export default {
           return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
         }
       } else {
-        console.error('invalid date value=' + this.stats.userSessionStatus.starttime_of_this_day);
+        console.error('invalid date value=' + this.stats?.userSessionStatus?.starttime_of_this_day);
         return 'N/A';
       }
     }
