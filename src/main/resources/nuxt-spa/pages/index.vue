@@ -30,7 +30,7 @@
         >
           <StatsNode
             :ids="getAllAppIdsForChart()"
-            :stats="stat"
+            :stats="v"
           />
         </div>
       </div>
