@@ -76,12 +76,15 @@
 export default {
   name: "Today",
   props: {
-    stats: {
-      type: Object,
+    statsProp: {
+      type: Array,
       required: true,
     }
   },
   computed: {
+    stats() {
+      return this.statsProp[1];
+    },
     categories() {
       if (this.stats?.hourlyStatusMap) {
         return Object.keys(this.stats.hourlyStatusTreeMap).map(x => {
@@ -156,7 +159,7 @@ export default {
       }
     },
     formattedDate() {
-      const target = this.stats?.userSessionStatus?.starttime_of_this_day;
+      const target = this.stats?.userSessionStatus?.starttime_of_this_day ?? this.statsProp[0];
       if(this.dateIsValid(target)) {
         const parsed = this.$datefns.parseISO(target);
         return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")

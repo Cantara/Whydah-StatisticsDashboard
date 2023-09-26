@@ -18,7 +18,7 @@
         />
       </div>
       <div class="column is-half is-full-touch p-2">
-        <Today :stats="getToday()" />
+        <Today :stats-prop="getToday()" />
       </div>
     </div>
     <div class="column is-full is-paddingless">
@@ -165,7 +165,7 @@ export default {
     },
 
     getToday() {
-      const today = Object.entries(this.status).find(([k, v]) => {
+      return Object.entries(this.status).find(([k, v]) => {
         const d = v?.userSessionStatus?.starttime_of_this_day ?? k;
         if (this.dateIsValid(d)) {
           const parsed = this.$datefns.parseISO(d);
@@ -174,9 +174,6 @@ export default {
           return false
         }
       })
-      if (today.length === 2) {
-        return today[1];
-      }
     },
 
     categories(st) {
