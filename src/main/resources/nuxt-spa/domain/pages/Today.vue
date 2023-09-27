@@ -150,9 +150,9 @@ export default {
       result.push({ "name": "Unique logins", "data": []});
       result.push({ "name": "Deleted users", "data": []});
       Object.values(this.stats?.hourlyStatusTreeMap ?? {}).forEach(e => {
-        result[0].data.push(e.number_of_registered_users_this_hour);
-        result[1].data.push(e.number_of_unique_logins_this_hour);
-        result[2].data.push(e.number_of_deleted_users_this_day);
+        result[0].data.push(e?.number_of_registered_users_this_hour ?? 0);
+        result[1].data.push(e?.number_of_unique_logins_this_hour ?? 0);
+        result[2].data.push(e?.number_of_deleted_users_this_day ?? 0);
       });
 
       return result
