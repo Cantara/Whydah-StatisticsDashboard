@@ -154,15 +154,7 @@ public class StatusService {
             if (lastHourUpdatedStatusCache.getStarttime_of_today() == null || lastHourUpdatedStatusCache.getStarttime_of_today().plusHours(1).isBefore(ZonedDateTime.now())) {
                 lastHourUpdatedStatusCache = new UserSessionStatusCache();
 
-                // add a new hourlystatus object for the new day
-                HourlyStatus hourlyStatus = new HourlyStatus();
-                if (hourlyStatusMap.get(currentHour)!=null){
-                    hourlyStatus=hourlyStatusMap.get(currentHour);
-                }
-                ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
-                lastHourUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
-                currentHour = simpleHourFormatter.format(new Date());
-                hourlyStatus = updateHourlyStatus();
+                HourlyStatus hourlyStatus = updateHourlyStatus();
                 hourlyStatusMap.put(currentHour, hourlyStatus);
 
             }
