@@ -225,9 +225,25 @@ public class StatusService {
         int logins = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredLogins();
         int registered_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredUsers();
         int deleted_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredDeletions();
-        hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
-        hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
-        hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
+        // survive restart scenario
+        if (hourlyStatus.getNumber_of_unique_logins_this_hour()>logins){
+            hourlyStatus.setNumber_of_unique_logins_this_hour(hourlyStatus.getNumber_of_unique_logins_this_hour()+logins);
+
+        } else {
+            hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
+        }
+        // survive restart scenario
+        if (hourlyStatus.getNumber_of_registered_users_this_hour()>registered_users){
+            hourlyStatus.setNumber_of_registered_users_this_hour(hourlyStatus.getNumber_of_registered_users_this_hour()+registered_users);
+        } else {
+            hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
+        }
+        // survive restart scenario
+        if (hourlyStatus.getNumber_of_deleted_users_this_day()>logins){
+            hourlyStatus.setNumber_of_deleted_users_this_day(hourlyStatus.getNumber_of_deleted_users_this_day()+deleted_users);
+        } else {
+            hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
+        }
         return hourlyStatus;
     }
 
