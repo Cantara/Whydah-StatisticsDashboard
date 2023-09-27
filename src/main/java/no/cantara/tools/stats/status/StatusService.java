@@ -233,7 +233,7 @@ public class StatusService {
         int registered_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredUsers();
         int deleted_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredDeletions();
         // survive restart scenario
-        if (bootstrap) {
+        if (bootstrap==true) {
             if (hourlyStatus.getNumber_of_unique_logins_this_hour() > logins) {
                 hourlyStatus.setNumber_of_unique_logins_this_hour(hourlyStatus.getNumber_of_unique_logins_this_hour() + logins);
 
@@ -324,6 +324,9 @@ public class StatusService {
     protected List<UserApplicationStatistics> getUserApplicationStatisticsDataFromActivityStatistics(Set<String> appIds, ActivityStatistics stats) {
         Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
         appIds.forEach(id -> statsByAppId.put(id, new UserApplicationStatistics(id)));
+        if (lastHourUpdatedStatusCache.get(currentHour)==null){
+            lastHourUpdatedStatusCache.put(currentHour,new UserSessionStatusCache());
+        }
         if (stats != null) {
             ActivityCollection activities = stats.getActivities();
             String todayString = simpleDateFormatter.format(new Date());
@@ -347,6 +350,9 @@ public class StatusService {
                         lastUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                     }
                     if (appIds.contains(activity.getData().getApplicationid()) && currentHour.equalsIgnoreCase(simpleHourFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
+                        if (lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId()==null){
+                            lastHourUpdatedStatusCache.put(currentHour,new UserSessionStatusCache());
+                        }
                         if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                             if (!lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
                                 lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
