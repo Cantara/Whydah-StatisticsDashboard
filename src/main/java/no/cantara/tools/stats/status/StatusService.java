@@ -53,6 +53,8 @@ public class StatusService {
 
     public static final String hourformat = "yyyy-MM-dd:HH";
 
+    private static boolean bootstrap=true;
+
     public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
     public static final SimpleDateFormat simpleHourFormatter = new SimpleDateFormat(hourformat);
 
@@ -226,23 +228,29 @@ public class StatusService {
         int registered_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredUsers();
         int deleted_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredDeletions();
         // survive restart scenario
-        if (hourlyStatus.getNumber_of_unique_logins_this_hour()>logins){
-            hourlyStatus.setNumber_of_unique_logins_this_hour(hourlyStatus.getNumber_of_unique_logins_this_hour()+logins);
+        if (bootstrap) {
+            if (hourlyStatus.getNumber_of_unique_logins_this_hour() > logins) {
+                hourlyStatus.setNumber_of_unique_logins_this_hour(hourlyStatus.getNumber_of_unique_logins_this_hour() + logins);
 
+            } else {
+                hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
+            }
+            if (hourlyStatus.getNumber_of_registered_users_this_hour() > registered_users) {
+                hourlyStatus.setNumber_of_registered_users_this_hour(hourlyStatus.getNumber_of_registered_users_this_hour() + registered_users);
+            } else {
+                hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
+            }
+            if (hourlyStatus.getNumber_of_deleted_users_this_day() > logins) {
+                hourlyStatus.setNumber_of_deleted_users_this_day(hourlyStatus.getNumber_of_deleted_users_this_day() + deleted_users);
+            } else {
+                hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
+            }
+            bootstrap=false;
         } else {
             hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
-        }
-        // survive restart scenario
-        if (hourlyStatus.getNumber_of_registered_users_this_hour()>registered_users){
-            hourlyStatus.setNumber_of_registered_users_this_hour(hourlyStatus.getNumber_of_registered_users_this_hour()+registered_users);
-        } else {
             hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
-        }
-        // survive restart scenario
-        if (hourlyStatus.getNumber_of_deleted_users_this_day()>logins){
-            hourlyStatus.setNumber_of_deleted_users_this_day(hourlyStatus.getNumber_of_deleted_users_this_day()+deleted_users);
-        } else {
             hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
+
         }
         return hourlyStatus;
     }
