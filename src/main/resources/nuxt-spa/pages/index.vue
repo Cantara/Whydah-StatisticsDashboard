@@ -5,7 +5,7 @@
   >
     <!-- {{ logStatus() }} -->
     <div class="columns is-marginless is-1 is-multiline">
-      <div class="column is-half is-full-touch p-2">
+      <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
         <highchart
           id="line-chart"
           class="hc border-radius mb-4"
@@ -322,12 +322,17 @@ export default {
 
 <style lang="scss" scoped>
 
+@import 'bulma/sass/utilities/mixins.sass';
+
 .min-height-full {
   min-height: 100vh;
 
 }
 .hc {
   height: 300px;
+  @include until($widescreen) {
+    flex-basis: 50%;
+  }
 }
 .border-radius {
   border-radius: 1rem;
