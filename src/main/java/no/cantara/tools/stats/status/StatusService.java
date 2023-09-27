@@ -135,7 +135,10 @@ public class StatusService {
 
     public UserSessionStatus getUserSessionStatusForToday() {
 
-        UserSessionStatus status = new UserSessionStatus();
+        UserSessionStatus status = recentStatus;
+        if (status==null){
+            status = new UserSessionStatus();
+        }
         currentHour=simpleHourFormatter.format(new Date());
         try {
             if (lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
