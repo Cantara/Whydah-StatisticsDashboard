@@ -6,9 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static no.cantara.tools.stats.status.StatusService.simpleHourFormatter;
 
 
 public class DailyStatus implements Serializable {
@@ -89,10 +90,28 @@ public class DailyStatus implements Serializable {
         if (hourlyStatusTreeMap==null){
             hourlyStatusTreeMap = new TreeMap<>();
         }
+        fillHourlyTreeMap(hourlyStatusTreeMap);
         return hourlyStatusTreeMap;
     }
 
     public  void setHourlyStatusTreeMap(TreeMap<String, HourlyStatus> hourlyStatusTreeMap) {
         this.hourlyStatusTreeMap = hourlyStatusTreeMap;
+        fillHourlyTreeMap(hourlyStatusTreeMap);
+    }
+
+    private void fillHourlyTreeMap(TreeMap treeMap){
+        String currentHour = simpleHourFormatter.format(new Date());
+        int length = currentHour.length();
+
+        for (int n=0;n<24;n++){
+            String loopHour;
+            if (n<10){
+                loopHour = currentHour.substring(0,length-2) +"0"+ n;
+            } else {
+                loopHour = currentHour.substring(0,length-2) + n;
+
+            }
+            treeMap.computeIfAbsent(loopHour, k -> new TreeMap<>());
+        }
     }
 }
