@@ -58,17 +58,16 @@ public class StatusService {
     public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
     public static final SimpleDateFormat simpleHourFormatter = new SimpleDateFormat(hourformat);
 
-    private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
+    private static UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
 
-    private TreeMap<String, UserSessionStatusCache>  lastHourUpdatedStatusCache = new TreeMap<>();
-    private UserSessionStatus recentStatus = null;
+    private static TreeMap<String, UserSessionStatusCache>  lastHourUpdatedStatusCache = new TreeMap<>();
+    private static UserSessionStatus recentStatus = null;
     private static TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
 
     private static TreeMap<String, HourlyStatus> hourlyStatusMap = new TreeMap<>();
 
     private static String currentHour;
 
-    LocalDate localDate = LocalDate.now();
 
     public StatusService() {
         simpleDateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -156,15 +155,18 @@ public class StatusService {
 
                 dailyStatus.setUserSessionStatus(recentStatus);
                 String todayString = simpleDateFormatter.format(new Date());
-                dailyStatusMap.put(todayString, dailyStatus);
-            }
-            if (lastHourUpdatedStatusCache.get(currentHour)==null || lastHourUpdatedStatusCache.get(currentHour).getStarttime_of_today() == null || lastHourUpdatedStatusCache.get(currentHour).getStarttime_of_today().plusHours(1).isBefore(ZonedDateTime.now())) {
-                lastHourUpdatedStatusCache.put(currentHour, new UserSessionStatusCache());
+                if (dailyStatusMap.get(todayString)==null) {
 
-                HourlyStatus hourlyStatus = updateHourlyStatus();
-                hourlyStatusMap.put(currentHour, hourlyStatus);
-
+                    dailyStatusMap.put(todayString, dailyStatus);
+                }
             }
+//            if (lastHourUpdatedStatusCache.get(currentHour)==null || lastHourUpdatedStatusCache.get(currentHour).getStarttime_of_today() == null || lastHourUpdatedStatusCache.get(currentHour).getStarttime_of_today().plusHours(1).isBefore(ZonedDateTime.now())) {
+//                lastHourUpdatedStatusCache.put(currentHour, new UserSessionStatusCache());
+
+//                HourlyStatus hourlyStatus = updateHourlyStatus();
+//                hourlyStatusMap.put(currentHour, hourlyStatus);
+
+//            }
 
             String starttime_param = String.valueOf(lastUpdatedStatusCache.getStarttime_of_today().toInstant().toEpochMilli());
             if (lastUpdatedStatusCache.getLasttime_requested() != 0) {
