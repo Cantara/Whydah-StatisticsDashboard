@@ -58,7 +58,7 @@ public class StatusService {
 
     private UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
 
-    private UserSessionStatusCache lastHourUpdatedStatusCache = new UserSessionStatusCache();
+    private TreeMap<String, UserSessionStatusCache>  lastHourUpdatedStatusCache = new TreeMap<>();
     private UserSessionStatus recentStatus = null;
     private static TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
 
@@ -92,6 +92,7 @@ public class StatusService {
         } catch (Exception e) {
             logger.error("Unable to create path to persistence", e);
         }
+        currentHour=simpleHourFormatter.format(new Date());
         if (readMap() != null) {
             dailyStatusMap = readMap();
             String todayString = simpleDateFormatter.format(new Date());
@@ -133,6 +134,7 @@ public class StatusService {
     public UserSessionStatus getUserSessionStatusForToday() {
 
         UserSessionStatus status = new UserSessionStatus();
+        currentHour=simpleHourFormatter.format(new Date());
         try {
             if (lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
                 //reset the cache if the day is passed
@@ -151,8 +153,8 @@ public class StatusService {
                 String todayString = simpleDateFormatter.format(new Date());
                 dailyStatusMap.put(todayString, dailyStatus);
             }
-            if (lastHourUpdatedStatusCache.getStarttime_of_today() == null || lastHourUpdatedStatusCache.getStarttime_of_today().plusHours(1).isBefore(ZonedDateTime.now())) {
-                lastHourUpdatedStatusCache = new UserSessionStatusCache();
+            if (lastHourUpdatedStatusCache.get(currentHour)==null || lastHourUpdatedStatusCache.get(currentHour).getStarttime_of_today() == null || lastHourUpdatedStatusCache.get(currentHour).getStarttime_of_today().plusHours(1).isBefore(ZonedDateTime.now())) {
+                lastHourUpdatedStatusCache.put(currentHour, new UserSessionStatusCache());
 
                 HourlyStatus hourlyStatus = updateHourlyStatus();
                 hourlyStatusMap.put(currentHour, hourlyStatus);
@@ -220,12 +222,9 @@ public class StatusService {
             hourlyStatus = new HourlyStatus();
 
         }
-        int logins = lastHourUpdatedStatusCache.getLogins().size() +
-                lastHourUpdatedStatusCache.getLogins_by_appId().size();
-        int registered_users = lastHourUpdatedStatusCache.getRegistered_users().size() +
-                lastHourUpdatedStatusCache.getRegistered_users_by_appId().size();
-        int deleted_users = lastHourUpdatedStatusCache.getDeleted_users().size() +
-                lastHourUpdatedStatusCache.getDeleted_users_by_appId().size();
+        int logins = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredLogins();
+        int registered_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredUsers();
+        int deleted_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredDeletions();
         hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
         hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
         hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
@@ -320,20 +319,20 @@ public class StatusService {
                     }
                     if (appIds.contains(activity.getData().getApplicationid()) && currentHour.equalsIgnoreCase(simpleHourFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
                         if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
-                            if (!lastHourUpdatedStatusCache.getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
-                                lastHourUpdatedStatusCache.getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                            if (!lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
+                                lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
                             }
                             lastUpdatedStatusCache.getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                         } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
-                            if (!lastHourUpdatedStatusCache.getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
-                                lastHourUpdatedStatusCache.getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                            if (!lastHourUpdatedStatusCache.get(currentHour).getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+                                lastHourUpdatedStatusCache.get(currentHour).getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
                             }
-                            lastHourUpdatedStatusCache.getRegistered_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                            lastHourUpdatedStatusCache.get(currentHour).getRegistered_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                         } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userDeleted")) {
-                            if (!lastHourUpdatedStatusCache.getDeleted_users_by_appId().containsKey(activity.getData().getApplicationid())) {
-                                lastHourUpdatedStatusCache.getDeleted_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
+                            if (!lastHourUpdatedStatusCache.get(currentHour).getDeleted_users_by_appId().containsKey(activity.getData().getApplicationid())) {
+                                lastHourUpdatedStatusCache.get(currentHour).getDeleted_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
                             }
-                            lastHourUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                            lastHourUpdatedStatusCache.get(currentHour).getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                         }
                     }
                 }
