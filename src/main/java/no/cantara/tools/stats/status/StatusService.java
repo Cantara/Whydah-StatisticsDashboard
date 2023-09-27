@@ -156,6 +156,9 @@ public class StatusService {
 
                 // add a new hourlystatus object for the new day
                 HourlyStatus hourlyStatus = new HourlyStatus();
+                if (hourlyStatusMap.get(currentHour)!=null){
+                    hourlyStatus=hourlyStatusMap.get(currentHour);
+                }
                 ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
                 lastHourUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
                 currentHour = simpleHourFormatter.format(new Date());
