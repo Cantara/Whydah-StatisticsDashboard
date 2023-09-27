@@ -322,7 +322,7 @@ public class StatusService {
                             if (!lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {
                                 lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
                             }
-                            lastUpdatedStatusCache.getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
+                            lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                         } else if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userCreated")) {
                             if (!lastHourUpdatedStatusCache.get(currentHour).getRegistered_users_by_appId().containsKey(activity.getData().getApplicationid())) {
                                 lastHourUpdatedStatusCache.get(currentHour).getRegistered_users_by_appId().put(activity.getData().getApplicationid(), new HashSet<>());
