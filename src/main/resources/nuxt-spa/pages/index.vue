@@ -3,8 +3,9 @@
     v-if="status"
     class="has-background-black has-text-white min-height-full p-2"
   >
+    <!-- {{ logStatus() }} -->
     <div class="columns is-marginless is-1 is-multiline">
-      <div class="column is-half is-full-touch p-2">
+      <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
         <highchart
           id="line-chart"
           class="hc border-radius mb-4"
@@ -17,19 +18,19 @@
         />
       </div>
       <div class="column is-half is-full-touch p-2">
-        <Today :stats="getToday()" />
+        <Today :stats-prop="getToday()" />
       </div>
     </div>
     <div class="column is-full is-paddingless">
       <div class="columns is-multiline is-marginless is-2 is-variable">
         <div
-          v-for="stat in getFilteredDays()"
-          :key="stat.userSessionStatus.starttime_of_this_day"
+          v-for="([k, v]) in getFilteredDays()"
+          :key="v?.userSessionStatus?.starttime_of_this_day ?? k"
           class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
         >
           <StatsNode
             :ids="getAllAppIdsForChart()"
-            :stats="stat"
+            :stats="v"
           />
         </div>
       </div>
@@ -71,6 +72,11 @@ export default {
         result.push({ "name": "Logins", "data": []});
         result.push({ "name": "Deleted users", "data": []});
         Object.values(this.status).forEach(e => {
+          const d = e.userSessionStatus.starttime_of_this_day;
+          if (this.dateIsValid(d)) {
+            const parsed = this.$datefns.parseISO(d);
+            if (this.isToday(parsed)) return;
+          }
           result[0].data.push(e.userSessionStatus.number_of_registered_users_this_day);
           result[1].data.push(e.userSessionStatus.number_of_unique_logins_this_day);
           result[2].data.push(e.userSessionStatus.number_of_deleted_users_this_day);
@@ -100,6 +106,9 @@ export default {
         chart: {
           type: 'line',
           styledMode: true,
+        },
+        accessibility: {
+          enabled: false,
         },
         credits: false,
         xAxis: {
@@ -132,28 +141,31 @@ export default {
     this.startAutoPoller();
   },
   methods: {
+    logStatus() {
+      console.log("status: ", this.status)
+    },
 
     dateIsValid(date) {
       return date && !Number.isNaN(new Date(date).getTime());
     },
     getFilteredDays() {
-     return Object.values(this.status).filter(x => {
-       const d = x.userSessionStatus.starttime_of_this_day;
+     return Object.entries(this.status).filter(([k, v]) => {
+       const d = v?.userSessionStatus?.starttime_of_this_day ?? k;
        if (this.dateIsValid(d)) {
          const parsed = this.$datefns.parseISO(d);
          return !this.isToday(parsed)
        } else {
          return false;
        }
-      }).reverse()
+      }).reverse();
     },
     isToday(d) {
       return this.$datefns.isValid(d) && this.$datefns.isToday(d)
     },
 
     getToday() {
-      return Object.values(this.status).find(x => {
-        const d = x.userSessionStatus.starttime_of_this_day;
+      return Object.entries(this.status).find(([k, v]) => {
+        const d = v?.userSessionStatus?.starttime_of_this_day ?? k;
         if (this.dateIsValid(d)) {
           const parsed = this.$datefns.parseISO(d);
           return this.isToday(parsed)
@@ -181,6 +193,9 @@ export default {
           styledMode: true,
         },
 
+        accessibility: {
+          enabled: false,
+        },
         tooltip: {
           formatter: function () {
             return `<b>
@@ -248,6 +263,11 @@ export default {
 
         }
         Object.keys(this.status).forEach(key => {
+          const d = this.status[key].userSessionStatus.starttime_of_this_day;
+          if (this.dateIsValid(d)) {
+            const parsed = this.$datefns.parseISO(d);
+            if (this.isToday(parsed)) return;
+          }
           const target = this.status[key].userApplicationStatistics;
           if (target) {
             target.forEach(x => {
@@ -302,12 +322,17 @@ export default {
 
 <style lang="scss" scoped>
 
+@import 'bulma/sass/utilities/mixins.sass';
+
 .min-height-full {
   min-height: 100vh;
 
 }
 .hc {
   height: 300px;
+  @include until($widescreen) {
+    flex-basis: 50%;
+  }
 }
 .border-radius {
   border-radius: 1rem;
