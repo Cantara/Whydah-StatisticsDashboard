@@ -103,10 +103,10 @@ export default {
       return this.statsProp[1];
     },
     categories() {
-      if (this.stats?.hourlyStatusMap) {
+      if (this.stats?.hourlyStatusTreeMap) {
         return Object.keys(this.stats.hourlyStatusTreeMap).map(x => {
           const [, h] = x.split(":");
-          return h
+          return `${h}:00`
         })
       } else {
         return []
@@ -159,7 +159,7 @@ export default {
     }
   },
   mounted() {
-    // console.log(this.stats)
+    console.log(this.stats.hourlyStatusTreeMap)
   },
   methods: {
     dateIsValid(date) {
