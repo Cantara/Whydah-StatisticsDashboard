@@ -11,6 +11,8 @@ import no.cantara.tools.stats.exception.GlobalExceptionHandler;
 import no.cantara.tools.stats.status.StatusResource;
 import no.cantara.tools.stats.status.StatusService;
 
+import no.cantara.tools.stats.utils.EnvironmentConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,8 @@ public final class Main {
     private final StatusResource statusResource;
     private final HealthResource healthResource;
 
+    private final EnvironmentConfig environmentConfig;
+
     /**
      * Cannot be instantiated.
      */
@@ -39,6 +43,7 @@ public final class Main {
         this.accessToken = accessToken;
         statusResource = new StatusResource(accessToken);
         healthResource = new HealthResource();
+        environmentConfig = new EnvironmentConfig();
     }
 
     /**
@@ -69,6 +74,7 @@ public final class Main {
 
     public WebServer startServer(int port, String contextPath) {
 
+        System.out.println(environmentConfig.getEnvironmentName());
     	CorsSupport corsSupport = CorsSupport.builder()
                 .addCrossOrigin(CrossOriginConfig.builder()
                             .allowOrigins("http://localhost:3000", 
