@@ -10,7 +10,6 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "environment_name",
-        "nodes"
 })
 public class ConfEnv {
 
