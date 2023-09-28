@@ -70,8 +70,9 @@ public class StatusService {
 
 
     public StatusService() {
-        simpleDateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        simpleHourFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String timezone=ApplicationProperties.getInstance().get("app.stats.timezone", "Europe/Oslo");
+        simpleDateFormatter.setTimeZone(TimeZone.getTimeZone(timezone));
+        simpleHourFormatter.setTimeZone(TimeZone.getTimeZone(timezone));
         report_service = ApplicationProperties.getInstance().get("app.reportservice", "");
         report_service = report_service.replaceFirst("/$", "");
         if (report_service.isEmpty()) {
