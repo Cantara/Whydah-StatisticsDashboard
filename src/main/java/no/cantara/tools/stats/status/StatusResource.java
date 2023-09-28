@@ -123,7 +123,8 @@ public class StatusResource implements Service {
             if(env!=null) {
                 response.status(200).send(env);
             } else {
-                throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get environment");
+                // throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get environment");
+                response.status(200).send("{ \"environmentName\": \"Statistics Dashboard\" }");
             }
 
         } catch (Exception e) {
