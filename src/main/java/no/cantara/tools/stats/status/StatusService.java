@@ -441,6 +441,7 @@ public class StatusService {
         if (recentStatus == null) {
             getUserSessionStatusForToday();
         }
+
         return dailyStatusMap;
     }
 

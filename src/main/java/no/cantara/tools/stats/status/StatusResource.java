@@ -12,9 +12,12 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import no.cantara.tools.stats.domain.Environment;
+import no.cantara.tools.stats.utils.EnvironmentConfig;
 import javax.ws.rs.core.UriBuilder;
 
 import no.cantara.tools.stats.domain.DailyStatus;
+import no.cantara.tools.stats.utils.EnvironmentConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,8 @@ public class StatusResource implements Service {
 
     final StatusService statusService = new StatusService();
 
+    private final EnvironmentConfig environmentConfig = new EnvironmentConfig();
+
     final String accessToken;
 
     public StatusResource(String accessToken) {
@@ -50,10 +55,12 @@ public class StatusResource implements Service {
     @Override
     public void update(Routing.Rules rules) {
         rules
-        .get("/status", this::showUserSessionStatus)
-        .get("/api/status", this::showUserSessionStatus)
-        .options("/status", this::showUserSessionStatusOptionHeaders)
-        .options("/api/status", this::showUserSessionStatusOptionHeaders);
+                .get("/status", this::showUserSessionStatus)
+                .get("/api/status", this::showUserSessionStatus)
+                .get("/env", this::showEnvironment)
+                .get("/api/env", this::showEnvironment)
+                .options("/status", this::showUserSessionStatusOptionHeaders)
+                .options("/api/status", this::showUserSessionStatusOptionHeaders);
     }
     
     private String getAccessTokenInReferer(URI uri) {
@@ -96,7 +103,36 @@ public class StatusResource implements Service {
 			request.next(e);
 		} 
     }
-    
+
+    @SuppressWarnings("checkstyle:designforextension")
+    public void showEnvironment(final ServerRequest request, final ServerResponse response){
+        if (accessToken != null && accessToken.length() > 0) {
+            String AccessTokenParam = request.queryParams().first(ACCESS_TOKEN_PARAM_NAME).
+                    orElseGet(() -> getAccessTokenInReferer(request.headers().referer().get()));
+
+            try {
+                if (!accessToken.equalsIgnoreCase(AccessTokenParam)) {
+                    response.status(404).send("{\"reason\":\"unauthorized\"}");
+                }
+            } catch (Exception e) {
+                response.status(404).send("{\"reason\":\"unauthorized\"}");
+            }
+        }
+        try {
+            Environment env = environmentConfig.getEnvironment();
+            if(env!=null) {
+                response.status(200).send(env);
+            } else {
+                throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get environment");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Unable to get status",e);
+            request.next(e);
+        }
+    }
+
     @SuppressWarnings("checkstyle:designforextension")
     public void showUserSessionStatusOptionHeaders(final ServerRequest request, final ServerResponse response) {
         response.status(200).headers().add("Content-Type: application/json"

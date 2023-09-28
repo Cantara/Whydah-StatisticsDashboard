@@ -74,7 +74,6 @@ public final class Main {
 
     public WebServer startServer(int port, String contextPath) {
 
-        System.out.println(environmentConfig.getEnvironmentName());
     	CorsSupport corsSupport = CorsSupport.builder()
                 .addCrossOrigin(CrossOriginConfig.builder()
                             .allowOrigins("http://localhost:3000", 

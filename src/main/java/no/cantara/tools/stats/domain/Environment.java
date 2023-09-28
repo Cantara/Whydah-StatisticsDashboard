@@ -17,7 +17,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "name",
-        "services"
 })
 public class Environment {
 
