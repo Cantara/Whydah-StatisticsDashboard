@@ -97,11 +97,18 @@ $colors: mergeColorMaps($colors, $addColors);
   }
 
   .highcharts-graph {
-    stroke-width: 5px;
+    stroke-width: 2px;
+    @include from($widescreen) {
+      stroke-width: 5px;
+    }
   }
   .highcharts-point, .highcharts-markers {
-    stroke-width: 8px;
+    stroke-width: 4px;
+    @include from($widescreen) {
+      stroke-width: 5px;
+    }
   }
+
 }
 
 // }}}
