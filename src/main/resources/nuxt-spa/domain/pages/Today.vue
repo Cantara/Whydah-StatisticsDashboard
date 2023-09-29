@@ -87,7 +87,7 @@
                 <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
                   <span class="icon mr-1">
                     <font-awesome-icon
-                      icon="fas fa-users"
+                      icon="fas fa-user"
                       size="xs"
                     />
                   </span>
@@ -106,7 +106,7 @@
                 <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
                   <span class="icon mr-1">
                     <font-awesome-icon
-                      icon="fas fa-folder"
+                      icon="fas fa-user"
                       size="xs"
                     />
                   </span>
