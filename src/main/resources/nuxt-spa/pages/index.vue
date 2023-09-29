@@ -61,6 +61,7 @@ export default {
       status: null,
       interval: 10000,
       prev: null,
+      env: null,
     };
   },
 
@@ -139,6 +140,11 @@ export default {
   watch: {},
   mounted() {
     this.startAutoPoller();
+    this.$store.dispatch("api/get_environment", {
+      callbackfunc: (data) => {
+        this.env = data;
+      }
+    })
   },
   methods: {
     logStatus() {

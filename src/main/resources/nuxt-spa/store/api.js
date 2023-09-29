@@ -23,6 +23,15 @@ export default {
         }
         commit("SET_REMOVE_KEY", "get_usersession_status_result")
       }
+    },
+    async get_environment({ dispatch, state, commit }, { callbackfunc }) {
+      await dispatch('get', { affixPath: '/api/env', key: "environment" })
+      if (state.environment) {
+        if (callbackfunc) {
+          callbackfunc(state.environment);
+        }
+        commit("SET_REMOVE_KEY", "environment")
+      }
     }
   },
   getters: {
