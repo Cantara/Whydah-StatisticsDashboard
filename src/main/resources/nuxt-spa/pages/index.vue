@@ -1,9 +1,8 @@
 <template>
   <div
     v-if="status"
-    class="has-background-black has-text-white min-height-full p-2"
+    class="has-text-white min-height-full p-2"
   >
-    <!-- {{ logStatus() }} -->
     <div class="columns is-marginless is-1 is-multiline">
       <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
         <highchart
@@ -348,5 +347,9 @@ export default {
 }
 .w-100 {
   width: 100%;
+}
+.vtitle {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
 }
 </style>
