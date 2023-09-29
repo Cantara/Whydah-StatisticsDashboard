@@ -60,7 +60,9 @@ public class StatusResource implements Service {
                 .get("/env", this::showEnvironment)
                 .get("/api/env", this::showEnvironment)
                 .options("/status", this::showUserSessionStatusOptionHeaders)
-                .options("/api/status", this::showUserSessionStatusOptionHeaders);
+                .options("/api/status", this::showUserSessionStatusOptionHeaders)
+                .options("/env", this::showUserSessionStatusOptionHeaders)
+                .options("/api/env", this::showUserSessionStatusOptionHeaders);
     }
     
     private String getAccessTokenInReferer(URI uri) {
@@ -112,10 +114,10 @@ public class StatusResource implements Service {
 
             try {
                 if (!accessToken.equalsIgnoreCase(AccessTokenParam)) {
-                    response.status(404).send("{\"reason\":\"unauthorized\"}");
+                    response.status(401).send("{ \"environmentName\": \"Statistics Dashboard\" }");
                 }
             } catch (Exception e) {
-                response.status(404).send("{\"reason\":\"unauthorized\"}");
+                response.status(401).send("{ \"environmentName\": \"Statistics Dashboard\" }");
             }
         }
         try {
