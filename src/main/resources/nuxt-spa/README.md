@@ -64,6 +64,19 @@ nitro: {
   }
 },
 ```
+## Favicon
+
+To set a favion, it needs to be included in `./public` folder and
+`environment_config.json` must contain that filename (without path)
+
+For example, for Quadim stats we add the icon `./public/quadim.favicon.ico`,
+then add the filename to `environment_config`:
+```
+...
+"favicon": "quadim.favicon.ico"
+...
+```
+
 ## Migration notes
 
 - [Migrate to Nuxt 3: Overview](https://nuxt.com/docs/migration/overview)
