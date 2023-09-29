@@ -67,8 +67,8 @@ export default defineNuxtConfig({
   //
   nitro: {
     devProxy: { // routeRules for prod
-      '/api': { target: 'http://localhost:8088', changeOrigin: true},
       '/status': { target: 'http://localhost:8088/status', changeOrigin: true},
+      '/env': { target: 'http://localhost:8088/env', changeOrigin: true},
     }
   },
   generate: {

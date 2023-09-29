@@ -16,7 +16,7 @@ export default {
     ...crud.actions,
 
     async get_usersession_status({ dispatch, state, commit }, { callbackfunc }) {
-      await dispatch('get', { affixPath: '/api/status', key: "get_usersession_status_result" })
+      await dispatch('get', { affixPath: '/status', key: "get_usersession_status_result" })
       if (state.get_usersession_status_result) {
         if (callbackfunc) {
           callbackfunc(state.get_usersession_status_result);
@@ -25,7 +25,7 @@ export default {
       }
     },
     async get_environment({ dispatch, state, commit }, { callbackfunc }) {
-      await dispatch('get', { affixPath: '/api/env', key: "environment" })
+      await dispatch('get', { affixPath: '/env', key: "environment" })
       if (state.environment) {
         if (callbackfunc) {
           callbackfunc(state.environment);
