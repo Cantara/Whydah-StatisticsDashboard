@@ -18,3 +18,17 @@ Dashboard to get some insights into the user activities for a running whydah ins
   Number of sessions accessed/day/application
 
    - and more to come
+
+## Configure environment
+
+You can configure the environment by modifying json file `./environment_config.json` in the current directory
+
+The name is the deployment target, and favicon should match the target
+
+Example
+```
+{
+  "environment_name": "My awesome target",
+  "favicon": "awesome.favicon.ico"
+}
+```
