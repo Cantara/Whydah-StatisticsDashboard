@@ -2,16 +2,16 @@
   <div class="">
     <div v-if="env">
       <div
-        v-if="env"
-        class="vtitle has-text-white has-text-weight-medium p-2 pt-4"
+        class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
       >
         {{ env.name }}
       </div>
-      <div
-        v-if="env"
-        class="htitle has-text-white has-text-weight-medium p-2"
-      >
-        {{ env.name }}
+      <div class="p-2 htitle-container has-text-centered truncate has-text-white">
+        <div
+          class="htitle has-text-white is-size-5 has-text-weight-medium"
+        >
+          {{ env.name }}
+        </div>
       </div>
     </div>
     <div
@@ -383,9 +383,13 @@ export default {
 .htitle {
   z-index: 2;
   display: none;
+  background: $color-dark-grey;
   @include until($desktop) {
     display: inline;
   }
+}
+.htitle-container {
+  background: $color-dark-grey;
 }
 
 .status {
@@ -393,5 +397,11 @@ export default {
   @include until($desktop) {
     margin-left: 0;
   }
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
