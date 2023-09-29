@@ -8,7 +8,7 @@
     </div>
     <div
       v-if="status"
-      class="has-text-white min-height-full p-2 asd"
+      class="has-text-white min-height-full p-2 status"
     >
       <!-- {{ logStatus() }} -->
       <div class="columns is-marginless is-1 is-multiline">
@@ -367,9 +367,15 @@ export default {
   background: $color-whydah-black;
   bottom: 0;
   top: 0;
+  @include until($desktop) {
+    display: none;
+  }
 }
-.asd {
-  margin-left: 32px;
 
+.status {
+  margin-left: 32px;
+  @include until($desktop) {
+    margin-left: 0;
+  }
 }
 </style>
