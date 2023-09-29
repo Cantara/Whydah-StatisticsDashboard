@@ -159,7 +159,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.stats.hourlyStatusTreeMap)
+    // console.log(this.stats.hourlyStatusTreeMap)
   },
   methods: {
     dateIsValid(date) {
