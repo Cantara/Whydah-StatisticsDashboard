@@ -1,14 +1,22 @@
 <template>
   <div class="">
-    <div
-      v-if="env"
-      class="vtitle has-text-white has-text-weight-medium p-2 pt-4"
-    >
-      {{ env.name }}
+    <div v-if="env">
+      <div
+        v-if="env"
+        class="vtitle has-text-white has-text-weight-medium p-2 pt-4"
+      >
+        {{ env.name }}
+      </div>
+      <div
+        v-if="env"
+        class="htitle has-text-white has-text-weight-medium p-2"
+      >
+        {{ env.name }}
+      </div>
     </div>
     <div
       v-if="status"
-      class="has-text-white min-height-full p-2 status"
+      class="has-text-white min-height-full status p-2"
     >
       <!-- {{ logStatus() }} -->
       <div class="columns is-marginless is-1 is-multiline">
@@ -361,10 +369,10 @@ export default {
 .vtitle {
   writing-mode: vertical-rl;
   text-orientation: upright;
-  letter-spacing: 0px;
+  letter-spacing: -4px;
   position: fixed;
   z-index: 2;
-  background: $color-whydah-black;
+  background: $color-dark-grey;
   bottom: 0;
   top: 0;
   @include until($desktop) {
@@ -372,8 +380,16 @@ export default {
   }
 }
 
+.htitle {
+  z-index: 2;
+  display: none;
+  @include until($desktop) {
+    display: inline;
+  }
+}
+
 .status {
-  margin-left: 32px;
+  margin-left: calc(32px + 1rem);
   @include until($desktop) {
     margin-left: 0;
   }
