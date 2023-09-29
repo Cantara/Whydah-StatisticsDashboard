@@ -1,36 +1,45 @@
 <template>
-  <div
-    v-if="status"
-    class="has-text-white min-height-full p-2"
-  >
-    <div class="columns is-marginless is-1 is-multiline">
-      <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
-        <highchart
-          id="line-chart"
-          class="hc border-radius mb-4"
-          :options="chartOptions"
-        />
-        <highchart
-          id="column-chart"
-          class="hc border-radius"
-          :options="getChartOptions()"
-        />
-      </div>
-      <div class="column is-half is-full-touch p-2">
-        <Today :stats-prop="getToday()" />
-      </div>
+  <div class="">
+    <div
+      v-if="env"
+      class="vtitle has-text-white has-text-weight-medium p-2 pt-4"
+    >
+      {{ env.name }}
     </div>
-    <div class="column is-full is-paddingless">
-      <div class="columns is-multiline is-marginless is-2 is-variable">
-        <div
-          v-for="([k, v]) in getFilteredDays()"
-          :key="v?.userSessionStatus?.starttime_of_this_day ?? k"
-          class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
-        >
-          <StatsNode
-            :ids="getAllAppIdsForChart()"
-            :stats="v"
+    <div
+      v-if="status"
+      class="has-text-white min-height-full p-2 asd"
+    >
+      <!-- {{ logStatus() }} -->
+      <div class="columns is-marginless is-1 is-multiline">
+        <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
+          <highchart
+            id="line-chart"
+            class="hc border-radius mb-4"
+            :options="chartOptions"
           />
+          <highchart
+            id="column-chart"
+            class="hc border-radius"
+            :options="getChartOptions()"
+          />
+        </div>
+        <div class="column is-half is-full-touch p-2">
+          <Today :stats-prop="getToday()" />
+        </div>
+      </div>
+      <div class="column is-full is-paddingless">
+        <div class="columns is-multiline is-marginless is-2 is-variable">
+          <div
+            v-for="([k, v]) in getFilteredDays()"
+            :key="v?.userSessionStatus?.starttime_of_this_day ?? k"
+            class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
+          >
+            <StatsNode
+              :ids="getAllAppIdsForChart()"
+              :stats="v"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -328,6 +337,7 @@ export default {
 <style lang="scss" scoped>
 
 @import 'bulma/sass/utilities/mixins.sass';
+@import "~/assets/styles/_colors.module.scss";
 
 .min-height-full {
   min-height: 100vh;
@@ -351,5 +361,15 @@ export default {
 .vtitle {
   writing-mode: vertical-rl;
   text-orientation: upright;
+  letter-spacing: 0px;
+  position: fixed;
+  z-index: 2;
+  background: $color-whydah-black;
+  bottom: 0;
+  top: 0;
+}
+.asd {
+  margin-left: 32px;
+
 }
 </style>
