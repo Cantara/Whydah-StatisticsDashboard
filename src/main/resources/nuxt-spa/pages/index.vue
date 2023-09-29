@@ -4,7 +4,11 @@
       <div
         class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
       >
-        {{ env.name }}
+        <img
+          src="quadim.favicon.ico"
+          class="my-icon mb-2"
+        >
+        <span>{{ env.name }}</span>
       </div>
       <div class="p-2 htitle-container has-text-centered truncate has-text-white">
         <div
@@ -403,5 +407,9 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.my-icon {
+  width: 24px;
+  height: 24px;
 }
 </style>
