@@ -13,11 +13,17 @@
         >
         <span>{{ env.name }}</span>
       </div>
-      <div class="p-2 htitle-container has-text-centered truncate has-text-white">
+      <div class="p-2 htitle-container has-text-centered has-text-white">
         <div
-          class="htitle has-text-white is-size-5 has-text-weight-medium"
+          class="htitle has-text-white is-flex is-justify-content-center is-align-items-center is-size-5 has-text-weight-medium"
         >
-          {{ env.name }}
+          <img
+            src="quadim.favicon.ico"
+            class="my-icon mr-2"
+          >
+          <span class="truncate">
+            {{ env.name }}
+          </span>
         </div>
       </div>
     </div>
