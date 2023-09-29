@@ -1,6 +1,9 @@
 <template>
   <div class="">
-    <div v-if="env">
+    <div
+      v-if="env"
+      class="is-flex"
+    >
       <div
         class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
       >
@@ -386,18 +389,19 @@ export default {
 
 .htitle {
   z-index: 2;
-  display: none;
   background: $color-dark-grey;
-  @include until($desktop) {
-    display: inline;
-  }
 }
 .htitle-container {
   background: $color-dark-grey;
+  display: none;
+  width: 100%;
+  @include until($desktop) {
+    display: inline-block;
+  }
 }
 
 .status {
-  margin-left: calc(32px + 1rem);
+  margin-left: calc(32px + 0.5rem);
   @include until($desktop) {
     margin-left: 0;
   }
