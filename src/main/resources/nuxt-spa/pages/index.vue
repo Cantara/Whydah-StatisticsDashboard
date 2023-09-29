@@ -8,7 +8,7 @@
         class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
       >
         <img
-          src="quadim.favicon.ico"
+          :src="env.favicon"
           class="my-icon mb-2"
         >
         <span>{{ env.name }}</span>
@@ -18,7 +18,7 @@
           class="htitle has-text-white is-flex is-justify-content-center is-align-items-center is-size-5 has-text-weight-medium"
         >
           <img
-            src="quadim.favicon.ico"
+            :src="env.favicon"
             class="my-icon mr-2"
           >
           <span class="truncate">
