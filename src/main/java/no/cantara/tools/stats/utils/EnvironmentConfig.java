@@ -28,6 +28,7 @@ public class EnvironmentConfig {
     private boolean exists = false;
     private ConfEnv confEnv;
     private String environmentName = "";
+    private String environmentFavicon = "";
     private Environment environment;
     private String environmentAsString;
     private final static Set<URI> pollingHealthURISet = new CopyOnWriteArraySet();
@@ -51,7 +52,8 @@ public class EnvironmentConfig {
 
     private void setUpEnvironment(ConfEnv readEnvironment) throws Exception {
         environmentName = readEnvironment.getEnvironmentName();
-        environment = new Environment().withName(environmentName);
+        environmentFavicon = readEnvironment.getFavicon();
+        environment = new Environment(environmentName, environmentFavicon);
         environmentAsString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(environment);
     }
 
@@ -72,6 +74,9 @@ public class EnvironmentConfig {
         return environmentName;
     }
 
+    public String getEnvironmentFavicon() {
+        return environmentFavicon;
+    }
     private ConfEnv readConfig() {
         try (InputStream fileStream = new FileInputStream("./environment_config.json")) {
             ConfEnv envConf = mapper.readValue(fileStream, ConfEnv.class);

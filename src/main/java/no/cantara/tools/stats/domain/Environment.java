@@ -17,13 +17,15 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "name",
+        "favicon"
 })
 public class Environment {
 
     @JsonProperty("name")
     private String name;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    @JsonProperty("favicon")
+    private String favicon;
 
     @JsonProperty("name")
     public String getName() {
@@ -35,25 +37,17 @@ public class Environment {
         this.name = name;
     }
 
-    public Environment withName(String name) {
+    @JsonProperty("favicon")
+    public String getFavicon() {
+        return favicon;
+    }
+
+    @JsonProperty("favicon")
+    public void setFavicon(String favicon) {
+        this.favicon = favicon;
+    }
+    public Environment(String name, String favicon) {
         this.name = name;
-        return this;
+        this.favicon = favicon;
     }
-
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
-    public Environment withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
-    }
-
 }

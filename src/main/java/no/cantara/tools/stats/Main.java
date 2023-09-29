@@ -73,10 +73,10 @@ public final class Main {
     }
 
     public WebServer startServer(int port, String contextPath) {
-
+        String favicon = String.format("/nuxt-spa/dist/%s", environmentConfig.getEnvironmentFavicon());
     	CorsSupport corsSupport = CorsSupport.builder()
                 .addCrossOrigin(CrossOriginConfig.builder()
-                            .allowOrigins("http://localhost:3000", 
+                            .allowOrigins("http://localhost:3000",
                             		"http://localhost:8088")
                             .allowMethods("*")
                             .build())
@@ -86,7 +86,7 @@ public final class Main {
         		.register(corsSupport)
                 .register(contextPath, healthResource)
                 .register(contextPath, statusResource)
-                .register(contextPath + "/favicon.ico", StaticContentSupport.builder("/nuxt-spa/dist/favicon.ico")
+                .register(contextPath + "/favicon.ico", StaticContentSupport.builder(String.format("/nuxt-spa/dist/%s", favicon))
                         .build())
                 .register(contextPath + "/nuxt-spa", StaticContentSupport.builder("/nuxt-spa")
                         .build())

@@ -13,10 +13,19 @@ import java.util.Map;
 })
 public class ConfEnv {
 
+    @JsonProperty("favicon")
+    private String favicon;
+
+    @JsonProperty("favicon")
+    public String getFavicon() {
+        return favicon;
+    }
+    @JsonProperty("favicon")
+    public void setFavicon(String favicon) {
+        this.favicon = favicon;
+    }
     @JsonProperty("environment_name")
     private String environmentName;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("environment_name")
     public String getEnvironmentName() {
@@ -27,15 +36,4 @@ public class ConfEnv {
     public void setEnvironmentName(String environmentName) {
         this.environmentName = environmentName;
     }
-
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }
