@@ -74,6 +74,11 @@ public class EnvironmentConfig {
         return environmentName;
     }
 
+    public Environment getDefaultEnvironment() {
+        Environment env = new Environment("Statistics Dashboard", "quadim.favicon.ico");
+        return env;
+    }
+
     public String getEnvironmentFavicon() {
         return environmentFavicon;
     }

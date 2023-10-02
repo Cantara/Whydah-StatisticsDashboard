@@ -108,25 +108,25 @@ public class StatusResource implements Service {
 
     @SuppressWarnings("checkstyle:designforextension")
     public void showEnvironment(final ServerRequest request, final ServerResponse response){
+        Environment defaultEnv = environmentConfig.getDefaultEnvironment();
         if (accessToken != null && accessToken.length() > 0) {
             String AccessTokenParam = request.queryParams().first(ACCESS_TOKEN_PARAM_NAME).
                     orElseGet(() -> getAccessTokenInReferer(request.headers().referer().get()));
 
             try {
                 if (!accessToken.equalsIgnoreCase(AccessTokenParam)) {
-                    response.status(401).send("{ \"environmentName\": \"Statistics Dashboard\" }");
+                    response.status(401).send(defaultEnv);
                 }
             } catch (Exception e) {
-                response.status(401).send("{ \"environmentName\": \"Statistics Dashboard\" }");
+                response.status(401).send(defaultEnv);
             }
         }
         try {
             Environment env = environmentConfig.getEnvironment();
-            if(env!=null) {
+            if (env != null) {
                 response.status(200).send(env);
             } else {
-                // throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get environment");
-                response.status(200).send("{ \"environmentName\": \"Statistics Dashboard\" }");
+                response.status(200).send(defaultEnv);
             }
 
         } catch (Exception e) {
