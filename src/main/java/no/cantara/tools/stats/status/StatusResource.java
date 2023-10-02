@@ -85,10 +85,10 @@ public class StatusResource implements Service {
             
             try {
                 if (!accessToken.equalsIgnoreCase(AccessTokenParam)) {
-                    response.status(404).send("{\"reason\":\"unauthorized\"}");
+                    response.status(401).send("{\"reason\":\"unauthorized\"}");
                 }
             } catch (Exception e) {
-                response.status(404).send("{\"reason\":\"unauthorized\"}");
+                response.status(401).send("{\"reason\":\"unauthorized\"}");
             }
         }
 		try {
