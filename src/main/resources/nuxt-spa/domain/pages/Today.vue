@@ -20,8 +20,8 @@
       </div>
       <div> Last updated: {{ getLastUpdated() }} </div>
     </header>
-    <summary class="columns is-multiline is-2 is-variable">
-      <div class="column is-full is-one-third-widescreen py-2">
+    <summary class="columns is-multiline is-mobile is-2 is-variable">
+      <div class="column is-one-third-widescreen is-half-touch py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
             Total registered users:
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="column is-full is-one-third-widescreen py-2">
+      <div class="column is-half-touch is-one-third-widescreen py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
             Total applications:
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <div class="column is-full is-one-third-widescreen py-2">
+      <div class="column is-half-touch is-one-third-widescreen py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
             Total user session activities:
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <div class="column is-full is-one-third-widescreen py-2">
+      <div class="column is-half-touch is-one-third-widescreen py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
             Today new users:
@@ -98,7 +98,7 @@
           </div>
         </div>
       </div>
-      <div class="column is-full is-one-third-widescreen py-2">
+      <div class="column is-half-touch is-one-third-widescreen py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
             Today logins:
@@ -117,7 +117,7 @@
           </div>
         </div>
       </div>
-      <div class="column is-full is-one-third-widescreen py-2">
+      <div class="column is-half-touch is-one-third-widescreen py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
             Today deleted users:
