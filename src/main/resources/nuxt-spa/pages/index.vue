@@ -1,34 +1,28 @@
 <template>
-  <div class="">
+  <div v-if="status && env">
     <div
-      v-if="env"
-      class="is-flex"
+      class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
     >
+      <img
+        :src="env.favicon"
+        class="my-icon mb-2"
+      >
+      <span>{{ env.name }}</span>
+    </div>
+    <div class="p-2 htitle-container has-text-centered has-text-white">
       <div
-        class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
+        class="htitle has-text-white is-flex is-justify-content-center is-align-items-center is-size-5 has-text-weight-medium"
       >
         <img
           :src="env.favicon"
-          class="my-icon mb-2"
+          class="my-icon mr-2"
         >
-        <span>{{ env.name }}</span>
-      </div>
-      <div class="p-2 htitle-container has-text-centered has-text-white">
-        <div
-          class="htitle has-text-white is-flex is-justify-content-center is-align-items-center is-size-5 has-text-weight-medium"
-        >
-          <img
-            :src="env.favicon"
-            class="my-icon mr-2"
-          >
-          <span class="truncate">
-            {{ env.name }}
-          </span>
-        </div>
+        <span class="truncate">
+          {{ env.name }}
+        </span>
       </div>
     </div>
     <div
-      v-if="status"
       class="has-text-white min-height-full status p-2"
     >
       <!-- {{ logStatus() }} -->
@@ -64,6 +58,24 @@
         </div>
       </div>
     </div>
+    <!-- <div v-else class="has-text-white min-height-full status p-2"></div> -->
+  </div>
+  <div
+    v-else-if="unauthorized"
+    class="min-height-full is-flex is-align-items-center is-justify-content-center"
+  >
+    <div class="has-text-white is-flex is-flex-direction-column">
+      <div class="is-flex is-justify-content-center is-align-items-center">
+        <span class="icon has-text-warning">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" />
+        </span>
+        <span class="is-size-4 px-2">Unauthorized</span>
+        <span class="icon has-text-warning">
+          <font-awesome-icon icon="fas fa-triangle-exclamation" />
+        </span>
+      </div>
+      <span class="is-size-7 is-italic">An access token is required, check your URL.</span>
+    </div>
   </div>
 </template>
 
@@ -95,6 +107,10 @@ export default {
   },
 
   computed: {
+    unauthorized() {
+      return this.$store?.state?.api?.error?.statusCode === 401 ?? false;
+    },
+
     getSeriesData() {
       const result = [];
       if (this.status) {
@@ -176,8 +192,12 @@ export default {
     })
   },
   methods: {
-    logStatus() {
-      console.log("status: ", this.status)
+    logState(key) {
+      console.log("status: ", this[key])
+    },
+    logVuexState(key) {
+      console.log(`logging state "${key}":`)
+      console.log(this.$store.state.api[key])
     },
 
     dateIsValid(date) {
