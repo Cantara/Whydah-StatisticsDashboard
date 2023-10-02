@@ -1,37 +1,66 @@
 <template>
-  <div
-    v-if="status"
-    class="has-background-black has-text-white min-height-full p-2"
-  >
-    <!-- {{ logStatus() }} -->
-    <div class="columns is-marginless is-1 is-multiline">
-      <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
-        <highchart
-          id="line-chart"
-          class="hc border-radius mb-4"
-          :options="chartOptions"
-        />
-        <highchart
-          id="column-chart"
-          class="hc border-radius"
-          :options="getChartOptions()"
-        />
+  <div class="">
+    <div
+      v-if="env"
+      class="is-flex"
+    >
+      <div
+        class="vtitle has-text-white has-text-weight-medium p-2 pt-4 truncate"
+      >
+        <img
+          :src="env.favicon"
+          class="my-icon mb-2"
+        >
+        <span>{{ env.name }}</span>
       </div>
-      <div class="column is-half is-full-touch p-2">
-        <Today :stats-prop="getToday()" />
+      <div class="p-2 htitle-container has-text-centered has-text-white">
+        <div
+          class="htitle has-text-white is-flex is-justify-content-center is-align-items-center is-size-5 has-text-weight-medium"
+        >
+          <img
+            :src="env.favicon"
+            class="my-icon mr-2"
+          >
+          <span class="truncate">
+            {{ env.name }}
+          </span>
+        </div>
       </div>
     </div>
-    <div class="column is-full is-paddingless">
-      <div class="columns is-multiline is-marginless is-2 is-variable">
-        <div
-          v-for="([k, v]) in getFilteredDays()"
-          :key="v?.userSessionStatus?.starttime_of_this_day ?? k"
-          class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
-        >
-          <StatsNode
-            :ids="getAllAppIdsForChart()"
-            :stats="v"
+    <div
+      v-if="status"
+      class="has-text-white min-height-full status p-2"
+    >
+      <!-- {{ logStatus() }} -->
+      <div class="columns is-marginless is-1 is-multiline">
+        <div class="column is-half is-flex is-flex-direction-column is-full-touch p-2">
+          <highchart
+            id="line-chart"
+            class="hc border-radius mb-4"
+            :options="chartOptions"
           />
+          <highchart
+            id="column-chart"
+            class="hc border-radius"
+            :options="getChartOptions()"
+          />
+        </div>
+        <div class="column is-half is-full-touch p-2">
+          <Today :stats-prop="getToday()" />
+        </div>
+      </div>
+      <div class="column is-full is-paddingless">
+        <div class="columns is-multiline is-marginless is-2 is-variable">
+          <div
+            v-for="([k, v]) in getFilteredDays()"
+            :key="v?.userSessionStatus?.starttime_of_this_day ?? k"
+            class="column is-one-fifth-fullhd is-half-tablet is-full-mobile is-one-third-desktop"
+          >
+            <StatsNode
+              :ids="getAllAppIdsForChart()"
+              :stats="v"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -61,6 +90,7 @@ export default {
       status: null,
       interval: 10000,
       prev: null,
+      env: null,
     };
   },
 
@@ -139,6 +169,11 @@ export default {
   watch: {},
   mounted() {
     this.startAutoPoller();
+    this.$store.dispatch("api/get_environment", {
+      callbackfunc: (data) => {
+        this.env = data;
+      }
+    })
   },
   methods: {
     logStatus() {
@@ -323,6 +358,7 @@ export default {
 <style lang="scss" scoped>
 
 @import 'bulma/sass/utilities/mixins.sass';
+@import "~/assets/styles/_colors.module.scss";
 
 .min-height-full {
   min-height: 100vh;
@@ -342,5 +378,48 @@ export default {
 }
 .w-100 {
   width: 100%;
+}
+.vtitle {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: -4px;
+  position: fixed;
+  z-index: 2;
+  background: $color-dark-grey;
+  bottom: 0;
+  top: 0;
+  @include until($desktop) {
+    display: none;
+  }
+}
+
+.htitle {
+  z-index: 2;
+  background: $color-dark-grey;
+}
+.htitle-container {
+  background: $color-dark-grey;
+  display: none;
+  width: 100%;
+  @include until($desktop) {
+    display: inline-block;
+  }
+}
+
+.status {
+  margin-left: calc(32px + 0.5rem);
+  @include until($desktop) {
+    margin-left: 0;
+  }
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.my-icon {
+  width: 24px;
+  height: 24px;
 }
 </style>

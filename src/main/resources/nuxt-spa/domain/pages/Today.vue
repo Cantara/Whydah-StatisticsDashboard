@@ -78,6 +78,64 @@
           </div>
         </div>
       </div>
+
+      <div class="column is-full is-one-third-widescreen py-2">
+              <div class="summary-item">
+                <div class="is-size-6 truncate">
+                  Today new users:
+                </div>
+                <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
+                  <span class="icon mr-1">
+                    <font-awesome-icon
+                      icon="fas fa-user"
+                      size="xs"
+                    />
+                  </span>
+                  <span v-if="stats?.userSessionStatus">
+                    {{ stats.userSessionStatus.number_of_registered_users_this_day }}
+                  </span>
+                  <span v-else>N/A</span>
+                </div>
+              </div>
+            </div>
+            <div class="column is-full is-one-third-widescreen py-2">
+              <div class="summary-item">
+                <div class="is-size-6 truncate">
+                  Today logins:
+                </div>
+                <div class="has-text-weight-bold is-size-4 is-flex is-align-items-center">
+                  <span class="icon mr-1">
+                    <font-awesome-icon
+                      icon="fas fa-user"
+                      size="xs"
+                    />
+                  </span>
+                  <span v-if="stats?.userSessionStatus">
+                    {{ stats.userSessionStatus.number_of_unique_logins_this_day }}
+                  </span>
+                  <span v-else>N/A</span>
+                </div>
+              </div>
+            </div>
+            <div class="column is-full is-one-third-widescreen py-2">
+              <div class="summary-item">
+                <div class="is-size-6 truncate">
+                  Today deleted users:
+                </div>
+                <div class="has-text-weight-bold is-size-4">
+                  <span class="icon mr-1">
+                    <font-awesome-icon
+                      icon="fas fa-user"
+                      size="xs"
+                    />
+                  </span>
+                  <span v-if="stats?.userSessionStatus">
+                    {{ stats.userSessionStatus.number_of_deleted_users_this_day }}
+                  </span>
+                  <span v-else>N/A</span>
+                </div>
+              </div>
+            </div>
     </summary>
     <main class="is-flex is-flex-grow-1">
       <highchart

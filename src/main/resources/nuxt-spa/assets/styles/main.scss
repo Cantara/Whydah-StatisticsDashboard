@@ -3,6 +3,12 @@
 @import "bulma/sass/utilities/derived-variables.sass";
 @import "bulma/sass/utilities/functions.sass";
 
+// Gloabl: {{
+body, html {
+  background: $color-whydah-black;
+}
+// }}
+
 // Bulma: {{{
 
 $family-primary: 'Noto Sans', sans-serif;
