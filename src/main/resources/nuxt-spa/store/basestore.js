@@ -24,6 +24,7 @@ export default class {
         await $fetch(`${endpoint}${affixPath}`).then(data => {
           if (key !== "") {
             commit("SET_DATA", { payload: data, key });
+            commit("SET_SUCCESS", true)
           }
         }).catch(error => {
           commit("SET_ERROR", error);

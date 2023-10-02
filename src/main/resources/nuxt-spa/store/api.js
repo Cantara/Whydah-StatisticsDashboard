@@ -16,13 +16,14 @@ export default {
     ...crud.actions,
 
     async get_usersession_status({ dispatch, state, commit }, { callbackfunc }) {
-      await dispatch('get', { affixPath: '/status', key: "get_usersession_status_result" })
-      if (state.get_usersession_status_result) {
-        if (callbackfunc) {
-          callbackfunc(state.get_usersession_status_result);
+      return await dispatch('get', { affixPath: '/status', key: "get_usersession_status_result" }).then(() => {
+        if (state.get_usersession_status_result) {
+          if (callbackfunc) {
+            callbackfunc(state.get_usersession_status_result);
+          }
+          commit("SET_REMOVE_KEY", "get_usersession_status_result")
         }
-        commit("SET_REMOVE_KEY", "get_usersession_status_result")
-      }
+      })
     },
     async get_environment({ dispatch, state, commit }, { callbackfunc }) {
       await dispatch('get', { affixPath: '/env', key: "environment" })

@@ -337,12 +337,13 @@ export default {
       return [];
     },
 
-    startAutoPoller() {
-      this.$store.dispatch("api/get_usersession_status", {
+    async startAutoPoller() {
+      await this.$store.dispatch("api/get_usersession_status", {
         callbackfunc: (data) => {
           this.status = data;
         }
       })
+      if (this.$store.state.api.error) return;
       this.polling = setInterval(() => {
         this.$store.dispatch("api/get_usersession_status", {
           callbackfunc: (data) => {
