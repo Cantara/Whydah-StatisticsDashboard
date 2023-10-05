@@ -61,20 +61,31 @@
     <!-- <div v-else class="has-text-white min-height-full status p-2"></div> -->
   </div>
   <div
-    v-else-if="unauthorized"
-    class="min-height-full is-flex is-align-items-center is-justify-content-center"
-  >
-    <div class="has-text-white is-flex is-flex-direction-column">
-      <div class="is-flex is-justify-content-center is-align-items-center">
-        <span class="icon has-text-warning">
-          <font-awesome-icon icon="fas fa-triangle-exclamation" />
-        </span>
-        <span class="is-size-4 px-2">Unauthorized</span>
-        <span class="icon has-text-warning">
-          <font-awesome-icon icon="fas fa-triangle-exclamation" />
-        </span>
+    v-else
+    class="min-height-full is-flex is-align-items-center is-justify-content-center">
+    <div
+      v-if="unauthorized"
+    >
+      <div class="has-text-white is-flex is-flex-direction-column">
+        <div class="is-flex is-justify-content-center is-align-items-center">
+          <span class="icon has-text-warning">
+            <font-awesome-icon icon="fas fa-triangle-exclamation" />
+          </span>
+          <span class="is-size-4 px-2">Unauthorized</span>
+          <span class="icon has-text-warning">
+            <font-awesome-icon icon="fas fa-triangle-exclamation" />
+          </span>
+        </div>
+        <span class="is-size-7 is-italic">An access token is required, check your URL.</span>
       </div>
-      <span class="is-size-7 is-italic">An access token is required, check your URL.</span>
+    </div>
+    <div v-else>
+      <span class="icon has-text-white">
+        <font-awesome-icon
+          icon="fas fa-spinner "
+          class="fa-spin fa-2xl"
+        />
+      </span>
     </div>
   </div>
 </template>
