@@ -29,7 +29,7 @@ public class Environment {
 
     @JsonProperty("name")
     public String getName() {
-        return name;
+        return name.toUpperCase();
     }
 
     @JsonProperty("name")
