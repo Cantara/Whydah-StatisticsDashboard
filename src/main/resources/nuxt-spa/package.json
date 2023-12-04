@@ -37,7 +37,7 @@
     "@nuxt/eslint-config": "^0.2.0",
     "@nuxtjs/eslint-module": "^4.1.0",
     "@nuxtjs/google-fonts": "3.1.0",
-    "@nuxtjs/style-resources": "1.2.1",
+    "@nuxtjs/style-resources": "1.2.2",
     "@vue/test-utils": "2.4.3",
     "defu": "^6.1.2",
     "eslint": "^8.49.0",
