@@ -203,7 +203,7 @@ export default {
     },
     getLastUpdated(){
       const d = this.stats?.userSessionStatus?.last_updated
-      if(this.dateIsValid(d)) {
+      if(this.dateIsValid(d) && !d===null) {
         const parsed = this.$datefns.parseISO(d);
         return this.$datefns.format(parsed, "HH:mm")
       } else {
@@ -216,7 +216,7 @@ export default {
     },
     getTheDay() {
       const d = this.stats?.userSessionStatus?.starttime_of_this_day;
-      if(this.dateIsValid(d)) {
+      if(this.dateIsValid(d) && !d===null) {
         const parsed = this.$datefns.parseISO(d);
         if (this.$datefns.isToday(parsed)) {
           return 'Today';
