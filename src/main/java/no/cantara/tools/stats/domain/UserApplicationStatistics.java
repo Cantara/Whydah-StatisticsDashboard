@@ -26,4 +26,12 @@ public class UserApplicationStatistics implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private ZonedDateTime starttime_of_this_day;
 
+    public ZonedDateTime getLast_updated() {
+        if (last_updated != null) {
+            return last_updated;
+        }
+        return ZonedDateTime.now();
+    }
+
+
 }
