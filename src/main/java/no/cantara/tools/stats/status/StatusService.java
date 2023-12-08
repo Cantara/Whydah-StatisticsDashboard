@@ -182,6 +182,11 @@ public class StatusService {
                     .asObject(ActivityStatistics.class)
                     .getBody();
 
+            for(UserSessionActivity activity:stats.getActivities().getUserSessions()){
+                if (activity.getStartTime()==0){
+                    activity.setStartTime(System.currentTimeMillis());
+                }
+            }
             status = getUserSessionStatusDataFromActivityStatistics(stats);
             status.setTotal_number_of_users(getTotalOfUsers());
             status.setNumber_of_active_user_sessions(getTotalOfSessions());
