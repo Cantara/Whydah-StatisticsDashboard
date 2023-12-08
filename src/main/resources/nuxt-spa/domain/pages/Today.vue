@@ -225,21 +225,21 @@ export default {
     },
     getLastUpdated() {
       const d = this.stats?.userSessionStatus?.last_updated
-      if(this.dateIsValid(d) && !d===null) {
+      if(this.dateIsValid(d)) {
         const parsed = this.$datefns.parseISO(d);
         return this.$datefns.format(parsed, "HH:mm")
       } else {
-        console.error('invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
+        console.error('getLastUpdated - invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
         return 'N/A';
       }
     },
     formattedDate() {
       const target = this.stats?.userSessionStatus?.starttime_of_this_day ?? this.statsProp[0];
-      if(this.dateIsValid(target) && !target===null) {
+      if(this.dateIsValid(target)) {
         const parsed = this.$datefns.parseISO(target);
         return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
       } else {
-        console.error('invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
+        console.error('formattedDate - invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
         return "N/A"
       }
     },
