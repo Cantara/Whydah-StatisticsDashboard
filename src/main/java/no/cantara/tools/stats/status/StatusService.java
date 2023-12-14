@@ -149,10 +149,12 @@ public class StatusService {
                 ZonedDateTime starttime_of_today = ZonedDateTime.now().with(LocalTime.MIDNIGHT);
                 lastUpdatedStatusCache.setStarttime_of_today(starttime_of_today);
 
+
                 // add a new dailystatus object for the new day
                 DailyStatus dailyStatus = new DailyStatus();
                 recentStatus = new UserSessionStatus();
                 recentStatus.setStarttime_of_this_day(starttime_of_today);
+                recentStatus.setLast_updated(ZonedDateTime.now());
 
                 dailyStatus.setUserSessionStatus(recentStatus);
                 String todayString = simpleDateFormatter.format(new Date());
