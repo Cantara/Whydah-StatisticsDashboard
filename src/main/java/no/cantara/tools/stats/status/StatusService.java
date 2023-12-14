@@ -249,6 +249,8 @@ public class StatusService {
                 dailyStatusMap.put(todayString, dailyStatus);
                 hourlyStatus = updateHourlyStatus();
                 hourlyStatusMap.put(currentHour, hourlyStatus);
+            } else {
+                logger.warn("Got unexpected result stats="+ stats);
             }
             return status;
         } catch (Exception ex) {
