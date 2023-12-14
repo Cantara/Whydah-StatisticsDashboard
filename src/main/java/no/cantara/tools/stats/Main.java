@@ -6,6 +6,7 @@ import io.helidon.webserver.WebServer;
 import io.helidon.webserver.cors.CorsSupport;
 import io.helidon.webserver.cors.CrossOriginConfig;
 import io.helidon.webserver.staticcontent.StaticContentSupport;
+import kong.unirest.Unirest;
 import no.cantara.config.ApplicationProperties;
 import no.cantara.tools.stats.exception.GlobalExceptionHandler;
 import no.cantara.tools.stats.status.StatusResource;
@@ -99,6 +100,8 @@ public final class Main {
                         .build())
                 .error(Throwable.class, GlobalExceptionHandler.handleErrors(ApplicationProperties.getInstance().get("app.errorlevel", "0")))
                 .build();
+
+        Unirest.config().connectTimeout(60000);
 
         WebServer ws = WebServer.builder()
                 .port(port)
