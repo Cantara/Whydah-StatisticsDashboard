@@ -100,7 +100,15 @@ public class StatusService {
             String todayString = simpleDateFormatter.format(new Date());
             if (dailyStatusMap.get(todayString) != null && dailyStatusMap.get(todayString).getUserSessionStatus() != null) {
                 recentStatus = dailyStatusMap.get(todayString).getUserSessionStatus();
+                // Workaround for handling serialized null
+                if (dailyStatusMap.get(todayString).getUserApplicationStatistics()==null){
+                    UserApplicationStatistics userApplicationStatistics= new UserApplicationStatistics();
+                    List<UserApplicationStatistics> userApplicationStatisticsList = new ArrayList<>();
+                    userApplicationStatisticsList.add(userApplicationStatistics);
+                    dailyStatusMap.get(todayString).setUserApplicationStatistics(userApplicationStatisticsList);
+                }
             }
+
         }
 
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
