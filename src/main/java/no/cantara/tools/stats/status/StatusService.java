@@ -138,6 +138,8 @@ public class StatusService {
         UserSessionStatus status = recentStatus;
         if (status==null){
             status = new UserSessionStatus();
+            status.setLast_updated(ZonedDateTime.now());
+
         }
         currentHour=simpleHourFormatter.format(new Date());
         try {
@@ -198,6 +200,7 @@ public class StatusService {
             DailyStatus dailyStatus = dailyStatusMap.get(todayString);
             if (dailyStatus == null) {
                 dailyStatus = new DailyStatus();
+
                 //dailyStatusMap.put(new SimpleDateFormat("yyyy-MM-dd").format(new Date()),dailyStatus);
             }
             if (dailyStatus.getUserApplicationStatistics() == null) {
@@ -397,6 +400,7 @@ public class StatusService {
 
     protected UserSessionStatus getUserSessionStatusDataFromActivityStatistics(ActivityStatistics stats) {
         UserSessionStatus status = new UserSessionStatus();
+        status.setLast_updated(ZonedDateTime.now());
         if (stats != null) {
 
             ActivityCollection activities = stats.getActivities();
