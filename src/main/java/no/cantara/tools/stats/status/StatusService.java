@@ -100,9 +100,12 @@ public class StatusService {
             String todayString = simpleDateFormatter.format(new Date());
             if (dailyStatusMap.get(todayString) != null && dailyStatusMap.get(todayString).getUserSessionStatus() != null) {
                 recentStatus = dailyStatusMap.get(todayString).getUserSessionStatus();
+                recentStatus.setStarttime_of_this_day(ZonedDateTime.now());
                 // Workaround for handling serialized null
                 if (dailyStatusMap.get(todayString).getUserApplicationStatistics()==null){
                     UserApplicationStatistics userApplicationStatistics= new UserApplicationStatistics();
+                    userApplicationStatistics.setFor_application("2015");
+                    userApplicationStatistics.setLast_updated(ZonedDateTime.now());
                     List<UserApplicationStatistics> userApplicationStatisticsList = new ArrayList<>();
                     userApplicationStatisticsList.add(userApplicationStatistics);
                     dailyStatusMap.get(todayString).setUserApplicationStatistics(userApplicationStatisticsList);
