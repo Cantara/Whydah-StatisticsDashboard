@@ -121,6 +121,7 @@ public class StatusService {
             logger.error("Unable to create status domain models", e);
         }
 
+        logger.info("Starting thread executor");
         try {
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
             scheduler.scheduleAtFixedRate(
@@ -250,7 +251,7 @@ public class StatusService {
 
             return status;
         } catch (Exception ex) {
-            logger.error("get: %s", ex.getMessage());
+            logger.error("getUserSessionStatusForToday Exception: ", ex);
             return status;
             //throw AppExceptionCode.COMMON_INTERNALEXCEPTION_500.addMessageParams("Failed to get status due to the exception - " + ex.getMessage());
         }
@@ -304,6 +305,8 @@ public class StatusService {
                     .getString("users (DB)");
             return Integer.valueOf(count_from_uib != null ? count_from_uib : "0");
         } catch (UnirestException e) {
+            logger.error("Exception: ", e);
+
             logger.error("get: %s", e.getMessage());
         }
         return 0;
@@ -319,6 +322,7 @@ public class StatusService {
                     .getString("AuthenticatedUserTokenMapSize");
             return Integer.valueOf(count_from_sts != null ? count_from_sts : "0");
         } catch (UnirestException e) {
+            logger.error("Exception: ", e);
             logger.error("get: %s", e.getMessage());
         }
         return 0;
@@ -334,6 +338,8 @@ public class StatusService {
                     .getString("ConfiguredApplications");
             return Integer.valueOf(count_from_sts != null ? count_from_sts : "0");
         } catch (UnirestException e) {
+            logger.error("getTotalOfApplications-UnirestException: ", e);
+
             logger.error("get: %s", e.getMessage());
         }
         return 0;
@@ -350,6 +356,7 @@ public class StatusService {
                     .getString("ThreatSignalRingbufferSize");
             return Integer.valueOf(count_from_sts != null ? count_from_sts : "0");
         } catch (UnirestException e) {
+            logger.error("getTotalOfThreats-UnirestException-sts_health_service: ", e);
             logger.error("get: %s", e.getMessage());
         }
         return 0;
