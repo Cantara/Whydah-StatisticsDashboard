@@ -36,7 +36,7 @@ public class MainTest {
     }
 
     @AfterAll
-    public static void shutdownTheServer() {
+    public static void shutdownTheServer() throws Exception {
         server.shutdown();
     }
 
