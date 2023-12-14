@@ -101,7 +101,11 @@ public final class Main {
                 .error(Throwable.class, GlobalExceptionHandler.handleErrors(ApplicationProperties.getInstance().get("app.errorlevel", "0")))
                 .build();
 
-        Unirest.config().connectTimeout(60000);
+        try {
+            Unirest.config().connectTimeout(60000);
+        } catch (Exception e){
+            log.warn("Unable to set timeout",e);
+        }
 
         WebServer ws = WebServer.builder()
                 .port(port)
