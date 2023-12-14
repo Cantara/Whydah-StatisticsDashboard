@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static no.cantara.tools.stats.status.StatusService.simpleHourFormatter;
@@ -25,6 +26,7 @@ public class DailyStatus implements Serializable {
     public UserSessionStatus getUserSessionStatus() {
         if (userSessionStatus==null){
             userSessionStatus=new UserSessionStatus();
+            userSessionStatus.setLast_updated(ZonedDateTime.now());
         }
         return userSessionStatus;
     }

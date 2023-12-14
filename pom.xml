@@ -50,7 +50,7 @@
 
     <properties>
         <mainClass>no.cantara.tools.stats.Main</mainClass>
-        <slf4j.version>1.7.36</slf4j.version>
+        <slf4j.version>2.0.9</slf4j.version>
         <helidon.version>2.6.4</helidon.version>
         <jackson.version>2.16.0</jackson.version>
         <maven.compiler.source>11</maven.compiler.source>
@@ -183,23 +183,26 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <!-- Flyway 3.2, httpclient and spring use Commons logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <!-- Jersey use jul -->
+        <!-- CXF and jersey use java.util logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
 
+
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.14</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
