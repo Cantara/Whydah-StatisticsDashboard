@@ -30,7 +30,8 @@ public class UserApplicationStatistics implements Serializable {
         if (last_updated != null) {
             return last_updated;
         }
-        return ZonedDateTime.now();
+        last_updated = ZonedDateTime.now();
+        return last_updated;
     }
 
 
