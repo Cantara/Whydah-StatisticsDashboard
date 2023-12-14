@@ -210,45 +210,46 @@ public class StatusService {
                     .asObject(ActivityStatistics.class)
                     .getBody();
 
-            for (UserSessionActivity activity : stats.getActivities().getUserSessions()) {
-                if (activity.getStartTime() == 0) {
-                    activity.setStartTime(System.currentTimeMillis());
+            if (stats!=null && stats.getActivities()!=null) {
+                for (UserSessionActivity activity : stats.getActivities().getUserSessions()) {
+                    if (activity.getStartTime() == 0) {
+                        activity.setStartTime(System.currentTimeMillis());
+                    }
                 }
-            }
-            status = getUserSessionStatusDataFromActivityStatistics(stats);
-            status.setTotal_number_of_users(getTotalOfUsers());
-            status.setNumber_of_active_user_sessions(getTotalOfSessions());
-            status.setTotal_number_of_applications(getTotalOfApplications());
-            recentStatus = status;
-            String todayString = simpleDateFormatter.format(new Date());
-            DailyStatus dailyStatus = dailyStatusMap.get(todayString);
-            if (dailyStatus == null) {
-                dailyStatus = new DailyStatus();
+                status = getUserSessionStatusDataFromActivityStatistics(stats);
+                status.setTotal_number_of_users(getTotalOfUsers());
+                status.setNumber_of_active_user_sessions(getTotalOfSessions());
+                status.setTotal_number_of_applications(getTotalOfApplications());
+                recentStatus = status;
+                String todayString = simpleDateFormatter.format(new Date());
+                DailyStatus dailyStatus = dailyStatusMap.get(todayString);
+                if (dailyStatus == null) {
+                    dailyStatus = new DailyStatus();
 
-                //dailyStatusMap.put(new SimpleDateFormat("yyyy-MM-dd").format(new Date()),dailyStatus);
-            }
-            if (dailyStatus.getUserApplicationStatistics() == null) {
-                String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
-                if (!appIds.equals("")) {
-                    String[] parts = appIds.split("\\s*[;,]\\s*");
-                    dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+                    //dailyStatusMap.put(new SimpleDateFormat("yyyy-MM-dd").format(new Date()),dailyStatus);
                 }
-            } else {
-                String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
-                if (!appIds.equals("")) {
-                    String[] parts = appIds.split("\\s*[;,]\\s*");
-                    dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+                if (dailyStatus.getUserApplicationStatistics() == null) {
+                    String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
+                    if (!appIds.equals("")) {
+                        String[] parts = appIds.split("\\s*[;,]\\s*");
+                        dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+                    }
+                } else {
+                    String appIds = ApplicationProperties.getInstance().get("app.stats.appids", "");
+                    if (!appIds.equals("")) {
+                        String[] parts = appIds.split("\\s*[;,]\\s*");
+                        dailyStatus.setUserApplicationStatistics(getUserApplicationStatisticsDataFromActivityStatistics(new HashSet<String>(Arrays.asList(parts)), stats));
+                    }
                 }
+                HourlyStatus hourlyStatus = updateHourlyStatus();
+                dailyStatus.setUserSessionStatus(status);
+                dailyStatus.setActivityStatistics(stats);
+                dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
+                dailyStatus.setHourlyStatus(currentHour, hourlyStatus);
+                dailyStatusMap.put(todayString, dailyStatus);
+                hourlyStatus = updateHourlyStatus();
+                hourlyStatusMap.put(currentHour, hourlyStatus);
             }
-            HourlyStatus hourlyStatus = updateHourlyStatus();
-            dailyStatus.setUserSessionStatus(status);
-            dailyStatus.setActivityStatistics(stats);
-            dailyStatus.addActivityStatistics(stats.getActivities().getUserSessions());
-            dailyStatus.setHourlyStatus(currentHour, hourlyStatus);
-            dailyStatusMap.put(todayString, dailyStatus);
-            hourlyStatus = updateHourlyStatus();
-            hourlyStatusMap.put(currentHour, hourlyStatus);
-
             return status;
         } catch (Exception ex) {
             logger.error("getUserSessionStatusForToday Exception: ", ex);
