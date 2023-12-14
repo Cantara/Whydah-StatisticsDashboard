@@ -20,7 +20,7 @@ public class UserSessionStatus  implements Serializable {
 
 	private int number_of_deleted_users_this_day;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-	private ZonedDateTime last_updated;
+	private ZonedDateTime last_updated= ZonedDateTime.now();
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private ZonedDateTime starttime_of_this_day;
 	
