@@ -53,14 +53,14 @@ public class StatusService {
 
     public static final String hourformat = "yyyy-MM-dd:HH";
 
-    private static boolean bootstrap=true;
+    private static boolean bootstrap = true;
 
     public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(dateformat);
     public static final SimpleDateFormat simpleHourFormatter = new SimpleDateFormat(hourformat);
 
     private static UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
 
-    private static TreeMap<String, UserSessionStatusCache>  lastHourUpdatedStatusCache = new TreeMap<>();
+    private static TreeMap<String, UserSessionStatusCache> lastHourUpdatedStatusCache = new TreeMap<>();
     private static UserSessionStatus recentStatus = null;
     private static TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
 
@@ -70,23 +70,26 @@ public class StatusService {
 
 
     public StatusService() {
-        String timezone=ApplicationProperties.getInstance().get("app.stats.timezone", "Europe/Oslo");
+        String timezone = ApplicationProperties.getInstance().get("app.stats.timezone", "Europe/Oslo");
         simpleDateFormatter.setTimeZone(TimeZone.getTimeZone(timezone));
         simpleHourFormatter.setTimeZone(TimeZone.getTimeZone(timezone));
         report_service = ApplicationProperties.getInstance().get("app.reportservice", "");
         report_service = report_service.replaceFirst("/$", "");
         if (report_service.isEmpty()) {
+            logger.warn("Unable to get report_service");
             throw new RuntimeException("app.reportservice must be present in the app config");
         }
         uib_health_service = ApplicationProperties.getInstance().get("app.uib-health", "");
         uib_health_service = uib_health_service.replaceFirst("/$", "");
         if (uib_health_service.isEmpty()) {
+            logger.warn("Unable to get uib_health_service");
             throw new RuntimeException("app.uib-health must be present in the app config");
         }
         sts_health_service = ApplicationProperties.getInstance().get("app.sts-health", "");
         sts_health_service = sts_health_service.replaceFirst("/$", "");
         if (sts_health_service.isEmpty()) {
-            throw new RuntimeException("app.uib-health must be present in the app config");
+            logger.warn("Unable to get sts_health_service");
+            throw new RuntimeException("app.sts-health must be present in the app config");
         }
 
         try {
@@ -94,65 +97,74 @@ public class StatusService {
         } catch (Exception e) {
             logger.error("Unable to create path to persistence", e);
         }
-        currentHour=simpleHourFormatter.format(new Date());
-        if (readMap() != null) {
-            dailyStatusMap = readMap();
-            String todayString = simpleDateFormatter.format(new Date());
-            if (dailyStatusMap.get(todayString) != null && dailyStatusMap.get(todayString).getUserSessionStatus() != null) {
-                recentStatus = dailyStatusMap.get(todayString).getUserSessionStatus();
-                recentStatus.setStarttime_of_this_day(ZonedDateTime.now());
-                // Workaround for handling serialized null
-                if (dailyStatusMap.get(todayString).getUserApplicationStatistics()==null){
-                    UserApplicationStatistics userApplicationStatistics= new UserApplicationStatistics();
-                    userApplicationStatistics.setFor_application("2015");
-                    userApplicationStatistics.setLast_updated(ZonedDateTime.now());
-                    List<UserApplicationStatistics> userApplicationStatisticsList = new ArrayList<>();
-                    userApplicationStatisticsList.add(userApplicationStatistics);
-                    dailyStatusMap.get(todayString).setUserApplicationStatistics(userApplicationStatisticsList);
+        try {
+            currentHour = simpleHourFormatter.format(new Date());
+            if (readMap() != null) {
+                dailyStatusMap = readMap();
+                String todayString = simpleDateFormatter.format(new Date());
+                if (dailyStatusMap.get(todayString) != null && dailyStatusMap.get(todayString).getUserSessionStatus() != null) {
+                    recentStatus = dailyStatusMap.get(todayString).getUserSessionStatus();
+                    recentStatus.setStarttime_of_this_day(ZonedDateTime.now());
+                    // Workaround for handling serialized null
+                    if (dailyStatusMap.get(todayString).getUserApplicationStatistics() == null) {
+                        UserApplicationStatistics userApplicationStatistics = new UserApplicationStatistics();
+                        userApplicationStatistics.setFor_application("2015");
+                        userApplicationStatistics.setLast_updated(ZonedDateTime.now());
+                        List<UserApplicationStatistics> userApplicationStatisticsList = new ArrayList<>();
+                        userApplicationStatisticsList.add(userApplicationStatistics);
+                        dailyStatusMap.get(todayString).setUserApplicationStatistics(userApplicationStatisticsList);
+                    }
                 }
-            }
 
+            }
+        } catch (Exception e) {
+            logger.error("Unable to create status domain models", e);
         }
 
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(
-                new Runnable() {
-                    public void run() {
-                        try {
+        try {
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduler.scheduleAtFixedRate(
+                    new Runnable() {
+                        public void run() {
+                            try {
 
-                            getUserSessionStatusForToday();
+                                getUserSessionStatusForToday();
 
-                            //remove old data
-                            int maxHistory = ApplicationProperties.getInstance().asInt("app.stats.keep-history-in-days", 7);
-                            int numberToRemove = dailyStatusMap.size() - maxHistory - 1;
-                            while (numberToRemove > 0) {
-                                Entry<String, DailyStatus> en = dailyStatusMap.pollFirstEntry();
-                                numberToRemove--;
-                                logger.debug("remove date {}. We keep a history of {} statistics records according to the config", en.getKey(), maxHistory);
+                                //remove old data
+                                int maxHistory = ApplicationProperties.getInstance().asInt("app.stats.keep-history-in-days", 7);
+                                int numberToRemove = dailyStatusMap.size() - maxHistory - 1;
+                                while (numberToRemove > 0) {
+                                    Entry<String, DailyStatus> en = dailyStatusMap.pollFirstEntry();
+                                    numberToRemove--;
+                                    logger.debug("remove date {}. We keep a history of {} statistics records according to the config", en.getKey(), maxHistory);
+                                }
+
+                                //store map
+                                storeMap();
+
+                            } catch (Exception ex) {
+                                logger.error("Exception in trying to get updated status", ex);
+                                ex.printStackTrace();
                             }
-
-                            //store map
-                            storeMap();
-
-                        } catch (Exception ex) {
-                            logger.error("Exception in trying to get updated status", ex);
-                            ex.printStackTrace();
                         }
-                    }
-                },
-                1, 1, TimeUnit.MINUTES);
+                    },
+                    1, 1, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            logger.error("Unable to create status pollers", e);
+        }
+
     }
 
 
     public UserSessionStatus getUserSessionStatusForToday() {
 
         UserSessionStatus status = recentStatus;
-        if (status==null){
+        if (status == null) {
             status = new UserSessionStatus();
             status.setLast_updated(ZonedDateTime.now());
 
         }
-        currentHour=simpleHourFormatter.format(new Date());
+        currentHour = simpleHourFormatter.format(new Date());
         try {
             if (lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
                 //reset the cache if the day is passed
@@ -171,7 +183,7 @@ public class StatusService {
 
                 dailyStatus.setUserSessionStatus(recentStatus);
                 String todayString = simpleDateFormatter.format(new Date());
-                if (dailyStatusMap.get(todayString)==null) {
+                if (dailyStatusMap.get(todayString) == null) {
 
                     dailyStatusMap.put(todayString, dailyStatus);
                 }
@@ -197,8 +209,8 @@ public class StatusService {
                     .asObject(ActivityStatistics.class)
                     .getBody();
 
-            for(UserSessionActivity activity:stats.getActivities().getUserSessions()){
-                if (activity.getStartTime()==0){
+            for (UserSessionActivity activity : stats.getActivities().getUserSessions()) {
+                if (activity.getStartTime() == 0) {
                     activity.setStartTime(System.currentTimeMillis());
                 }
             }
@@ -255,7 +267,7 @@ public class StatusService {
         int registered_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredUsers();
         int deleted_users = lastHourUpdatedStatusCache.get(currentHour).getAllRegisteredDeletions();
         // survive restart scenario
-        if (bootstrap==true) {
+        if (bootstrap == true) {
             if (hourlyStatus.getNumber_of_unique_logins_this_hour() > logins) {
                 hourlyStatus.setNumber_of_unique_logins_this_hour(hourlyStatus.getNumber_of_unique_logins_this_hour() + logins);
 
@@ -272,7 +284,7 @@ public class StatusService {
             } else {
                 hourlyStatus.setNumber_of_deleted_users_this_day(deleted_users);
             }
-            bootstrap=false;
+            bootstrap = false;
         } else {
             hourlyStatus.setNumber_of_unique_logins_this_hour(logins);
             hourlyStatus.setNumber_of_registered_users_this_hour(registered_users);
@@ -346,8 +358,8 @@ public class StatusService {
     protected List<UserApplicationStatistics> getUserApplicationStatisticsDataFromActivityStatistics(Set<String> appIds, ActivityStatistics stats) {
         Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
         appIds.forEach(id -> statsByAppId.put(id, new UserApplicationStatistics(id)));
-        if (lastHourUpdatedStatusCache.get(currentHour)==null){
-            lastHourUpdatedStatusCache.put(currentHour,new UserSessionStatusCache());
+        if (lastHourUpdatedStatusCache.get(currentHour) == null) {
+            lastHourUpdatedStatusCache.put(currentHour, new UserSessionStatusCache());
         }
         if (stats != null) {
             ActivityCollection activities = stats.getActivities();
@@ -372,8 +384,8 @@ public class StatusService {
                         lastUpdatedStatusCache.getDeleted_users_by_appId().get(activity.getData().getApplicationid()).add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
                     }
                     if (appIds.contains(activity.getData().getApplicationid()) && currentHour.equalsIgnoreCase(simpleHourFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
-                        if (lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId()==null){
-                            lastHourUpdatedStatusCache.put(currentHour,new UserSessionStatusCache());
+                        if (lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId() == null) {
+                            lastHourUpdatedStatusCache.put(currentHour, new UserSessionStatusCache());
                         }
                         if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                             if (!lastHourUpdatedStatusCache.get(currentHour).getLogins_by_appId().containsKey(activity.getData().getApplicationid())) {

@@ -15,10 +15,12 @@ import no.cantara.tools.stats.utils.EnvironmentConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 /**
@@ -130,9 +132,15 @@ public final class Main {
      * Configure logging from logging.properties file.
      */
     private static void setupLogging() throws IOException {
-        try (InputStream is = Main.class.getResourceAsStream("/logging.properties")) {
-            LogManager.getLogManager().readConfiguration(is);
-        }
+
+        LogManager.getLogManager().reset();
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+        //Enable openness in JerseyApplication logging.
+        LogManager.getLogManager().getLogger("").setLevel(Level.FINEST);
+//        try (InputStream is = Main.class.getResourceAsStream("/logging.properties")) {
+//            LogManager.getLogManager().readConfiguration(is);
+//        }
     }
 
    
