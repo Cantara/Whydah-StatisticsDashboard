@@ -204,10 +204,14 @@ public class StatusService {
             ZonedDateTime lastTimeRequested = ZonedDateTime.now();
             String endtime_pram = String.valueOf(lastTimeRequested.toInstant().toEpochMilli());
 
+            logger.error("Trying to get data..  from:"+starttime_param+" to "+endtime_pram);
+            Unirest.config().connectTimeout(60000);
+//            Unirest.config().connectionTTL(60000);
             ActivityStatistics stats = Unirest.get(report_service + "/observe/statistics/all/usersession")
                     .queryString("starttime", starttime_param)
                     .queryString("endtime", endtime_pram)
                     .asObject(ActivityStatistics.class)
+
                     .getBody();
 
             if (stats!=null && stats.getActivities()!=null) {
