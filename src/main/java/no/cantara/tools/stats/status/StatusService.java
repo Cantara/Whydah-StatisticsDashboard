@@ -201,8 +201,8 @@ public class StatusService {
             if (lastUpdatedStatusCache.getLasttime_requested() != 0) {
                 starttime_param = String.valueOf(lastUpdatedStatusCache.getLasttime_requested() + 1);
             }
-            ZonedDateTime lastTimeRequested = ZonedDateTime.now();
-            String endtime_pram = String.valueOf(lastTimeRequested.toInstant().toEpochMilli());
+            //ZonedDateTime lastTimeRequested = ZonedDateTime.now();
+            String endtime_pram = String.valueOf(Instant.now().toEpochMilli());
 
             logger.error("Trying to get data..  from:"+starttime_param+" to "+endtime_pram);
 //            Unirest.config().connectionTTL(60000);
@@ -213,6 +213,7 @@ public class StatusService {
 
                     .getBody();
 
+            logger.error("Result:"+stats);
             if (stats!=null && stats.getActivities()!=null) {
                 for (UserSessionActivity activity : stats.getActivities().getUserSessions()) {
                     if (activity.getStartTime() == 0) {
