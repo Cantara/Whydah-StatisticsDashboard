@@ -38,6 +38,8 @@ public class StatusService {
     public static final Logger logger = LoggerFactory.getLogger(StatusService.class);
 
     private static final String MAPFILENAME = "data/dailyStatusMap.json";
+
+    public static String endtime_pram;
     ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -202,7 +204,7 @@ public class StatusService {
                 starttime_param = String.valueOf(lastUpdatedStatusCache.getLasttime_requested() + 1);
             }
             //ZonedDateTime lastTimeRequested = ZonedDateTime.now();
-            String endtime_pram = String.valueOf(Instant.now().toEpochMilli());
+            endtime_pram = String.valueOf(Instant.now().toEpochMilli());
 
             logger.error("Trying to get data..  from:"+starttime_param+" to "+endtime_pram);
 //            Unirest.config().connectionTTL(60000);
