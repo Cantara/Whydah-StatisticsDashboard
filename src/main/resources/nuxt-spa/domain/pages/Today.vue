@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div> Last updated: {{ getLastUpdated() }} </div>
+      <div> Last updated: {{ getLastUpdated() }} - QueryTime: {{ getQueryTime() ns }}</div>
     </header>
     <summary class="columns is-multiline is-mobile is-2 is-variable">
       <div class="column is-one-third-widescreen is-half-touch py-2">
@@ -232,6 +232,10 @@ export default {
         console.error('getLastUpdated - invalid date format value=' + this.stats?.userSessionStatus?.last_updated);
         return 'N/A';
       }
+    },
+    getQueryTime() {
+      const d = this.stats?.userSessionStatus?.queryTime
+      return d;
     },
     formattedDate() {
       const target = this.stats?.userSessionStatus?.starttime_of_this_day ?? this.statsProp[0];

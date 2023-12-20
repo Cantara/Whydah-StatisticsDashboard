@@ -208,12 +208,18 @@ public class StatusService {
 
             logger.error("Trying to get data..  from:"+starttime_param+" to "+endtime_pram);
 //            Unirest.config().connectionTTL(60000);
+
+            long startTime = System.currentTimeMillis();
+
+
             ActivityStatistics stats = Unirest.get(report_service + "/observe/statistics/all/usersession")
                     .queryString("starttime", starttime_param)
                     .queryString("endtime", endtime_pram)
                     .asObject(ActivityStatistics.class)
 
                     .getBody();
+            long endTime = System.currentTimeMillis();
+            int duration = (int) (endTime - startTime)/1000;
 
             logger.error("Result:"+stats);
             if (stats!=null && stats.getActivities()!=null) {
@@ -227,6 +233,7 @@ public class StatusService {
                 status.setNumber_of_active_user_sessions(getTotalOfSessions());
                 status.setTotal_number_of_applications(getTotalOfApplications());
                 recentStatus = status;
+                recentStatus.setQueryTime(duration);
                 String todayString = simpleDateFormatter.format(new Date());
                 DailyStatus dailyStatus = dailyStatusMap.get(todayString);
                 if (dailyStatus == null) {
