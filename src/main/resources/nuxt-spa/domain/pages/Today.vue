@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div> Last updated: {{ getLastUpdated() }} - QueryTime: {{ getQueryTime() ns }} </div>
+      <div> Last updated: {{ getLastUpdated() }} - QueryTime: {{ getQueryTime() }} ns </div>
     </header>
     <summary class="columns is-multiline is-mobile is-2 is-variable">
       <div class="column is-one-third-widescreen is-half-touch py-2">
