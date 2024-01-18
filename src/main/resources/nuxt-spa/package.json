@@ -27,7 +27,7 @@
     "highcharts": "^11.1.0",
     "install-changed": "1.1.0",
     "lodash": "4.17.21",
-    "nuxt": "3.9.1",
+    "nuxt": "3.9.3",
     "nuxt-highcharts": "^3.0.11",
     "sass": "1.70.0",
     "vuex": "^4.1.0",
