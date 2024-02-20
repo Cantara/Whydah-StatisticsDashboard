@@ -63,7 +63,7 @@
         <dependency>
             <groupId>no.cantara.config</groupId>
             <artifactId>property-config</artifactId>
-            <version>0.8.29</version>
+            <version>0.8.30</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
