@@ -65,7 +65,8 @@ public class HealthResource implements Service {
                 "  \"ip\": \"" + myIp + "\",\n" +
                 "  \"version\": \"" + myVersion + "\",\n" +
                 "  \"now\": \"" + Instant.now() + "\",\n" +
-                "  \"running since\": \"" + runningSince + "\"\n\n" +
+                "  \"running since\": \"" + runningSince + "\",\n" +
+                "  \"dummy\": \"" + Instant.now() + "\"\n" +
                 "}\n";
     }
 
