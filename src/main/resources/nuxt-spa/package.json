@@ -23,7 +23,7 @@
     "bulma": "0.9.4",
     "color": "^4.2.3",
     "cross-env": "7.0.3",
-    "date-fns": "^3.0.0",
+    "date-fns": "^4.0.0",
     "highcharts": "^11.1.0",
     "install-changed": "1.1.0",
     "lodash": "4.17.21",
