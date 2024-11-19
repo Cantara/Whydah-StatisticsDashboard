@@ -34,7 +34,7 @@
     "vuex-intern": "0.1.0"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "^0.3.0",
+    "@nuxt/eslint-config": "^0.7.0",
     "@nuxtjs/eslint-module": "^4.1.0",
     "@nuxtjs/google-fonts": "3.2.0",
     "@nuxtjs/style-resources": "1.2.2",
