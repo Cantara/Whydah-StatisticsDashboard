@@ -166,7 +166,15 @@ public class StatusService {
             status = new UserSessionStatus();
             status.setLast_updated(ZonedDateTime.now());
 
+        } 
+        
+        if(dailyStatusMap.containsKey(simpleDateFormatter.format(new Date())) && 
+        		hourlyStatusMap.containsKey(simpleHourFormatter.format(new Date()))
+        		) {
+        	return dailyStatusMap.get(simpleDateFormatter.format(new Date())).getUserSessionStatus();
         }
+        	
+       
         currentHour = simpleHourFormatter.format(new Date());
         try {
             if (lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
@@ -199,6 +207,9 @@ public class StatusService {
 
 //            }
 
+            
+            
+            
             String starttime_param = String.valueOf(lastUpdatedStatusCache.getStarttime_of_today().toInstant().toEpochMilli());
             if (lastUpdatedStatusCache.getLasttime_requested() != 0) {
                 starttime_param = String.valueOf(lastUpdatedStatusCache.getLasttime_requested() + 1);
@@ -206,7 +217,7 @@ public class StatusService {
             //ZonedDateTime lastTimeRequested = ZonedDateTime.now();
             endtime_pram = String.valueOf(Instant.now().toEpochMilli());
 
-            logger.error("Trying to get data..  from:"+starttime_param+" to "+endtime_pram);
+            logger.debug("Trying to get data..  from:"+starttime_param+" to "+endtime_pram);
 //            Unirest.config().connectionTTL(60000);
 
             long startTime = System.currentTimeMillis();
@@ -221,7 +232,7 @@ public class StatusService {
             long endTime = System.currentTimeMillis();
             int duration = (int) (endTime - startTime)/1000;
 
-            logger.error("Result:"+stats);
+            //logger.debug("Result:"+stats);
             if (stats!=null && stats.getActivities()!=null) {
                 for (UserSessionActivity activity : stats.getActivities().getUserSessions()) {
                     if (activity.getStartTime() == 0) {
@@ -455,7 +466,7 @@ public class StatusService {
             Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
             String todayString = simpleDateFormatter.format(new Date());
 
-            activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null).forEach(activity -> {
+            activities.getUserSessions().stream().filter(i -> i.getData().getApplicationid() != null && !i.getData().getUserid().equalsIgnoreCase("ssolwaadmin") && !i.getData().getUserid().equalsIgnoreCase("useradmin") ).forEach(activity -> {
                 if (todayString.equalsIgnoreCase(simpleDateFormatter.format(Date.from(Instant.ofEpochMilli(activity.getStartTime()))))) {
                     if (activity.getData().getUsersessionfunction().equalsIgnoreCase("userSessionAccess")) {
                         logins.add(activity.getData().getUsersessionfunction() + "" + activity.getData().getUserid());
