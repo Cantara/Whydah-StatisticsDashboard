@@ -168,14 +168,24 @@ public class StatusService {
 
         } 
         
-        if(dailyStatusMap.containsKey(simpleDateFormatter.format(new Date())) && 
-        		hourlyStatusMap.containsKey(simpleHourFormatter.format(new Date()))
+        String currentHour = simpleHourFormatter.format(new Date());
+        String currentDate = simpleDateFormatter.format(new Date());
+        
+        if(dailyStatusMap.containsKey(currentDate) && 
+        		hourlyStatusMap.containsKey(currentHour)
         		) {
-        	return dailyStatusMap.get(simpleDateFormatter.format(new Date())).getUserSessionStatus();
+        	
+        	DailyStatus ds = dailyStatusMap.get(currentDate);
+        	HourlyStatus hourlyStatus = updateHourlyStatus();
+        	hourlyStatusMap.put(currentHour, hourlyStatus);
+            ds.setHourlyStatus(currentHour, hourlyStatus);
+            dailyStatusMap.put(currentDate, ds);
+        	
+        	return dailyStatusMap.get(currentDate).getUserSessionStatus();
         }
         	
        
-        currentHour = simpleHourFormatter.format(new Date());
+        
         try {
             if (lastUpdatedStatusCache.getStarttime_of_today() == null || lastUpdatedStatusCache.getStarttime_of_today().plusDays(1).isBefore(ZonedDateTime.now())) {
                 //reset the cache if the day is passed
