@@ -68,8 +68,7 @@ public class StatusService {
 
     private static TreeMap<String, HourlyStatus> hourlyStatusMap = new TreeMap<>();
 
-    private static String currentHour;
-
+    
 
     public StatusService() {
         String timezone = ApplicationProperties.getInstance().get("app.stats.timezone", "Europe/Oslo");
@@ -100,7 +99,7 @@ public class StatusService {
             logger.error("Unable to create path to persistence", e);
         }
         try {
-            currentHour = simpleHourFormatter.format(new Date());
+            String currentHour = simpleHourFormatter.format(new Date());
             if (readMap() != null) {
                 dailyStatusMap = readMap();
                 String todayString = simpleDateFormatter.format(new Date());
@@ -296,6 +295,7 @@ public class StatusService {
     }
 
     private HourlyStatus updateHourlyStatus() {
+    	String currentHour = simpleHourFormatter.format(new Date());
         HourlyStatus hourlyStatus = hourlyStatusMap.get(currentHour);
         if (hourlyStatus == null) {
             hourlyStatus = new HourlyStatus();
@@ -400,7 +400,8 @@ public class StatusService {
     }
 
     protected List<UserApplicationStatistics> getUserApplicationStatisticsDataFromActivityStatistics(Set<String> appIds, ActivityStatistics stats) {
-        Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
+    	String currentHour = simpleHourFormatter.format(new Date());
+    	Map<String, UserApplicationStatistics> statsByAppId = new HashMap<String, UserApplicationStatistics>();
         appIds.forEach(id -> statsByAppId.put(id, new UserApplicationStatistics(id)));
         if (lastHourUpdatedStatusCache.get(currentHour) == null) {
             lastHourUpdatedStatusCache.put(currentHour, new UserSessionStatusCache());
