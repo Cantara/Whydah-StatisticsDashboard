@@ -170,18 +170,18 @@ public class StatusService {
         String currentHour = simpleHourFormatter.format(new Date());
         String currentDate = simpleDateFormatter.format(new Date());
         
-        if(dailyStatusMap.containsKey(currentDate) && 
-        		hourlyStatusMap.containsKey(currentHour)
-        		) {
-        	
-        	DailyStatus ds = dailyStatusMap.get(currentDate);
-        	HourlyStatus hourlyStatus = updateHourlyStatus();
-        	hourlyStatusMap.put(currentHour, hourlyStatus);
-            ds.setHourlyStatus(currentHour, hourlyStatus);
-            dailyStatusMap.put(currentDate, ds);
-        	
-        	return dailyStatusMap.get(currentDate).getUserSessionStatus();
-        }
+//        if(dailyStatusMap.containsKey(currentDate) && 
+//        		hourlyStatusMap.containsKey(currentHour)
+//        		) {
+//        	
+//        	DailyStatus ds = dailyStatusMap.get(currentDate);
+//        	HourlyStatus hourlyStatus = updateHourlyStatus();
+//        	hourlyStatusMap.put(currentHour, hourlyStatus);
+//            ds.setHourlyStatus(currentHour, hourlyStatus);
+//            dailyStatusMap.put(currentDate, ds);
+//        	
+//        	return dailyStatusMap.get(currentDate).getUserSessionStatus();
+//        }
         	
        
         
