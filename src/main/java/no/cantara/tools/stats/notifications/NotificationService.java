@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -177,7 +177,7 @@ public class NotificationService {
             file.getParentFile().mkdirs();
             file.createNewFile();
 
-            String content = new String(Files.readAllBytes(Paths.get(warningMapFileName)), StandardCharsets.UTF_8);
+            String content = new String(Files.readAllBytes(Path.of(warningMapFileName)), StandardCharsets.UTF_8);
             if (content != null && content.length() > 4) {
                 warningMap.clear();
                 warningMap.putAll(mapper.readValue(content, Map.class));
@@ -191,7 +191,7 @@ public class NotificationService {
             File file = new File(alarmMapFileName);
             file.getParentFile().mkdirs();
             file.createNewFile();
-            String content = new String(Files.readAllBytes(Paths.get(alarmMapFileName)), StandardCharsets.UTF_8);
+            String content = new String(Files.readAllBytes(Path.of(alarmMapFileName)), StandardCharsets.UTF_8);
             if (content != null && content.length() > 4) {
                 alarmMap.clear();
                 alarmMap.putAll(mapper.readValue(content, Map.class));

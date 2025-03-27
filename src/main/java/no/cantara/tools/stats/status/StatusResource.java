@@ -68,9 +68,9 @@ public class StatusResource implements Service {
     private String getAccessTokenInReferer(URI uri) {
     	Map<String, List<String>> parameters =  new QueryStringDecoder(uri).parameters();
     	if( parameters.get("accesstoken")!=null) { 
-    		return parameters.get("accesstoken").get(0);
+    		return parameters.get("accesstoken").getFirst();
     	} else if(parameters.get("accessToken")!=null) {
-    		return parameters.get("accessToken").get(0);
+    		return parameters.get("accessToken").getFirst();
     	}
     	return null;
     }

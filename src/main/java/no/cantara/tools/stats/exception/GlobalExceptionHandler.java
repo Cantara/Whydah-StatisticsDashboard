@@ -14,9 +14,9 @@ public class GlobalExceptionHandler {
 				root = root.getCause();
 			}
 
-			if (root instanceof AppException) {
-				String error_res = ExceptionConfig.handleSecurity(new ErrorMessage((AppException) root), errorlevel).toString();	
-				res.status(((AppException) root).getStatus()).send(EntityUtils.jsonString_toJsonObject(error_res));
+			if (root instanceof AppException exception) {
+				String error_res = ExceptionConfig.handleSecurity(new ErrorMessage(exception), errorlevel).toString();	
+				res.status(exception.getStatus()).send(EntityUtils.jsonString_toJsonObject(error_res));
 			} else if(root instanceof NotFoundException) {
 				res.status(Http.Status.MOVED_PERMANENTLY_301);
 				res.headers().put(Http.Header.LOCATION, "/");

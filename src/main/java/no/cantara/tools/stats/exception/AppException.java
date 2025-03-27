@@ -1,11 +1,15 @@
 package no.cantara.tools.stats.exception;
 
+import java.io.Serial;
+
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AppException extends RuntimeException {
 
-	private static final long serialVersionUID = -8999932578270387947L;
+    @Serial
+    private static final long serialVersionUID = -8999932578270387947L;
 	
 	
 	private int status;
@@ -71,7 +75,7 @@ public class AppException extends RuntimeException {
 	}
 	
 	public AppException addMessageParams(Object... params) {
-		return new AppException(status, code, String.format(this.getMessage(), params), developerMessage, link);
+		return new AppException(status, code, this.getMessage().formatted(params), developerMessage, link);
 	}
 	
 	public static AppException parse(String exception) {

@@ -87,14 +87,14 @@ public class EntityUtils {
 		obj.forEach(p -> {
 			if(p instanceof String) {
 				jsonArrayBuilder.add(String.valueOf(p));
-			} else if(p instanceof Integer) {
-				jsonArrayBuilder.add((Integer)p);
-			} else if(p instanceof Boolean) {
-				jsonArrayBuilder.add((Boolean)p);
-			} else if(p instanceof Long) {
-				jsonArrayBuilder.add((Long)p);
-			}else if(p instanceof Double) {
-				jsonArrayBuilder.add((Double)p);
+			} else if(p instanceof Integer integer) {
+				jsonArrayBuilder.add(integer);
+			} else if(p instanceof Boolean boolean1) {
+				jsonArrayBuilder.add(boolean1);
+			} else if(p instanceof Long long1) {
+				jsonArrayBuilder.add(long1);
+			}else if(p instanceof Double double1) {
+				jsonArrayBuilder.add(double1);
 			} else {
 				jsonArrayBuilder.add(object_toJsonObject(p));
 			}

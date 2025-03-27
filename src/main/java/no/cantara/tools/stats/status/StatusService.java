@@ -2,7 +2,6 @@ package no.cantara.tools.stats.status;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +30,6 @@ import no.cantara.tools.stats.exception.AppExceptionCode;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class StatusService {
 
@@ -94,7 +92,7 @@ public class StatusService {
         }
 
         try {
-            Files.createDirectories(Paths.get("data"));
+            Files.createDirectories(Path.of("data"));
         } catch (Exception e) {
             logger.error("Unable to create path to persistence", e);
         }
@@ -528,7 +526,7 @@ public class StatusService {
     public synchronized void storeMap() {
         try {
 
-            Path path = Paths.get(MAPFILENAME);
+            Path path = Path.of(MAPFILENAME);
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dailyStatusMap);
             Files.writeString(path, json, StandardCharsets.UTF_8);
 
