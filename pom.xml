@@ -51,7 +51,7 @@
     <properties>
         <mainClass>no.cantara.tools.stats.Main</mainClass>
         <slf4j.version>2.0.17</slf4j.version>
-        <helidon.version>2.6.11</helidon.version>
+        <helidon.version>4.2.3</helidon.version>
         <jackson.version>2.19.1</jackson.version>
         <jdk.version>21</jdk.version>
         <maven.compiler.source>21</maven.compiler.source>
