@@ -42,7 +42,8 @@ export default defineNuxtConfig({
     '@nuxtjs/eslint-module',
   ],
   eslint: {
-    lintOnStart: false
+    lintOnStart: false,
+    parser: 'babel-eslint'
   },
   toast: {
     position: 'top-center',
