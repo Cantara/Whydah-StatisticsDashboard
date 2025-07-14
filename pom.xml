@@ -281,6 +281,15 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>install oxc binding</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install @oxc-parser/binding-linux-x64-gnu --save-optional</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>npm run build -y</id>
                         <goals>
                             <goal>npm</goal>
