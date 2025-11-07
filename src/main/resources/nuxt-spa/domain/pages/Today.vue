@@ -20,7 +20,7 @@
       </div>
       <div> Last updated: {{ getLastUpdated() }} - QueryTime: {{ getQueryTime() }} ns </div>
     </header>
-    <summary class="columns is-multiline is-mobile is-2 is-variable">
+    <div class="columns is-multiline is-mobile is-2 is-variable">
       <div class="column is-one-third-widescreen is-half-touch py-2">
         <div class="summary-item">
           <div class="is-size-6 truncate">
@@ -136,7 +136,7 @@
           </div>
         </div>
       </div>
-    </summary>
+    </div>
     <main class="is-flex is-flex-grow-1">
       <highchart
         id="today-chart"
