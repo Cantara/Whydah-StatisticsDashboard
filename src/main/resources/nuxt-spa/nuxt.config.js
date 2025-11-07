@@ -43,7 +43,19 @@ export default defineNuxtConfig({
   ],
   eslint: {
     lintOnStart: false,
-    parser: 'babel-eslint'
+    // overrideConfig: {
+    //   parser: 'babel-eslint'
+    // }
+  },
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          quietDeps: true,
+          silenceDeprecations: ["import", "color-functions", "global-builtin"],
+        }
+      }
+    }
   },
   toast: {
     position: 'top-center',
@@ -66,7 +78,6 @@ export default defineNuxtConfig({
   //     logErrors: true
   //   },
   // },
-  //
   nitro: {
     devProxy: { // routeRules for prod
       '/status': { target: 'http://localhost:8088/status', changeOrigin: true},
@@ -89,5 +100,6 @@ export default defineNuxtConfig({
         }
       }
     },
-  }
+  },
+  compatibilityDate: '2025-11-06'
 })
