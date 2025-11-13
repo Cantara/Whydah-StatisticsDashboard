@@ -1,7 +1,7 @@
-@import "_colors.module.scss";
+@use "_colors.module.scss" as *;
+@use "bulma/sass/utilities/derived-variables.sass" as *;
+@use "bulma/sass/utilities/functions.sass" as *;
 
-@import "bulma/sass/utilities/derived-variables.sass";
-@import "bulma/sass/utilities/functions.sass";
 
 // Gloabl: {{
 body, html {
@@ -26,11 +26,11 @@ $addColors: (
 
 $colors: mergeColorMaps($colors, $addColors);
 
-@import "bulma/bulma";
+@use "bulma/bulma";
 
 // }}}
 // Highcharts: {{{
-@import  "highcharts/css/highcharts.css";
+@use  "highcharts/css/highcharts.css";
 
 
 :root {
