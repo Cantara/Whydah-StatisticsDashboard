@@ -1,4 +1,5 @@
 const config = require("../../../../environment_config.json");
+
 export default defineNuxtConfig({
   ssr: false,
   target: 'static',
@@ -19,14 +20,9 @@ export default defineNuxtConfig({
           href: `/${config.favicon}`
         },
       ],
-      // style: [
-      //   { cssText: '.icon svg { height: 20px !important; }', type: 'text/css' }
-      // ],
     },
   },
-  /*
-   ** Global CSS
-   */
+
   css: [
     '@/assets/styles/main.scss',
     "@fortawesome/fontawesome-svg-core/styles.css",
@@ -34,61 +30,41 @@ export default defineNuxtConfig({
 
   googleFonts: {
     families: {
-      "Noto+Sans":true
+      "Noto+Sans": true
     },
   },
+
   modules: [
     '@nuxtjs/google-fonts',
     'nuxt-highcharts',
   ],
-  eslint: {
-    lintOnStart: false,
-    // Disable eslint during dev
-    exclude: ['**/*']
-  },
-  toast: {
-    position: 'top-center',
-    fullWidth:true,
-    duration:5000,
-    closeOnSwipe:true,
-    register: [ // Register custom toasts
-      {
-        name: 'my-error',
-        message: 'Oops...Something went wrong',
-        options: {
-          type: 'error'
-        }
-      }
-    ]
-  },
-  // sentry: {
-  //   dsn: 'https://f8cf946a403f4e709a6d6639a528da04@o450136.ingest.sentry.io/5434296', // Enter your project's DSN here
-  //   config: {
-  //     logErrors: true
-  //   },
-  // },
-  //
+
   nitro: {
-    devProxy: { // routeRules for prod
-      '/status': { target: 'http://localhost:8088/status', changeOrigin: true},
-      '/env': { target: 'http://localhost:8088/env', changeOrigin: true},
+    devProxy: {
+      '/status': { 
+        target: 'http://localhost:8088/status', 
+        changeOrigin: true
+      },
+      '/env': { 
+        target: 'http://localhost:8088/env', 
+        changeOrigin: true
+      },
     }
   },
+
   generate: {
     dir: process.env.APP_ENV === 'production' ? 'dist' : `dist-${process.env.APP_ENV}`
   },
 
-  build: {
-    parallel: true,
-    cache: true,
-    analyze: false,
-    optimizeCSS: process.env.APP_ENV === 'production',
-    postcss: {
-      preset: {
-        features: {
-          customProperties: false
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler', // or 'modern' depending on sass version
+          quietDeps: true, // Suppress deprecation warnings from dependencies
+          silenceDeprecations: ['import', 'global-builtin', 'color-functions'], // Silence specific deprecations
         }
       }
-    },
+    }
   }
 })
