@@ -2,12 +2,13 @@ export default {
   name: "auth",
   namespaced: true,
   state() {
-    authToken: '' // eslint-disable-line
+    return {
+      authToken: ''
+    }
   },
   mutations: {
-    setToken (state, token) {
+    setToken(state, token) {
       state.authToken = token;
     },
   }
 }
-

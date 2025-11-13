@@ -2,6 +2,7 @@ const config = require("../../../../environment_config.json");
 export default defineNuxtConfig({
   ssr: false,
   target: 'static',
+  compatibilityDate: '2025-11-13',
 
   app: {
     head: {
@@ -39,11 +40,11 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/google-fonts',
     'nuxt-highcharts',
-    '@nuxtjs/eslint-module',
   ],
   eslint: {
     lintOnStart: false,
-    parser: 'babel-eslint'
+    // Disable eslint during dev
+    exclude: ['**/*']
   },
   toast: {
     position: 'top-center',
