@@ -43,7 +43,7 @@
     "defu": "^6.1.2",
     "eslint": "^8.57.0",
     "eslint-plugin-nuxt": "^4.0.0",
-    "eslint-plugin-vue": "^9.0.0",
+    "eslint-plugin-vue": "^10.0.0",
     "file-loader": "6.2.0",
     "nuxt-purgecss": "2.0.0",
     "sass-loader": "13.3.3"
