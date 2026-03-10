@@ -1,0 +1,21 @@
+id: Whydah-StatisticsDashboard
+name: Whydah Statistics Dashboard
+version: 2.31.24-SNAPSHOT
+description: |
+  Web dashboard for visualising Whydah platform usage statistics. Displays
+  login counts, active sessions, and authentication trends sourced from the
+  Statistics Service.
+units:
+  - id: dashboard-ui
+    name: Dashboard UI
+    type: webapp
+    description: Web UI for statistics visualisation — tables, summaries, and trend views.
+    path: src/main/java/net/whydah
+  - id: charts
+    name: Charts
+    type: component
+    description: Graph and chart rendering for time-series statistics data.
+  - id: stats-client
+    name: Statistics Service Client
+    type: component
+    description: HTTP client for fetching aggregated data from the Whydah Statistics Service.
