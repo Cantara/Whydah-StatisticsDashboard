@@ -139,9 +139,13 @@ public class StatusService {
                                 }
                                 //store map
                                 storeMap();
-                            } catch (Exception ex) {
-                                logger.error("Exception in trying to get updated status", ex);
-                                ex.printStackTrace();
+                            } catch (Throwable t) {
+                                // Must catch Throwable, not Exception: ScheduledExecutorService.scheduleAtFixedRate
+                                // cancels the recurring task on any uncaught throwable. An uncaught Error (e.g. OOM)
+                                // would silently kill the scheduler while the JVM keeps serving stale HTTP — happened
+                                // in prod on 2026-04-11.
+                                logger.error("Throwable in trying to get updated status — caught to keep scheduler alive", t);
+                                t.printStackTrace();
                             }
                         }
                     }, 1, 1, TimeUnit.MINUTES);

@@ -158,7 +158,7 @@ export default {
   },
   computed: {
     stats() {
-      return this.statsProp[1];
+      return this.statsProp?.[1];
     },
     categories() {
       if (this.stats?.hourlyStatusTreeMap) {
@@ -237,7 +237,7 @@ export default {
       return this.stats?.userSessionStatus?.queryTime
     },
     formattedDate() {
-      const target = this.stats?.userSessionStatus?.starttime_of_this_day ?? this.statsProp[0];
+      const target = this.stats?.userSessionStatus?.starttime_of_this_day ?? this.statsProp?.[0];
       if(this.dateIsValid(target)) {
         const parsed = this.$datefns.parseISO(target);
         return this.$datefns.format(parsed, "EEE, LLL dd, yyyy")
