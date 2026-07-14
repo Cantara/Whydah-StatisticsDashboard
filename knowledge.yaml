@@ -1,4 +1,4 @@
-kcp_version: "0.21"
+kcp_version: "0.26"
 updated: "2026-06-20"
 language: en
 license: "Apache-2.0"
@@ -25,20 +25,19 @@ units:
     type: webapp
     description: Web UI for statistics visualisation — tables, summaries, and trend views.
     path: src/main/java/net/whydah
-      content_hash:
-        algorithm: sha256
-        value: ""
   - id: charts
     name: Charts
     type: component
     description: Graph and chart rendering for time-series statistics data.
-      content_hash:
-        algorithm: sha256
-        value: ""
   - id: stats-client
     name: Statistics Service Client
     type: component
     description: HTTP client for fetching aggregated data from the Whydah Statistics Service.
-      content_hash:
-        algorithm: sha256
-        value: ""
+
+# Serving Endpoint Binding (KCP SPEC v0.26 §3.12): authoritative manifest URL
+# and authorized MCP representative. Ignored by pre-0.26 verifiers.
+serving:
+  manifest:
+    - https://raw.githubusercontent.com/Cantara/Whydah-StatisticsDashboard/main/knowledge.yaml
+  mcp:
+    - https://mcp.cantara.no/mcp
