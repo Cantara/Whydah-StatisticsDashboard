@@ -49,6 +49,6 @@
     "sass-loader": "17.0.0"
   },
   "optionalDependencies": {
-    "@oxc-parser/binding-linux-x64-gnu": "^0.143.0"
+    "@oxc-parser/binding-linux-x64-gnu": "^0.144.0"
   }
 }
