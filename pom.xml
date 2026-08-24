@@ -292,7 +292,11 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install @oxc-parser/binding-linux-x64-gnu --save-optional</arguments>
+                            <!-- Needs legacy-peer-deps for the same reason "install dependencies" above
+                                 passes force: the eslint tooling here is not peer clean (@nuxtjs/eslint-config@12
+                                 wants eslint 8, @nuxt/eslint-config@0.7 wants 8 or 9, the project is on 10),
+                                 so a plain install fails with ERESOLVE. -->
+                            <arguments>install @oxc-parser/binding-linux-x64-gnu --save-optional --legacy-peer-deps</arguments>
                         </configuration>
                     </execution>
                     <execution>
