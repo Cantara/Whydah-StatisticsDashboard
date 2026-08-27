@@ -39,7 +39,7 @@
     "@nuxtjs/eslint-module": "^4.1.0",
     "@nuxtjs/google-fonts": "3.2.0",
     "@nuxtjs/style-resources": "1.2.2",
-    "@vue/test-utils": "2.4.11",
+    "@vue/test-utils": "2.5.0",
     "defu": "^6.1.2",
     "eslint": "^10.0.0",
     "eslint-plugin-nuxt": "^4.0.0",
