@@ -29,7 +29,7 @@
     "lodash": "4.18.1",
     "nuxt": "3.21.11",
     "nuxt-highcharts": "^3.0.11",
-    "sass": "1.103.1",
+    "sass": "1.104.0",
     "vuex": "^4.1.0",
     "vuex-intern": "0.1.0"
   },
