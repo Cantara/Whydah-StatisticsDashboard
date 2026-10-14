@@ -295,8 +295,12 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
+                            <!-- legacy-peer-deps, not force: the eslint tooling is not peer clean (see the oxc step
+                                 below), and with no package-lock.json a clean checkout (release:perform) resolves
+                                 from scratch, where npm 10's --force crashes with
+                                 "Cannot read properties of null (reading 'edgesOut')". -->
                             <arguments>
-                                install --force
+                                install --legacy-peer-deps
                             </arguments>
                         </configuration>
                     </execution>
@@ -306,11 +310,11 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <!-- Needs legacy-peer-deps for the same reason "install dependencies" above
-                                 passes force: the eslint tooling here is not peer clean (@nuxtjs/eslint-config@12
+                            <!-- Needs legacy-peer-deps for the same reason as "install dependencies" above:
+                                 the eslint tooling here is not peer clean (@nuxtjs/eslint-config@12
                                  wants eslint 8, @nuxt/eslint-config@0.7 wants 8 or 9, the project is on 10),
                                  so a plain install fails with ERESOLVE. -->
-                            <arguments>install @oxc-parser/binding-linux-x64-gnu --save-optional --force</arguments>
+                            <arguments>install @oxc-parser/binding-linux-x64-gnu --save-optional --legacy-peer-deps</arguments>
                         </configuration>
                     </execution>
                     <execution>
