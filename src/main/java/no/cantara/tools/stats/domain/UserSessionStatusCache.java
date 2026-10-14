@@ -20,6 +20,8 @@ public class UserSessionStatusCache  implements Serializable {
 	Map<String, HashSet<String>> deleted_users_by_appId = new HashMap<String, HashSet<String>>();
 	ZonedDateTime starttime_of_today = null;
 	long lasttime_requested = 0;
+	// running total for today; each poll only fetches the activities since lasttime_requested
+	int session_actions_today = 0;
 
 	public int getAllRegisteredUsers(){
 		Collection<HashSet<String>> values = registered_users_by_appId.values();

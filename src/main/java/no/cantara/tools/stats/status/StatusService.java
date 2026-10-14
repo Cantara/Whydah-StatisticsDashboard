@@ -215,9 +215,11 @@ public class StatusService {
             logger.debug("Trying to get data.. from:" + starttime_param + " to " + endtime_pram);
 
             long startTime = System.currentTimeMillis();
+            // Valuereporter reads camelCase startTime/endTime; unknown names are ignored and it falls back
+            // to the last 24h, which returns ~1M+ rows per poll and OOMs StatisticsService
             ActivityStatistics stats = Unirest.get(report_service + "/observe/statistics/all/usersession")
-                    .queryString("starttime", starttime_param)
-                    .queryString("endtime", endtime_pram)
+                    .queryString("startTime", starttime_param)
+                    .queryString("endTime", endtime_pram)
                     .asObject(ActivityStatistics.class)
                     .getBody();
             long endTime = System.currentTimeMillis();
@@ -466,6 +468,7 @@ public class StatusService {
             Set<String> logins = new HashSet<>(lastUpdatedStatusCache.getLogins());
             Set<String> registered_users = new HashSet<>(lastUpdatedStatusCache.getRegistered_users());
             Set<String> deleted_users = new HashSet<>(lastUpdatedStatusCache.getDeleted_users());
+            status.setTotal_number_of_session_actions_this_day(lastUpdatedStatusCache.getSession_actions_today());
 
             String todayString = getCurrentDateString();
 
@@ -503,6 +506,7 @@ public class StatusService {
             lastUpdatedStatusCache.setLogins(logins);
             lastUpdatedStatusCache.setRegistered_users(registered_users);
             lastUpdatedStatusCache.setDeleted_users(deleted_users);
+            lastUpdatedStatusCache.setSession_actions_today(status.getTotal_number_of_session_actions_this_day());
             lastUpdatedStatusCache.setLasttime_requested(stats.getEndTime());
         }
 

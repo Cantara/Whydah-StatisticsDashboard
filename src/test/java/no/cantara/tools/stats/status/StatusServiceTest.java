@@ -1,5 +1,6 @@
 package no.cantara.tools.stats.status;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -92,4 +93,23 @@ class StatusServiceTest {
     }
 
     
+
+    @Test
+    public void testSessionActionsAccumulateAcrossIncrementalPolls() throws JsonMappingException, JsonProcessingException {
+    	// each poll only returns the activities since the previous poll, so per-day totals must carry over
+    	Long timestamp = Instant.now().toEpochMilli();
+    	String delta = "{\"prefix\":\"All\",\"activityName\":\"userSession\",\"startTime\":" + timestamp + ",\"endTime\":" + timestamp + ","
+    			+ "\"activities\":{\"userSessions\":["
+    			+ "{\"prefix\":\"\",\"name\":\"usersession\",\"startTime\":" + timestamp + ",\"data\":{\"usersessionfunction\":\"userSessionVerification\",\"applicationid\":\"2215\",\"userid\":\"petter\",\"applicationtokenid\":\"t1\"}},"
+    			+ "{\"prefix\":\"\",\"name\":\"usersession\",\"startTime\":" + timestamp + ",\"data\":{\"usersessionfunction\":\"userSessionAccess\",\"applicationid\":\"2215\",\"userid\":\"petter\",\"applicationtokenid\":\"t1\"}}"
+    			+ "]}}";
+    	StatusService s = new StatusService();
+
+    	UserSessionStatus first = s.getUserSessionStatusDataFromActivityStatistics(EntityUtils.mapFromJson(delta, ActivityStatistics.class));
+    	UserSessionStatus second = s.getUserSessionStatusDataFromActivityStatistics(EntityUtils.mapFromJson(delta, ActivityStatistics.class));
+
+    	// the cache is static and shared with other tests, so compare the two polls rather than absolute values
+    	assertEquals(2, second.getTotal_number_of_session_actions_this_day() - first.getTotal_number_of_session_actions_this_day());
+    	assertEquals(1, second.getNumber_of_unique_logins_this_day());
+    }
 }
