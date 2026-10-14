@@ -112,4 +112,13 @@ class StatusServiceTest {
     	assertEquals(2, second.getTotal_number_of_session_actions_this_day() - first.getTotal_number_of_session_actions_this_day());
     	assertEquals(1, second.getNumber_of_unique_logins_this_day());
     }
+
+    @Test
+    public void testPollWindowIsBoundedWhileCatchingUp() {
+    	long now = Instant.now().toEpochMilli();
+    	// catching up from midnight: one bounded window, not the whole day
+    	assertEquals(now - 10 * 3600_000L + StatusService.MAX_POLL_WINDOW_MS, StatusService.pollWindowEnd(now - 10 * 3600_000L, now));
+    	// caught up: up to now
+    	assertEquals(now, StatusService.pollWindowEnd(now - 60_000L, now));
+    }
 }

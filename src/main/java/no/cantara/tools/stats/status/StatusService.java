@@ -59,6 +59,9 @@ public class StatusService {
     private static DateTimeFormatter simpleHourFormatter;
 
     private static UserSessionStatusCache lastUpdatedStatusCache = new UserSessionStatusCache();
+    // After a restart the first poll starts at midnight. Fetching the whole day in one request returned ~1M rows,
+    // timed out client side and was retried every minute, so catch up in bounded windows instead.
+    static final long MAX_POLL_WINDOW_MS = 30 * 60 * 1000L;
     private static TreeMap<String, UserSessionStatusCache> lastHourUpdatedStatusCache = new TreeMap<>();
     private static UserSessionStatus recentStatus = null;
     private static TreeMap<String, DailyStatus> dailyStatusMap = new TreeMap<>();
@@ -175,6 +178,10 @@ public class StatusService {
         return simpleHourFormatter.format(instant.atZone(appZoneId));
     }
 
+    static long pollWindowEnd(long start, long now) {
+        return Math.min(now, start + MAX_POLL_WINDOW_MS);
+    }
+
     public UserSessionStatus getUserSessionStatusForToday() {
         UserSessionStatus status = recentStatus;
         if (status == null) {
@@ -211,7 +218,7 @@ public class StatusService {
                 starttime_param = String.valueOf(lastUpdatedStatusCache.getLasttime_requested() + 1);
             }
 
-            endtime_pram = String.valueOf(Instant.now().toEpochMilli());
+            endtime_pram = String.valueOf(pollWindowEnd(Long.parseLong(starttime_param), Instant.now().toEpochMilli()));
             logger.debug("Trying to get data.. from:" + starttime_param + " to " + endtime_pram);
 
             long startTime = System.currentTimeMillis();
