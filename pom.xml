@@ -297,7 +297,7 @@
                         <configuration>
                             <!-- legacy-peer-deps, not force: the eslint tooling is not peer clean (see the oxc step
                                  below), and with no package-lock.json a clean checkout (release:perform) resolves
-                                 from scratch, where npm 10's --force crashes with
+                                 from scratch, where npm 10 with the force flag crashes with
                                  "Cannot read properties of null (reading 'edgesOut')". -->
                             <arguments>
                                 install --legacy-peer-deps
