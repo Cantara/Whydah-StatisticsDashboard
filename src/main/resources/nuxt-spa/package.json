@@ -46,7 +46,7 @@
     "eslint-plugin-vue": "^10.0.0",
     "file-loader": "6.2.0",
     "nuxt-purgecss": "2.0.0",
-    "sass-loader": "17.1.0"
+    "sass-loader": "17.1.1"
   },
   "optionalDependencies": {
     "@oxc-parser/binding-linux-x64-gnu": "^0.159.0"
